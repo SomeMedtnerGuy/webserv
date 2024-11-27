@@ -1,0 +1,18 @@
+Parsing:
+1. Place start-line in structure;
+2. Place field-lines in an unordered-map (hashtable)
+3. Check map if body is expected.
+3.1 If yes, read body as stream.
+
+MUSTS:
+- Declare an element containing a bare CR as invalid
+- Invalidate a message which has a whitespace between start-line and first header.
+- 
+
+SHOULDS:
+- Ignore a CRLF before a request line
+
+
+
+Maybe:
+- Insert validation of encoding to prevent attacks in message
