@@ -1,24 +1,40 @@
+HTTP-message	= start-line CRLF
+		  *( field-line CRLF )
+		  CRLF
+		  [ message-body ]
+request-line	= method SP request-target SP HTTP-version
+
+
+
+
 Parsing:
 1. Place start-line in structure;
 2. Place field-lines in an unordered-map (hashtable)
 3. Check map if body is expected.
-3.1 If yes, read body as stream.
+	3.1 If yes, read body as stream.
 
 
 
 MUSTS:
 - Declare an element containing a bare CR as invalid
 - Invalidate a message which has a whitespace between start-line and first header.
-- 
+- Answer a request-line with a too long of a target with 414.
+- Answer with 400 any message without, more than one or a badly formatted Host header field.
 
 SHOULDS:
 - Ignore a CRLF before a request line
-- Answer anything that  does not match the HTTP grammar with a 400 response and close connection.
-
-
+- Answer anything that does not match the HTTP grammar with a 400 response and close connection.
+- Answer a request-line with an unknown method (especially one longer than the longest known) with 501.
+- Answer a request-target with a space as 400 response.
 
 Random notes:
 - HTTP version is case-SENSITIVE.
+- While parsing request line, SP can be parsed leniantly (check RFC). However, it might be easier to be
+more restrictive, although that might introduce interoperapility problems.
+- ONLY ACCEPT ORIGIN-FORM (other forms are for types of servers or for types of requests not supported).
+- Reconstruction of Target URI: "http://" + authority (given by host) + request-target.
+
+
 
 
 
