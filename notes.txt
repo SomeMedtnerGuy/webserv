@@ -4,6 +4,8 @@ Parsing:
 3. Check map if body is expected.
 3.1 If yes, read body as stream.
 
+
+
 MUSTS:
 - Declare an element containing a bare CR as invalid
 - Invalidate a message which has a whitespace between start-line and first header.
@@ -11,6 +13,12 @@ MUSTS:
 
 SHOULDS:
 - Ignore a CRLF before a request line
+- Answer anything that  does not match the HTTP grammar with a 400 response and close connection.
+
+
+
+Random notes:
+- HTTP version is case-SENSITIVE.
 
 
 
