@@ -13,31 +13,57 @@
 #ifndef HTTP_REQUEST_HPP
 # define HTTP_REQUEST_HPP
 
-#include <cstring>
-#include <string>
-#include <array>
+# include <cstring>
+# include <string>
+# include <array>
+# include <iostream>
 
 //TO MOVE TO MAIN HEADER
 enum	Method
 {
+	INVALID = -1,
 	GET,
 	POST,
-	DELETE
+	DELETE,
+	METHODS_SIZE
 };
 
 
 class	HttpRequest
 {
 	private:
-		std::string	_methods[3];
+		const std::string	_methods[3];
+
+		char*	_request;
+		char*	_requestPtr;
+	
 		Method	_method;
+		
 
 		HttpRequest();
+
+		void	_parseMethod(void);
+		void	_parseTarget(void);
 	public:
 		HttpRequest(char* request);
 		HttpRequest(const HttpRequest& other);
 		HttpRequest&	operator=(const HttpRequest& other);
 		~HttpRequest();
+
+		void	parseRequest(void);
+
+
+		//Exceptions
+		class HttpRequestException: public std::exception
+		{
+			private:
+				std::string	_message;
+			public:
+				HttpRequestException(std::string msg);
+				~HttpRequestException() throw();
+				const char* what() const throw();
+		};
+
 };
 
 #endif
