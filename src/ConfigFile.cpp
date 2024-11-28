@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 16:29:14 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:40:32 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void ConfigFile::splitServers()
 	}
 
 	//std::cout << _serverObjs[0].getPort(0) << '\n';
+	std::cout << _serverObjs[0].getServerName() << '\n';
 	
 }
 
@@ -110,13 +111,14 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 	Server realServer;
 
 	realServer.setServerId(serverId);
-	for (size_t i = 0; i < serverVector.size(); ++i) {
+	for (size_t i = 0; i < serverVector.size(); ++i) 
+	{
 
 		if (!serverVector[i].compare("}"))
 			continue ;
 		if (i != 0 && serverVector[i].find("location") == std::string::npos)
 		{
-			realServer.setElements(serverVector[i]); /* TODO: Cada setter vai receber um vetor e analisar se pode ou nao ter mais do que um argumento */	
+			realServer.setElements(serverVector[i]);	
 		}
 		
 	}

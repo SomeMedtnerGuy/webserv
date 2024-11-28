@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 16:23:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:37:08 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ std::vector<std::string> splitServerBlocks(const std::string& content)
 {
     std::vector<std::string> serverBlocks;
     size_t pos = 0;
-    size_t openBracket;
-    size_t closeBracket;
+    size_t openBracket = 0;
+    size_t closeBracket = 0;
     int balance = 0;
 
     while (pos < content.size())
@@ -97,17 +97,14 @@ std::vector<std::string> splitServerStr(const std::string& serverStr)
     size_t end = 0;
     while (start < serverStr.size())
     {
-        while (isspace(serverStr[start]))
+        while (start < serverStr.size() && isspace(serverStr[start]))
             start++;
+        if (start >= serverStr.size())
+            break;
+        
         end = start;
-        while (!isspace(serverStr[end]))
+        while (end < serverStr.size() && !isspace(serverStr[end]))
             end++;
-    
-        if (!serverStr[end])
-        {
-            serverStrVector.push_back(serverStr.substr(start));
-            break ;
-        }
         
         serverStrVector.push_back(serverStr.substr(start, end - start));
         start = end + 1;
@@ -120,4 +117,9 @@ std::string intToStr(int i)
     std::stringstream ss;
     ss << i;
     return (ss.str());
+}
+
+bool validDomain(std::string domainToValidate)
+{
+    
 }

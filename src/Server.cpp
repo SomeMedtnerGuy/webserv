@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 16:27:47 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:38:28 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void Server::setServerId(size_t serverId)
 void Server::setPort(const std::vector<std::string>& port)
 {
 	if (port.size() != 2)
-		throw std::runtime_error("Port directive must have exactly one value.");
+		throw std::runtime_error("Port directive must have exactly one value, and can't be empty.");
+	
 	for (size_t i = 0; i < port[1].size(); ++i)
 	{
 		if (!isdigit(port[1][i]) && i != port[1].size() - 1)
@@ -54,17 +55,37 @@ void Server::setPort(const std::vector<std::string>& port)
 		if (i == port[1].size() - 1 && port[1][i] != ';')
 			throw std::runtime_error("The Port directive in server " + intToStr(_serverId) + " block does not end with \';\'");			
 	}
+	
 	std::string portNb = port[1];
 	portNb.erase(port[1].size() - 1);
 	long nbr = atoi(portNb.c_str());
 	if (nbr < 1024 || nbr > 65535)
 		throw std::runtime_error("Invalid port number: The port must be in the range 1024-65535.");
+	
 	_port.push_back(nbr);
 }
 
 void Server::setServerName(const std::vector<std::string>& serverName)
 {
-	_serverName = serverName;
+	if (serverName.size() != 2)
+		throw std::runtime_error("Server name directive must have exactly one value, and can't be empty.");
+	
+	for (size_t i = 0; i < serverName[1].size(); ++i)
+	{
+		if (i == serverName[1].size() - 1 && serverName[1][i] != ';')
+			throw std::runtime_error("The Server name directive in server " + intToStr(_serverId) + " block does not end with \';\'");			
+	}
+	
+	std::string serverNameNotConst = serverName[1];
+	serverNameNotConst.erase(serverNameNotConst.size() - 1);
+	if (serverNameNotConst.empty())
+		throw std::runtime_error("The Server name directive is empty."); 
+	if (!validDomain(serverNameNotConst))/* TODO */
+	{
+		if (serverNameNotConst != "localhost" && serverNameNotConst != "LOCALHOST")
+			throw std::runtime_error("Invalid server_name value.");
+	}	
+	_serverName = serverNameNotConst;
 }
 
 void Server::setHost(const std::vector<std::string>& host)
@@ -108,7 +129,7 @@ int Server::getPortSize(void) const
 
 std::string Server::getServerName(void) const
 {
-	return (_serverName[0]);
+	return (_serverName);
 }
 
 std::string Server::getHost(void) const
