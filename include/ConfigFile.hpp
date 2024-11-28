@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/27 18:31:07 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:45:58 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ public:
 	void isConfigFilePath();
 	void readingFile();
 	void splitServers();
-	Server fillServersObjs(std::string& serverStr);
+	Server fillServersObjs(std::string& serverStr, size_t serverId);
 
 };
 

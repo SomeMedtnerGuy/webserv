@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/27 19:38:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:29:14 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,18 +97,19 @@ void ConfigFile::splitServers()
 	
 	for (size_t i = 0; i < _serverStr.size(); ++i) 
 	{
-		_serverObjs.push_back(fillServersObjs(_serverStr[i]));
+		_serverObjs.push_back(fillServersObjs(_serverStr[i], i + 1));
 	}
 
-	std::cout << _serverObjs[0].getErrorPage() << '\n';
+	//std::cout << _serverObjs[0].getPort(0) << '\n';
 	
 }
 
-Server ConfigFile::fillServersObjs(std::string& serverStr)
+Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 {
 	std::vector<std::string> serverVector = splitStr(serverStr, '\n');
 	Server realServer;
 
+	realServer.setServerId(serverId);
 	for (size_t i = 0; i < serverVector.size(); ++i) {
 
 		if (!serverVector[i].compare("}"))

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/27 19:37:07 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:27:47 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,83 +38,109 @@ Server::~Server(){}
 
 /* Setters */
 
-void Server::setPort(const std::string& port)
+void Server::setServerId(size_t serverId)
 {
-	_port = port;
+	_serverId = serverId;
 }
 
-void Server::setServerName(const std::string& serverName)
+void Server::setPort(const std::vector<std::string>& port)
+{
+	if (port.size() != 2)
+		throw std::runtime_error("Port directive must have exactly one value.");
+	for (size_t i = 0; i < port[1].size(); ++i)
+	{
+		if (!isdigit(port[1][i]) && i != port[1].size() - 1)
+			throw std::runtime_error("The value of Port directive must have only digits.");
+		if (i == port[1].size() - 1 && port[1][i] != ';')
+			throw std::runtime_error("The Port directive in server " + intToStr(_serverId) + " block does not end with \';\'");			
+	}
+	std::string portNb = port[1];
+	portNb.erase(port[1].size() - 1);
+	long nbr = atoi(portNb.c_str());
+	if (nbr < 1024 || nbr > 65535)
+		throw std::runtime_error("Invalid port number: The port must be in the range 1024-65535.");
+	_port.push_back(nbr);
+}
+
+void Server::setServerName(const std::vector<std::string>& serverName)
 {
 	_serverName = serverName;
 }
 
-void Server::setHost(const std::string& host)
+void Server::setHost(const std::vector<std::string>& host)
 {
 	_host = host;
 }
 
-void Server::setRoot(const std::string& root)
+void Server::setRoot(const std::vector<std::string>& root)
 {
 	_root = root;
 }
 
-void Server::setClientLimit(const std::string& clientLimit)
+void Server::setClientLimit(const std::vector<std::string>& clientLimit)
 {
 	_clientLimit = clientLimit;
 }
 
-void Server::setIndex(const std::string& index)
+void Server::setIndex(const std::vector<std::string>& index)
 {
 	_index = index;
 }
 
-void Server::setErrorPage(const std::string& errorPage)
+void Server::setErrorPage(const std::vector<std::string>& errorPage)
 {
 	_errorPage = errorPage;
 }
 
 /* Getters */
 
-std::string Server::getPort(void) const
+int Server::getPort(size_t portNb) const
 {
-	return (_port);
+	if (portNb >= _port.size())
+		throw std::runtime_error("Port number out of range. Valid range: 0 to " + intToStr(_port.size() - 1));
+	return (_port[portNb]);
+}
+
+int Server::getPortSize(void) const
+{
+	return (_port.size());
 }
 
 std::string Server::getServerName(void) const
 {
-	return (_serverName);
+	return (_serverName[0]);
 }
 
 std::string Server::getHost(void) const
 {
-	return (_host);
+	return (_host[0]);
 }
 
 std::string Server::getRoot(void) const
 {
-	return (_root);
+	return (_root[0]);
 }
 
 std::string Server::getClientLimit(void) const
 {
-	return (_clientLimit);
+	return (_clientLimit[0]);
 }
 
 std::string Server::getIndex(void) const
 {
-	return (_index);
+	return (_index[0]);
 }
 
 std::string Server::getErrorPage(void) const
 {
-	return (_errorPage);
+	return (_errorPage[0]);
 }
 
 /* -- */
 
 void Server::setElements(std::string element)
 {
-	void (Server::*SetFunct[7])(const std::string&) = {
+	void (Server::*SetFunct[7])(const std::vector<std::string>&) = {
 		&Server::setPort, 
 		&Server::setServerName, 
 		&Server::setHost, 
@@ -125,11 +151,9 @@ void Server::setElements(std::string element)
 		};
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
-	if (elementVector.size() != 2)
-		throw std::runtime_error("Each directive must have exactly one value. Found: " + element);
 	size_t nbr =  getElementNbr(elementVector[0]);
 	
-	(this->*SetFunct[nbr])(elementVector[1]);
+	(this->*SetFunct[nbr])(elementVector);
 }
 
 size_t getElementNbr(std::string element)

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/27 19:33:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:23:11 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,4 +113,11 @@ std::vector<std::string> splitServerStr(const std::string& serverStr)
         start = end + 1;
     }
     return serverStrVector;
+}
+
+std::string intToStr(int i)
+{
+    std::stringstream ss;
+    ss << i;
+    return (ss.str());
 }

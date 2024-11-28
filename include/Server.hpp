@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/27 18:21:22 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:07:49 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 
 class Server {
 private:
-	std::string _port;
-	std::string _serverName;
-	std::string _host;
-	std::string _root;
-	std::string _clientLimit;
-	std::string _index;
-	std::string _errorPage;	
+	int _serverId;
+	std::vector<int> _port;
+	std::vector<std::string> _serverName;
+	std::vector<std::string> _host;
+	std::vector<std::string> _root;
+	std::vector<std::string> _clientLimit;
+	std::vector<std::string> _index;
+	std::vector<std::string> _errorPage;	
 
 public:
 	Server();
@@ -32,16 +33,18 @@ public:
 	~Server();
 
 	/* Setters */
-	void setPort(const std::string& port);
-	void setServerName(const std::string& serverName);
-	void setHost(const std::string& host);
-	void setRoot(const std::string& root);
-	void setClientLimit(const std::string& clientLimit);
-	void setIndex(const std::string& index);
-	void setErrorPage(const std::string& errorPage);
+	void setServerId(size_t serverId);
+	void setPort(const std::vector<std::string>& port);
+	void setServerName(const std::vector<std::string>& serverName);
+	void setHost(const std::vector<std::string>& host);
+	void setRoot(const std::vector<std::string>& root);
+	void setClientLimit(const std::vector<std::string>& clientLimit);
+	void setIndex(const std::vector<std::string>& index);
+	void setErrorPage(const std::vector<std::string>& errorPage);
 
 	/* Getters */
-	std::string getPort(void) const;
+	int getPort(size_t portNb) const;
+	int getPortSize(void) const;
 	std::string getServerName(void) const;
 	std::string getHost(void) const;
 	std::string getRoot(void) const;
