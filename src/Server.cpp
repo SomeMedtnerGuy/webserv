@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 18:38:28 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/02 18:11:15 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,12 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 	std::string serverNameNotConst = serverName[1];
 	serverNameNotConst.erase(serverNameNotConst.size() - 1);
 	if (serverNameNotConst.empty())
-		throw std::runtime_error("The Server name directive is empty."); 
+		return ;
 	if (!validDomain(serverNameNotConst))/* TODO */
 	{
 		if (serverNameNotConst != "localhost" && serverNameNotConst != "LOCALHOST")
 			throw std::runtime_error("Invalid server_name value.");
-	}	
+	}
 	_serverName = serverNameNotConst;
 }
 

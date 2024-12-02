@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 18:37:12 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/02 18:31:29 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,4 @@ std::vector<std::string> splitServerBlocks(const std::string& content);
 std::vector<std::string> splitStr(const std::string& Str, char delimiter);
 std::vector<std::string> splitServerStr(const std::string& Str);
 std::string intToStr(int i);
-bool validDomain(std::string domainToValidate);
+bool validDomain(std::string& domainToValidate);
