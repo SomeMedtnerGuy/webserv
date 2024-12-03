@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/02 18:11:15 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:50:17 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,16 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 
 void Server::setHost(const std::vector<std::string>& host)
 {
-	_host = host;
+	if (host.size() != 2)
+		throw std::runtime_error("Host directive must have exactly one value, and can't be empty.");
+	checkSemicolonAtEnd(host[1], _serverId, "Host");
+	std::string lastHostElement = host[1];
+	lastHostElement.erase(lastHostElement.size() - 1);	
+	std::vector<std::string> splitedHost = splitStr(lastHostElement, '.');
+	
+
+	
+	_host = lastHostElement;
 }
 
 void Server::setRoot(const std::vector<std::string>& root)
@@ -134,7 +143,7 @@ std::string Server::getServerName(void) const
 
 std::string Server::getHost(void) const
 {
-	return (_host[0]);
+	return (_host);
 }
 
 std::string Server::getRoot(void) const

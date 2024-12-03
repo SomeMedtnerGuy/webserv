@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/02 18:31:47 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:42:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,10 @@ bool validDomain(std::string& domainToValidate)
     if (domainToValidate.find('-') == 0)
         throw std::runtime_error("Invalid server_name value.");
     return (true);      
+}
+
+void checkSemicolonAtEnd(const std::string& str, int _serverId, std::string directive)
+{
+    if (str[str.size() - 1] != ';')
+        throw std::runtime_error("The " + directive + " directive in server " + intToStr(_serverId) + " block does not end with \';\'");
 }
