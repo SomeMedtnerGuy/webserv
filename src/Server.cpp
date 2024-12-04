@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 17:11:05 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:25:55 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,21 @@ void Server::setHost(const std::vector<std::string>& host)
 
 void Server::setRoot(const std::vector<std::string>& root)
 {
+	if (root.size() != 2)
+		throw std::runtime_error("Root directive must not have more than one value");
+
+	struct stat statbuf;
+	if (stat(root[1].c_str(), &statbuf) == 0)
+	{
+		if (statbuf.st_mode & S_IFDIR != 0)
+			throw std::runtime_error("Root directive must have a directory path.");
+	} /* here */
 	
-	_root = root;
+	checkSemicolonAtEnd(root[1], _serverId, "Root");
+	std::string lastRootElement = root[1];
+	lastRootElement.erase(lastRootElement.size() - 1);
+	
+	_root = lastRootElement;
 }
 
 void Server::setClientLimit(const std::vector<std::string>& clientLimit)

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 17:04:09 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:23:13 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ private:
 	std::vector<int> _port;
 	std::string _serverName;
 	std::string _host;
-	std::vector<std::string> _root;
+	std::string _root;
 	size_t _clientLimit;
 	std::vector<std::string> _index;
 	std::vector<std::string> _errorPage;	
