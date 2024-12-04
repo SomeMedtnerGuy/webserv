@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/03 16:42:25 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:48:44 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,18 @@ void checkSemicolonAtEnd(const std::string& str, int _serverId, std::string dire
 {
     if (str[str.size() - 1] != ';')
         throw std::runtime_error("The " + directive + " directive in server " + intToStr(_serverId) + " block does not end with \';\'");
+}
+
+void isValidIPv4(std::vector<std::string>& str)
+{
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        for (size_t j = 0; j < str[i].size(); j++)
+        {
+            if (!isdigit(str[i][j]))
+                throw std::runtime_error("Invalid host directive: Expected an IPv4 address in the format 'x.x.x.x' with numbers values.");
+        }
+        if (atoi(str[i].c_str()) < 0 || atoi(str[i].c_str()) > 255)
+            throw std::runtime_error("Invalid host directive: Expected an IPv4 address in the format 'x.x.x.x' with values between 0 and 255.");
+    }
 }

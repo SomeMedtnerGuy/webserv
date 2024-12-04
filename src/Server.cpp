@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/03 16:50:17 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:11:05 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,26 +90,39 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 
 void Server::setHost(const std::vector<std::string>& host)
 {
+	if (_host.empty() == false)
+		throw std::runtime_error("Must have only one host directive");
 	if (host.size() != 2)
 		throw std::runtime_error("Host directive must have exactly one value, and can't be empty.");
 	checkSemicolonAtEnd(host[1], _serverId, "Host");
 	std::string lastHostElement = host[1];
 	lastHostElement.erase(lastHostElement.size() - 1);	
 	std::vector<std::string> splitedHost = splitStr(lastHostElement, '.');
-	
-
-	
+	if (splitedHost.size() != 4)
+		throw std::runtime_error("Invalid host directive, IPv4 required.");
+	isValidIPv4(splitedHost);
 	_host = lastHostElement;
 }
 
 void Server::setRoot(const std::vector<std::string>& root)
 {
+	
 	_root = root;
 }
 
 void Server::setClientLimit(const std::vector<std::string>& clientLimit)
 {
-	_clientLimit = clientLimit;
+	if (clientLimit.size() > 2)
+		throw std::runtime_error("Host directive must not have more than one value");
+	checkSemicolonAtEnd(clientLimit[1], _serverId, "Client Limit");
+	std::string lastClientLimit = clientLimit[1];
+	lastClientLimit.erase(lastClientLimit.size() - 1);
+	for (size_t j = 0; j < lastClientLimit.size(); j++)
+	{
+		if (!isdigit(lastClientLimit[j]))
+			throw std::runtime_error("Invalid Client Limit directive: Expected a number value grater than 0.");
+	}
+	_clientLimit = atoi(lastClientLimit.c_str());
 }
 
 void Server::setIndex(const std::vector<std::string>& index)
@@ -151,9 +164,9 @@ std::string Server::getRoot(void) const
 	return (_root[0]);
 }
 
-std::string Server::getClientLimit(void) const
+size_t Server::getClientLimit(void) const
 {
-	return (_clientLimit[0]);
+	return (_clientLimit);
 }
 
 std::string Server::getIndex(void) const

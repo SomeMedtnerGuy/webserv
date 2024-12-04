@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/03 16:44:52 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:04:09 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ private:
 	std::string _serverName;
 	std::string _host;
 	std::vector<std::string> _root;
-	std::vector<std::string> _clientLimit;
+	size_t _clientLimit;
 	std::vector<std::string> _index;
 	std::vector<std::string> _errorPage;	
 
@@ -48,7 +48,7 @@ public:
 	std::string getServerName(void) const;
 	std::string getHost(void) const;
 	std::string getRoot(void) const;
-	std::string getClientLimit(void) const;
+	size_t getClientLimit(void) const;
 	std::string getIndex(void) const;
 	std::string getErrorPage(void) const;
 
