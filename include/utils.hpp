@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 16:48:55 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:54:23 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,3 +26,5 @@ std::string intToStr(int i);
 bool validDomain(std::string& domainToValidate);
 void checkSemicolonAtEnd(const std::string& str, int _serverId, std::string directive);
 void isValidIPv4(std::vector<std::string>& str);
+bool isDirectory(std::string path);
+bool isFile(std::string path);

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 17:16:53 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:14:23 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void ConfigFile::splitServers()
 	//std::cout << _serverObjs[0].getServerName() << '\n';
 	// std::cout << _serverObjs[0].getHost() << '\n';
 	// std::cout << _serverObjs[0].getClientLimit() << '\n';
+	std::cout << _serverObjs[0].getRoot() << '\n';
 	
 }
 

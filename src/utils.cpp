@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 16:48:44 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:54:13 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,4 +144,23 @@ void isValidIPv4(std::vector<std::string>& str)
         if (atoi(str[i].c_str()) < 0 || atoi(str[i].c_str()) > 255)
             throw std::runtime_error("Invalid host directive: Expected an IPv4 address in the format 'x.x.x.x' with values between 0 and 255.");
     }
+}
+
+bool isDirectory(std::string path)
+{
+    struct stat statbuf;
+	if (stat(path.c_str(), &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR))
+			return (false);
+    return (true);
+}
+
+bool isFile(std::string path)
+{
+    struct stat statbuf;
+	if (stat(path.c_str(), &statbuf) == 0)
+	{
+		if (S_ISREG(statbuf.st_mode) && statbuf.st_mode & S_IRUSR)
+			return (true);
+	}
+    return (false);
 }
