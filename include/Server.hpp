@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/04 17:23:13 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:59:59 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ public:
 	std::string getHost(void) const;
 	std::string getRoot(void) const;
 	size_t getClientLimit(void) const;
-	std::string getIndex(void) const;
+	std::string getIndex(size_t indexNbr) const;
 	std::string getErrorPage(void) const;
 
 	void setElements(std::string element);

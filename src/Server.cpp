@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/05 17:04:52 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:42:13 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,47 @@ void Server::setClientLimit(const std::vector<std::string>& clientLimit)
 
 void Server::setIndex(const std::vector<std::string>& index)
 {
+	
 	if (index.size() < 2)
-		throw std::runtime_error("Host directive must have more one value, ate least.");
-	_index = index;
+		throw std::runtime_error("Host directive must have one value, at least.");
+	
+	checkSemicolonAtEnd(index[index.size() - 1], _serverId, "Index");
+	//std::cout << index[1] + "\n";
+	
+	for (size_t i = 1; i < index.size(); i++)
+	{
+		if (i == index.size() - 1)
+		{
+			std::string lastIndex = index[i];
+			lastIndex.erase(lastIndex.size() - 1);
+			//std::cout << lastIndex + "\n";
+			_index.push_back(lastIndex);
+		}
+		else
+		{
+			//std::cout << index[i] + "\n";
+			_index.push_back(index[i]);
+		}
+	}
 }
 
 void Server::setErrorPage(const std::vector<std::string>& errorPage)
 {
-	_errorPage = errorPage;
+	if (errorPage.size() != 3)
+		throw std::runtime_error("The Error Page directive must have a error number and one path for a file.");
+	
+	checkSemicolonAtEnd(errorPage[2], _serverId, "Error Page");
+	
+	for (size_t j = 0; j < errorPage[1].size(); j++)
+	{
+		if (!isdigit(errorPage[1][j]))
+			throw std::runtime_error("Invalid Error Page directive: Expected a number value.");
+	}
+	int errorNbr = atoi(errorPage[1].c_str());
+	if (errorNbr < 100 || errorNbr >= 600)
+		throw std::runtime_error("Invalid Error Page directive.");
+	
+	_errorPage.push_back(errorPage[2]);/* CHANGE TO MAP */
 }
 
 /* Getters */
@@ -180,9 +213,12 @@ size_t Server::getClientLimit(void) const
 	return (_clientLimit);
 }
 
-std::string Server::getIndex(void) const
+std::string Server::getIndex(size_t indexNbr) const
 {
-	return (_index[0]);
+	if (indexNbr > _index.size() -1)
+		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_port.size() - 1));
+
+	return (_index[indexNbr]);
 }
 
 std::string Server::getErrorPage(void) const
