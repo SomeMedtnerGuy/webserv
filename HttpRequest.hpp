@@ -13,45 +13,54 @@
 #ifndef HTTP_REQUEST_HPP
 # define HTTP_REQUEST_HPP
 
-# include <cstring>
-# include <string>
-# include <array>
-# include <iostream>
+# include <iostream> // for std::cout and std::endl
+# include <string> // for std::string
+# include <cstring> // for std::memset
+# include <unistd.h> // for sleep
+# include <sys/socket.h> // for recv
 
-//TO MOVE TO MAIN HEADER
-enum	Method
-{
-	INVALID = -1,
-	GET,
-	POST,
-	DELETE,
-	METHODS_SIZE
-};
 
+# include "RequestLineParser.hpp"
+# include "HeadersParser.hpp"
+# include "BodyParser.hpp"
+
+
+# define BUFFER_SIZE 20
 
 class	HttpRequest
 {
 	private:
-		const std::string	_methods[3];
-
-		char*	_request;
-		char*	_requestPtr;
-	
-		Method	_method;
+		enum State 
+		{
+			REQUEST_LINE_PARSING,
+			HEADERS_PARSING,
+			BODY_PARSING,
+			FINISHED_PARSER
+		};
 		
+		
+		//RequestLineParser			_rlp;
+		//HeadersParser				_hp;
+		//BodyParser					_bp;
+
+		State						_currentState;
+		char						_buffer[BUFFER_SIZE];
+		std::string					_currentRequest;
+
+		int							_sockfd;
+		bool						_eof;
 
 		HttpRequest();
+		bool	_isBuffValid(void);
 
-		void	_parseMethod(void);
-		void	_parseTarget(void);
 	public:
-		HttpRequest(char* request);
+		HttpRequest(int sockfd);
 		HttpRequest(const HttpRequest& other);
 		HttpRequest&	operator=(const HttpRequest& other);
 		~HttpRequest();
 
-		void	parseRequest(void);
-
+		void	parseMoreRequest(void);
+		bool	eof(void);
 
 		//Exceptions
 		class HttpRequestException: public std::exception
