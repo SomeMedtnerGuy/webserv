@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/06 18:42:13 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:45:58 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 		throw std::runtime_error("The Error Page directive must have a error number and one path for a file.");
 	
 	checkSemicolonAtEnd(errorPage[2], _serverId, "Error Page");
+	std::string value = errorPage[2];
+	value.erase(errorPage[2].size() - 1);
 	
 	for (size_t j = 0; j < errorPage[1].size(); j++)
 	{
@@ -176,7 +178,7 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 	if (errorNbr < 100 || errorNbr >= 600)
 		throw std::runtime_error("Invalid Error Page directive.");
 	
-	_errorPage.push_back(errorPage[2]);/* CHANGE TO MAP */
+	_errorPage[errorPage[1]] = value;
 }
 
 /* Getters */
@@ -221,9 +223,14 @@ std::string Server::getIndex(size_t indexNbr) const
 	return (_index[indexNbr]);
 }
 
-std::string Server::getErrorPage(void) const
+std::string Server::getErrorPage(std::string key) const
 {
-	return (_errorPage[0]);
+	std::map<std::string, std::string>::const_iterator it = _errorPage.find(key);
+	
+	if(it != _errorPage.end())
+		return (it->second);
+	
+	return ("Error Page not found.");
 }
 
 /* -- */

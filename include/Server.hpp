@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/06 13:59:59 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:46:23 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ private:
 	std::string _root;
 	size_t _clientLimit;
 	std::vector<std::string> _index;
-	std::vector<std::string> _errorPage;	
+	std::map<std::string, std::string> _errorPage;	
 
 public:
 	Server();
@@ -50,7 +50,7 @@ public:
 	std::string getRoot(void) const;
 	size_t getClientLimit(void) const;
 	std::string getIndex(size_t indexNbr) const;
-	std::string getErrorPage(void) const;
+	std::string getErrorPage(std::string key) const;
 
 	void setElements(std::string element);
 };
