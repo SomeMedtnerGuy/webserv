@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Define.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamonte <joamonte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:13:15 by joamonte          #+#    #+#             */
-/*   Updated: 2024/12/08 22:49:51 by joamonte         ###   ########.fr       */
+/*   Updated: 2024/12/09 11:18:04 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,6 @@
 
 
 extern bool	g_shutdown;
-
-//Key Words
-#define ALLOW_M		"allow_methods"
-#define AUTOID		"autoindex"
-#define CGI_E		"cgi_ext"
-#define CGI_P		"cgi_path"
-#define MAX_SIZE	"client_max_body_size"
-#define ERROR_P		"error_page"
-#define	HOST		"host"
-#define INDEX		"index"
-#define LISTEN		"listen"
-#define LOCATION	"location"
-#define RETURN		"return"
-#define ROOT		"root"
-#define SERVER		"server"
-#define SERVER_N	"server_name"
-#define TRY 		"try_file"
-#define UPLOAD		"upload_to"
 
 // Default settings
 #define DEFAULT_CONF		"system/default.conf"
