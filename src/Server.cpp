@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/09 14:45:58 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/10 20:23:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,11 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 		throw std::runtime_error("Invalid Error Page directive.");
 	
 	_errorPage[errorPage[1]] = value;
+}
+
+void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
+{
+	/* TODO */
 }
 
 /* Getters */

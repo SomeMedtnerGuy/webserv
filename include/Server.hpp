@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/09 14:46:23 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/10 20:21:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define SERVER_HPP
 
 #include "utils.hpp"
+#include "Location.hpp"
 
 class Server {
 private:
@@ -25,6 +26,7 @@ private:
 	size_t _clientLimit;
 	std::vector<std::string> _index;
 	std::map<std::string, std::string> _errorPage;	
+	std::map<std::string, std::vector<Location>> _locations;
 
 public:
 	Server();
@@ -41,6 +43,7 @@ public:
 	void setClientLimit(const std::vector<std::string>& clientLimit);
 	void setIndex(const std::vector<std::string>& index);
 	void setErrorPage(const std::vector<std::string>& errorPage);
+	void setLocation(std::vector<std::string>& serverVector, size_t i);
 
 	/* Getters */
 	int getPort(size_t portNb) const;
