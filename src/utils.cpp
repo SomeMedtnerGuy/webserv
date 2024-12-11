@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/05 16:54:13 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:23:52 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,4 +163,28 @@ bool isFile(std::string path)
 			return (true);
 	}
     return (false);
+}
+
+void checkCurlyBrace(std::string& line, bool begin)
+{
+    if (begin)
+    {
+        if (line.find("{") == std::string::npos || line.find("{") != line.size() - 1)
+            throw std::runtime_error("The location block must be open in the same line, with a opening curly brace '{' and it should be at the end of the line, without spaces.");    
+    }
+    else
+    {
+        if (line.compare("}"))
+            throw std::runtime_error("The location block must be ended with a closing curly brace, in a diferent line.");
+    }
+}
+
+std::string cacthPath(std::string& str)
+{
+    std::string path = str.erase(str.size() - 1);
+    std::vector<std::string> pathVec = splitStr(path, ' ');
+    if (pathVec.size() != 2)
+        throw std::runtime_error("The location block must have only one specific path.");
+ 
+    return (pathVec[1]);
 }

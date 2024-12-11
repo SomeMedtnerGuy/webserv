@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/10 20:23:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:17:17 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void Server::setIndex(const std::vector<std::string>& index)
 		throw std::runtime_error("Host directive must have one value, at least.");
 	
 	checkSemicolonAtEnd(index[index.size() - 1], _serverId, "Index");
-	//std::cout << index[1] + "\n";
 	
 	for (size_t i = 1; i < index.size(); i++)
 	{
@@ -149,14 +148,10 @@ void Server::setIndex(const std::vector<std::string>& index)
 		{
 			std::string lastIndex = index[i];
 			lastIndex.erase(lastIndex.size() - 1);
-			//std::cout << lastIndex + "\n";
 			_index.push_back(lastIndex);
 		}
 		else
-		{
-			//std::cout << index[i] + "\n";
 			_index.push_back(index[i]);
-		}
 	}
 }
 
@@ -183,7 +178,35 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 
 void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 {
-	/* TODO */
+	checkCurlyBrace(serverVector[i], true);
+	std::string specificPath = cacthPath(serverVector[i]);
+	for (size_t j = i; j < serverVector.size() - 1; j++)
+	{
+		if (serverVector[j].find("}") != std::string::npos)
+		{
+			checkCurlyBrace(serverVector[j], false);
+			_locations[specificPath] = fillLocation(serverVector, i + 1, j - 1);
+		}
+	}
+}
+
+Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
+{
+	Location realLocation;
+	std::string specificPath = cacthPath(serverVector[begin - 1]);
+	realLocation.setSpecificPath(specificPath);
+	for (size_t i = begin; i <= end; i++)
+	{
+		realLocation.setLocationElements(serverVector[i]);
+	}
+
+	// if (realLocation.getAllowMethods("PUT"))
+	// 	std::cout << "find" << std::endl;
+
+	if (realLocation.getAutoIndex())
+		std::cout << "on" << std::endl;
+
+	return (realLocation);
 }
 
 /* Getters */
@@ -276,4 +299,3 @@ size_t getElementNbr(std::string element)
 	}
 	throw std::runtime_error("Invalid element on Configuration File: " + element);
 }
-

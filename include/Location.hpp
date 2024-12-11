@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/10 19:40:45 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:40:22 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,35 @@ private:
 	std::vector<std::string> _allowMethods;
 	bool _autoindex;
 	std::string _index;
-	std::string _return;	
+	std::string _return;
+	std::string _root;
 
 public:
 	Location();
 	Location(const Location& src);
 	Location& operator=(const Location& src);
 	~Location();
+
+	/* Setters */
+	void setSpecificPath(std::string& specificPath);
+	void setAllowMethods(std::vector<std::string>& allowMethods);
+	void setAutoIndex(std::vector<std::string>& autoIndex);
+	void setIndex(std::vector<std::string>& index);
+	void setReturn(std::vector<std::string>& Return);
+	void setRoot(std::vector<std::string>& root);
+
+	/* Getters */
+	std::string getSpecificPath() const;
+	bool getAllowMethods(std::string method) const;
+	bool getAutoIndex() const;
+	std::string getIndex() const;
+	std::string getReturn() const;
+	std::string getRoot() const;
+
+	
+	void setLocationElements(std::string& element);
 };
+
+size_t getLocationNbr(std::string element);
 
 #endif // LOCATION_HPP

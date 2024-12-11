@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/10 20:21:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:11:08 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ private:
 	size_t _clientLimit;
 	std::vector<std::string> _index;
 	std::map<std::string, std::string> _errorPage;	
-	std::map<std::string, std::vector<Location>> _locations;
+	std::map<std::string, Location> _locations;
 
 public:
 	Server();
@@ -44,6 +44,7 @@ public:
 	void setIndex(const std::vector<std::string>& index);
 	void setErrorPage(const std::vector<std::string>& errorPage);
 	void setLocation(std::vector<std::string>& serverVector, size_t i);
+	Location fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end);
 
 	/* Getters */
 	int getPort(size_t portNb) const;

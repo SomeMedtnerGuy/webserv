@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/10 20:17:26 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:58:16 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,6 @@ void ConfigFile::splitServers()
 	// std::cout << _serverObjs[0].getRoot() << '\n';
 	// std::cout << _serverObjs[0].getIndex(1) << '\n';
 	// std::cout << _serverObjs[0].getErrorPage("401") << '\n';
-	
-	
 }
 
 Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
@@ -122,9 +120,20 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 		if (!serverVector[i].compare("}"))
 			continue ;
 		if (serverVector[i].find("location") != std::string::npos)
+		{
+			// std::cout << "location " << serverVector[i] << std::endl;
 			realServer.setLocation(serverVector, i);
+			for (size_t j = i; j < serverVector.size() - 1; j++)
+			{
+				if (serverVector[j].find("}") != std::string::npos)
+					i = j;
+			}
+		}
 		else if (i != 0)
+		{
+			// std::cout << "elements " << serverVector[i] << std::endl;
 			realServer.setElements(serverVector[i]);		
+		}
 	}
 	return (realServer);
 }
