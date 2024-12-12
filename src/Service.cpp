@@ -6,7 +6,7 @@
 /*   By: joamonte <joamonte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:41:07 by joamonte          #+#    #+#             */
-/*   Updated: 2024/12/09 10:19:27 by joamonte         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:24:58 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 bool	g_shutdown = false;
 
-//Constructor and destructor
+// Constructor and destructor
 
 Service::Service(int ac, char **av)
 {
@@ -37,7 +37,7 @@ Service::~Service()
 	printMsg(END_MSG, GREEN);
 }
 
-// ---> Public member functions ----------------------------------------------
+// Public member functions
 
 void Service::setup()
 {
@@ -84,7 +84,7 @@ void Service::printServersInfo()
 	}
 }
 
-// ---> Launch private auxiliars -----------------------------------------------------
+// Launch private auxiliars
 
 void Service::_initPollingRequests()
 {
@@ -181,6 +181,15 @@ void Service::_readData()
 
 void Service::_closeConnection(std::string const &msg)
 {
+	// Set the SO_LINGER option
+	struct linger lg;
+	lg.l_onoff = 1;  // Enable linger
+	lg.l_linger = 0; // Timeout in seconds
+	if (setsockopt(this->_tmp.socket, SOL_SOCKET, SO_LINGER, &lg, sizeof(lg)) < 0)
+	{
+		printMsg("Failed to set SO_LINGER: " + std::string(std::strerror(errno)), RED);
+	}
+
 	close(this->_tmp.socket);
 	this->_pollingRequests.erase(this->_pollingRequests.begin() + this->_tmp.pollID);
 	this->_clients.erase(this->_clients.begin() + this->_tmp.clientID);
@@ -257,7 +266,7 @@ void Service::_checkRequestedServer()
 	}
 }
 
-// ---> Setup private auxiliars -------------------------------------------------------
+// Setup private auxiliars
 
 void Service::_initAddressParameters()
 {
@@ -318,7 +327,7 @@ void Service::_setSocketListening()
 	}
 }
 
-// ---> Common private auxiliars -------------------------------------------------------
+// Common private auxiliars
 
 void Service::_addSocketInPollingRequests()
 {
@@ -357,7 +366,7 @@ void Service::_resetInfo()
 	this->_tmp.launch = false;
 }
 
-// ---> Constructor auxiliars -------------------------------------------------------
+// Constructor auxiliars
 
 size_t Service::_countDefaultServers()
 {
