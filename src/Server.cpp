@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/11 19:17:17 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:56:18 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 			throw std::runtime_error("Invalid Error Page directive: Expected a number value.");
 	}
 	int errorNbr = atoi(errorPage[1].c_str());
-	if (errorNbr < 100 || errorNbr >= 600)
+	if (errorNbr < 100 || errorNbr >= 600)/* check http codes */
 		throw std::runtime_error("Invalid Error Page directive.");
 	
 	_errorPage[errorPage[1]] = value;
@@ -202,9 +202,8 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 
 	// if (realLocation.getAllowMethods("PUT"))
 	// 	std::cout << "find" << std::endl;
-
-	if (realLocation.getAutoIndex())
-		std::cout << "on" << std::endl;
+	// if (realLocation.getAutoIndex())
+		// std::cout << "on" << std::endl;
 
 	return (realLocation);
 }
@@ -243,22 +242,35 @@ size_t Server::getClientLimit(void) const
 	return (_clientLimit);
 }
 
+size_t Server::getIndexSize() const
+{
+	return (_index.size());
+}
+
 std::string Server::getIndex(size_t indexNbr) const
 {
 	if (indexNbr > _index.size() -1)
-		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_port.size() - 1));
+		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_index.size() -1));
 
 	return (_index[indexNbr]);
 }
 
-std::string Server::getErrorPage(std::string key) const
+bool Server::isErrorPageDefined(std::string key) const
 {
 	std::map<std::string, std::string>::const_iterator it = _errorPage.find(key);
-	
+
 	if(it != _errorPage.end())
-		return (it->second);
+		return (true);
 	
-	return ("Error Page not found.");
+	return (false);
+}
+
+std::string Server::getErrorPage(std::string key) const
+{
+	if (!this->isErrorPageDefined(key))
+		return (NULL);
+	std::map<std::string, std::string>::const_iterator it = _errorPage.find(key);
+	return (it->second);
 }
 
 /* -- */

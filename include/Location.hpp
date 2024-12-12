@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/11 18:40:22 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:51:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ private:
 	std::string _specificPath;
 	std::vector<std::string> _allowMethods;
 	bool _autoindex;
-	std::string _index;
-	std::string _return;
+	std::vector<std::string> _index;
+	std::map<int, std::string> _return;
 	std::string _root;
 
 public:
@@ -42,7 +42,8 @@ public:
 	std::string getSpecificPath() const;
 	bool getAllowMethods(std::string method) const;
 	bool getAutoIndex() const;
-	std::string getIndex() const;
+	size_t getIndexSize() const;
+	std::string getIndex(size_t indexNbr) const;
 	std::string getReturn() const;
 	std::string getRoot() const;
 

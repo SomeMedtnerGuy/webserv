@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/11 19:24:57 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:58:37 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,49 @@ void Location::setAutoIndex(std::vector<std::string>& autoIndex)
 
 void Location::setIndex(std::vector<std::string>& index)
 {
-	_index = index[0];
+	if (index.size() < 2)
+		throw std::runtime_error("Host directive must have one value, at least.");
+	
+	checkSemicolonAtEnd(index[index.size() - 1], 0, "Index");
+	
+	for (size_t i = 1; i < index.size(); i++)
+	{
+		if (i == index.size() - 1)
+		{
+			std::string lastIndex = index[i];
+			lastIndex.erase(lastIndex.size() - 1);
+			_index.push_back(lastIndex);
+		}
+		else
+			_index.push_back(index[i]);
+	}
 }
 
 void Location::setReturn(std::vector<std::string>& Return)
 {
-	_return = Return[0];
+	if (Return.size() < 2)
+		throw std::runtime_error("The Error Page directive must have a value.");
+	if (Return.size() > 3)
+		throw std::runtime_error("The Error Page directive must have a http code and a value.");
+	
+	checkSemicolonAtEnd(Return[Return.size() - 1], 0, "Return");
+	std::string returnContent = Return[Return.size() - 1];
+	returnContent.erase(Return.size() - 1);
+	
+	if (Return.size() == 3)
+	{
+		for (size_t j = 0; j < Return[1].size(); j++)
+		{
+			if (!isdigit(Return[1][j]))
+				throw std::runtime_error("Invalid Return directive: Expected a number value in http code.");
+		}
+		int code = atoi(Return[1].c_str());
+		if (code < 100 || code > 600)
+			throw std::runtime_error("Invalid HTTP code in Return directive.");
+		_return[code] = returnContent;			
+	}
+	else
+		_return[200] = returnContent;
 }
 
 void Location::setRoot(std::vector<std::string>& root)
@@ -120,9 +157,17 @@ bool Location::getAutoIndex() const
 	return (_autoindex);
 }
 
-std::string Location::getIndex() const
+size_t Location::getIndexSize() const
 {
-	return (_index);
+	return (_index.size());
+}
+
+std::string Location::getIndex(size_t indexNbr) const
+{
+	if (indexNbr > _index.size() -1)
+		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_index.size() -1));
+
+	return (_index[indexNbr]);
 }
 
 std::string Location::getReturn() const
