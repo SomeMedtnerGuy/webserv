@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/13 15:44:37 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:32:34 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ void Location::setIndex(std::vector<std::string>& index)
 		{
 			std::string lastIndex = index[i];
 			lastIndex.erase(lastIndex.size() - 1);
-			_index.push_back(lastIndex);
+			if (lastIndex.find_first_not_of(' ') != std::string::npos)
+				_index.push_back(lastIndex);
 		}
 		else
 			_index.push_back(index[i]);
