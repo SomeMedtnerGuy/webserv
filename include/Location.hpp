@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/12 15:51:39 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/13 14:40:51 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ private:
 	std::vector<std::string> _allowMethods;
 	bool _autoindex;
 	std::vector<std::string> _index;
-	std::map<int, std::string> _return;
+	std::vector<std::string> _return;
 	std::string _root;
 
 public:
@@ -44,7 +44,7 @@ public:
 	bool getAutoIndex() const;
 	size_t getIndexSize() const;
 	std::string getIndex(size_t indexNbr) const;
-	std::string getReturn() const;
+	std::vector<std::string> getReturn() const;
 	std::string getRoot() const;
 
 	

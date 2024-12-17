@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/12 15:58:37 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:44:37 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,15 +125,29 @@ void Location::setReturn(std::vector<std::string>& Return)
 		int code = atoi(Return[1].c_str());
 		if (code < 100 || code > 600)
 			throw std::runtime_error("Invalid HTTP code in Return directive.");
-		_return[code] = returnContent;			
+		_return.push_back(Return[1]);
+		_return.push_back(returnContent);			
 	}
 	else
-		_return[200] = returnContent;
+	{
+		_return.push_back("200");
+		_return.push_back(returnContent);
+	}
 }
 
 void Location::setRoot(std::vector<std::string>& root)
 {
-	_root = root[0];
+	if (root.size() != 2)
+		throw std::runtime_error("Root directive must not have more than one value");
+
+	checkSemicolonAtEnd(root[1], 0, "Root");
+	std::string lastRootElement = root[1];
+	lastRootElement.erase(lastRootElement.size() - 1);
+	
+	if (!isDirectory(lastRootElement))
+			throw std::runtime_error("Root directive must have a directory path.");
+	
+	_root = lastRootElement;
 }
 
 /* Getters */
@@ -170,8 +184,10 @@ std::string Location::getIndex(size_t indexNbr) const
 	return (_index[indexNbr]);
 }
 
-std::string Location::getReturn() const
+std::vector<std::string> Location::getReturn() const
 {
+	if (_return.size() == 0)
+		return (std::vector<std::string>());
 	return (_return);
 }
 

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/12 15:56:18 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:45:33 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,13 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 	// 	std::cout << "find" << std::endl;
 	// if (realLocation.getAutoIndex())
 		// std::cout << "on" << std::endl;
+/* 	std::vector<std::string> a = realLocation.getReturn(); 
+	if (!a.empty())
+	{
+		std::cout << a[0] << std::endl;
+	} */
+	std::cout << realLocation.getRoot() << std::endl;
+
 
 	return (realLocation);
 }
