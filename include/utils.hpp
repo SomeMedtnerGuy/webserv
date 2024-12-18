@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/11 17:11:40 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:18:57 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,4 @@ void isValidIPv4(std::vector<std::string>& str);
 bool isDirectory(std::string path);
 bool isFile(std::string path);
 void checkCurlyBrace(std::string& line, bool begin);
-std::string cacthPath(std::string& str);
+std::string cacthPath(std::string str);

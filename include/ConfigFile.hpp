@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/11/28 17:18:58 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:38:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,18 @@ private:
 	size_t _nbrOfServers;
 	std::vector<std::string> _serverStr;
 	std::vector<Server> _serverObjs;
+	ConfigFile();
 
 public:
-	ConfigFile();
-	ConfigFile(std::string filePath);
+	ConfigFile(int argc, char **argv);
 	ConfigFile(const ConfigFile& src);
 	ConfigFile& operator=(const ConfigFile& src);
 	~ConfigFile();
 
+	void run();
 	const std::string& getContent() const;
+	size_t getNbrOfServers() const;
+	Server getServer(size_t indexNbr) const;
 
 	void isConfigFilePath();
 	void readingFile();

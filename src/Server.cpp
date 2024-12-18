@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/17 14:26:59 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:04:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 	serverNameNotConst.erase(serverNameNotConst.size() - 1);
 	if (serverNameNotConst.empty())
 		return ;
-	if (!validDomain(serverNameNotConst))/* TODO */
+	if (!validDomain(serverNameNotConst))
 	{
 		if (serverNameNotConst != "localhost" && serverNameNotConst != "LOCALHOST")
 			throw std::runtime_error("Invalid server_name value.");
@@ -210,10 +210,9 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 		std::cout << a[0] << std::endl;
 	} */
 	// std::cout << realLocation.getRoot() << std::endl;
-	std::cout << realLocation.getIndexSize() << std::endl;
-	std::cout << realLocation.getIndex(1) << std::endl;
-
-
+	// std::cout << realLocation.getIndexSize() << std::endl;
+	// std::cout << realLocation.getIndex(0) << std::endl;
+	
 	return (realLocation);
 }
 
@@ -263,6 +262,14 @@ std::string Server::getIndex(size_t indexNbr) const
 
 	return (_index[indexNbr]);
 }
+
+/* const Location* Server::getLocation(std::string& path) const
+{
+	std::map<std::string, Location>::const_iterator it = _locations.find(path);
+    if (it != _locations.end()) 
+        return &(it->second);
+	return (NULL);
+} */
 
 bool Server::isErrorPageDefined(std::string key) const
 {

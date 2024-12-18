@@ -6,15 +6,22 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/11 17:58:16 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:40:13 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ConfigFile.hpp"
 
-ConfigFile::ConfigFile() : _nbrOfServers(0) {}
+ConfigFile::ConfigFile() {}
 
-ConfigFile::ConfigFile(std::string filePath) : _filePath(filePath){}
+ConfigFile::ConfigFile(int argc, char **argv)
+{
+	/* if (argc != 2)
+		createFile(); */
+	(void)argc;
+	_filePath = argv[1];
+	run();
+}
 
 ConfigFile::ConfigFile(const ConfigFile& src)
 {
@@ -30,10 +37,34 @@ ConfigFile& ConfigFile::operator=(const ConfigFile& src)
 
 ConfigFile::~ConfigFile(){}
 
+void ConfigFile::run()
+{
+	try
+	{
+		this->isConfigFilePath();
+		this->readingFile();
+		this->splitServers();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "[ERROR]: " << e.what() << std::endl;
+	}
+}
+
 const std::string& ConfigFile::getContent() const
 {
 	return (_content);
 } 
+
+size_t ConfigFile::getNbrOfServers() const
+{
+	return (_nbrOfServers);
+}
+
+Server ConfigFile::getServer(size_t indexNbr) const
+{
+	return (_serverObjs[indexNbr]);
+}
 
 void ConfigFile::isConfigFilePath()
 {
@@ -119,10 +150,11 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 	{
 		if (!serverVector[i].compare("}"))
 			continue ;
+		//std::cout << serverVector[i] << std::endl;
 		if (serverVector[i].find("location") != std::string::npos)
 		{
-			// std::cout << "location " << serverVector[i] << std::endl;
 			realServer.setLocation(serverVector, i);
+			// std::cout << i << std::endl;
 			for (size_t j = i; j < serverVector.size() - 1; j++)
 			{
 				if (serverVector[j].find("}") != std::string::npos)
@@ -130,10 +162,7 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 			}
 		}
 		else if (i != 0)
-		{
-			// std::cout << "elements " << serverVector[i] << std::endl;
 			realServer.setElements(serverVector[i]);		
-		}
 	}
 	return (realServer);
 }

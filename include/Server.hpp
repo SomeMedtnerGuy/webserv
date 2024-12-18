@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/12 15:23:33 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:03:22 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ public:
 	std::string getIndex(size_t indexNbr) const;
 	bool isErrorPageDefined(std::string key) const;
 	std::string getErrorPage(std::string key) const;
+	const Location* getLocation(std::string& path) const;
 
 	void setElements(std::string element);
 };
