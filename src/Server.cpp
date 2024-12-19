@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/18 17:04:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:28:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,9 +185,11 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 		if (serverVector[j].find("}") != std::string::npos)
 		{
 			checkCurlyBrace(serverVector[j], false);
-			_locations[specificPath] = fillLocation(serverVector, i + 1, j - 1);
+			_locations.push_back(fillLocation(serverVector, i + 1, j - 1));
 		}
 	}
+	std::string location = "/";
+	this->getLocation(location);
 }
 
 Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
@@ -200,7 +202,7 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 		realLocation.setLocationElements(serverVector[i]);
 	}
 
-	// if (realLocation.getAllowMethods("PUT"))
+	// if (realLocation.getAllowMethods("GET"))
 	// 	std::cout << "find" << std::endl;
 	// if (realLocation.getAutoIndex())
 		// std::cout << "on" << std::endl;
@@ -255,6 +257,8 @@ size_t Server::getIndexSize() const
 	return (_index.size());
 }
 
+/* TODO: fazer as validacoes e devolver defaults */
+
 std::string Server::getIndex(size_t indexNbr) const
 {
 	if (indexNbr > _index.size() -1)
@@ -263,13 +267,15 @@ std::string Server::getIndex(size_t indexNbr) const
 	return (_index[indexNbr]);
 }
 
-/* const Location* Server::getLocation(std::string& path) const
+const Location* Server::getLocation(std::string& path) const
 {
-	std::map<std::string, Location>::const_iterator it = _locations.find(path);
-    if (it != _locations.end()) 
-        return &(it->second);
-	return (NULL);
-} */
+	/* std::map<std::string, Location>::const_iterator it = _locations.find(path);
+	if (it != _locations.end())
+		return &(it->second);
+	std::cout << "not found" << std::endl;
+	return NULL; */
+	
+}
 
 bool Server::isErrorPageDefined(std::string key) const
 {

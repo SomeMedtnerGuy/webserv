@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/18 17:03:22 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2024/12/19 11:03:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ private:
 	size_t _clientLimit;
 	std::vector<std::string> _index;
 	std::map<std::string, std::string> _errorPage;	
-	std::map<std::string, Location> _locations;
+	std::vector<Location> _locations;
 
 public:
 	Server();
