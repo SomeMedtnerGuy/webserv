@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/19 13:28:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/02 17:11:09 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Server& Server::operator=(const Server& src)
 	{
 		_port = src._port;
 		_serverName = src._serverName;
-		_host = src._host;
 		_root = src._root;
 		_clientLimit = src._clientLimit;
 		_index = src._index;
@@ -86,22 +85,6 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 			throw std::runtime_error("Invalid server_name value.");
 	}
 	_serverName = serverNameNotConst;
-}
-
-void Server::setHost(const std::vector<std::string>& host)
-{
-	if (_host.empty() == false)
-		throw std::runtime_error("Must have only one host directive");
-	if (host.size() != 2)
-		throw std::runtime_error("Host directive must have exactly one value, and can't be empty.");
-	checkSemicolonAtEnd(host[1], _serverId, "Host");
-	std::string lastHostElement = host[1];
-	lastHostElement.erase(lastHostElement.size() - 1);	
-	std::vector<std::string> splitedHost = splitStr(lastHostElement, '.');
-	if (splitedHost.size() != 4)
-		throw std::runtime_error("Invalid host directive, IPv4 required.");
-	isValidIPv4(splitedHost);
-	_host = lastHostElement;
 }
 
 void Server::setRoot(const std::vector<std::string>& root)
@@ -173,7 +156,7 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 	if (errorNbr < 100 || errorNbr >= 600)/* check http codes */
 		throw std::runtime_error("Invalid Error Page directive.");
 	
-	_errorPage[errorPage[1]] = value;
+	_errorPage[errorNbr] = value;
 }
 
 void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
@@ -189,7 +172,7 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 		}
 	}
 	std::string location = "/";
-	this->getLocation(location);
+	//this->getLocation(location);
 }
 
 Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
@@ -237,11 +220,6 @@ std::string Server::getServerName(void) const
 	return (_serverName);
 }
 
-std::string Server::getHost(void) const
-{
-	return (_host);
-}
-
 std::string Server::getRoot(void) const
 {
 	return (_root);
@@ -257,8 +235,6 @@ size_t Server::getIndexSize() const
 	return (_index.size());
 }
 
-/* TODO: fazer as validacoes e devolver defaults */
-
 std::string Server::getIndex(size_t indexNbr) const
 {
 	if (indexNbr > _index.size() -1)
@@ -267,42 +243,23 @@ std::string Server::getIndex(size_t indexNbr) const
 	return (_index[indexNbr]);
 }
 
-const Location* Server::getLocation(std::string& path) const
+const std::vector<Location>& Server::getLocation() const
 {
-	/* std::map<std::string, Location>::const_iterator it = _locations.find(path);
-	if (it != _locations.end())
-		return &(it->second);
-	std::cout << "not found" << std::endl;
-	return NULL; */
-	
+	return(this->_locations);
 }
 
-bool Server::isErrorPageDefined(std::string key) const
+const std::map<int, std::string>& Server::getErrorPage() const
 {
-	std::map<std::string, std::string>::const_iterator it = _errorPage.find(key);
-
-	if(it != _errorPage.end())
-		return (true);
-	
-	return (false);
-}
-
-std::string Server::getErrorPage(std::string key) const
-{
-	if (!this->isErrorPageDefined(key))
-		return (NULL);
-	std::map<std::string, std::string>::const_iterator it = _errorPage.find(key);
-	return (it->second);
+	return (_errorPage);
 }
 
 /* -- */
 
 void Server::setElements(std::string element)
 {
-	void (Server::*SetFunct[7])(const std::vector<std::string>&) = {
+	void (Server::*SetFunct[6])(const std::vector<std::string>&) = {
 		&Server::setPort, 
-		&Server::setServerName, 
-		&Server::setHost, 
+		&Server::setServerName,
 		&Server::setRoot, 
 		&Server::setClientLimit, 
 		&Server::setIndex, 
@@ -317,10 +274,9 @@ void Server::setElements(std::string element)
 
 size_t getElementNbr(std::string element)
 {
-	std::string elementsKeys[7] = {
+	std::string elementsKeys[6] = {
 		"port",
 		"server_name", 
-		"host", 
 		"root", 
 		"client_limit", 
 		"index", 

@@ -5,7 +5,7 @@ int main(int argc, char **argv)
 	ConfigFile parsing(argc, argv);
 	parsing.run();
 	std::string location = "/";
-	parsing.getServer(0).getLocation(location);
+	parsing.getServer(0).getLocation();
 	// std::cout << parsing.getServer(0).getHost() << std::endl;
 	// std::cout << parsing.getServer(0).getIndex(0) << std::endl;
 /* 
