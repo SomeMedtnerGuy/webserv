@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/02 17:11:09 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:55:34 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ Server& Server::operator=(const Server& src)
 		_clientLimit = src._clientLimit;
 		_index = src._index;
 		_errorPage	= src._errorPage;
+		_locations = src._locations;
 	}
 	return (*this);
 }

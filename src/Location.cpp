@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/17 14:32:34 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:56:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 		if (methods[i] == "GET")
 			continue;
 		if (methods[i] == "POST")
-			continue;
-		if (methods[i] == "PUT")
-			continue;
-		if (methods[i] == "HEAD")
 			continue;
 		if (methods[i] == "DELETE")
 			continue;
