@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/18 16:25:02 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:42:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,13 +181,10 @@ void checkCurlyBrace(std::string& line, bool begin)
 
 std::string cacthPath(std::string str)
 {
-    // std::cout << str + "a" << std::endl;
     std::string path = str.erase(str.size() - 1);
     std::vector<std::string> pathVec = splitStr(path, ' ');
     if (pathVec.size() != 2)
-    {
         throw std::runtime_error("The location block must have only one specific path.");
-    }
  
     return (pathVec[1]);
 }

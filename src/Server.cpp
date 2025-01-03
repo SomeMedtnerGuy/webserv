@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/03 18:55:34 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:41:50 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ Server& Server::operator=(const Server& src)
 {
 	if (this != &src)
 	{
-		_port = src._port;
+		_listen = src._listen;
 		_serverName = src._serverName;
 		_root = src._root;
-		_clientLimit = src._clientLimit;
+		_clientBodySize = src._clientBodySize;
 		_index = src._index;
 		_errorPage	= src._errorPage;
 		_locations = src._locations;
@@ -43,7 +43,7 @@ void Server::setServerId(size_t serverId)
 	_serverId = serverId;
 }
 
-void Server::setPort(const std::vector<std::string>& port)
+void Server::setListen(const std::vector<std::string>& port)
 {
 	if (port.size() != 2)
 		throw std::runtime_error("Port directive must have exactly one value, and can't be empty.");
@@ -62,7 +62,7 @@ void Server::setPort(const std::vector<std::string>& port)
 	if (nbr < 1024 || nbr > 65535)
 		throw std::runtime_error("Invalid port number: The port must be in the range 1024-65535.");
 	
-	_port.push_back(nbr);
+	_listen.push_back(nbr);
 }
 
 void Server::setServerName(const std::vector<std::string>& serverName)
@@ -92,7 +92,9 @@ void Server::setRoot(const std::vector<std::string>& root)
 {
 	if (root.size() != 2)
 		throw std::runtime_error("Root directive must not have more than one value");
-
+	if (root[1].find("../") != std::string::npos)
+		throw std::runtime_error("Root directive must not have '../'. Access to parent directories is not allowed.");
+		
 	checkSemicolonAtEnd(root[1], _serverId, "Root");
 	std::string lastRootElement = root[1];
 	lastRootElement.erase(lastRootElement.size() - 1);
@@ -103,11 +105,11 @@ void Server::setRoot(const std::vector<std::string>& root)
 	_root = lastRootElement;
 }
 
-void Server::setClientLimit(const std::vector<std::string>& clientLimit)
+void Server::setClientBodySize(const std::vector<std::string>& clientLimit)
 {
 	if (clientLimit.size() > 2)
 		throw std::runtime_error("Host directive must not have more than one value");
-	checkSemicolonAtEnd(clientLimit[1], _serverId, "Client Limit");
+	checkSemicolonAtEnd(clientLimit[1], _serverId, "Client Body Size");
 	std::string lastClientLimit = clientLimit[1];
 	lastClientLimit.erase(lastClientLimit.size() - 1);
 	for (size_t j = 0; j < lastClientLimit.size(); j++)
@@ -115,7 +117,7 @@ void Server::setClientLimit(const std::vector<std::string>& clientLimit)
 		if (!isdigit(lastClientLimit[j]))
 			throw std::runtime_error("Invalid Client Limit directive: Expected a number value grater than 0.");
 	}
-	_clientLimit = atoi(lastClientLimit.c_str());
+	_clientBodySize = atoi(lastClientLimit.c_str());
 }
 
 void Server::setIndex(const std::vector<std::string>& index)
@@ -154,7 +156,7 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 			throw std::runtime_error("Invalid Error Page directive: Expected a number value.");
 	}
 	int errorNbr = atoi(errorPage[1].c_str());
-	if (errorNbr < 100 || errorNbr >= 600)/* check http codes */
+	if (errorNbr < 100 || errorNbr >= 600)
 		throw std::runtime_error("Invalid Error Page directive.");
 	
 	_errorPage[errorNbr] = value;
@@ -173,7 +175,6 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 		}
 	}
 	std::string location = "/";
-	//this->getLocation(location);
 }
 
 Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
@@ -182,38 +183,23 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 	std::string specificPath = cacthPath(serverVector[begin - 1]);
 	realLocation.setSpecificPath(specificPath);
 	for (size_t i = begin; i <= end; i++)
-	{
 		realLocation.setLocationElements(serverVector[i]);
-	}
-
-	// if (realLocation.getAllowMethods("GET"))
-	// 	std::cout << "find" << std::endl;
-	// if (realLocation.getAutoIndex())
-		// std::cout << "on" << std::endl;
-/* 	std::vector<std::string> a = realLocation.getReturn(); 
-	if (!a.empty())
-	{
-		std::cout << a[0] << std::endl;
-	} */
-	// std::cout << realLocation.getRoot() << std::endl;
-	// std::cout << realLocation.getIndexSize() << std::endl;
-	// std::cout << realLocation.getIndex(0) << std::endl;
 	
 	return (realLocation);
 }
 
 /* Getters */
 
-int Server::getPort(size_t portNb) const
+int Server::getListen(size_t portNb) const
 {
-	if (portNb >= _port.size())
-		throw std::runtime_error("Port number out of range. Valid range: 0 to " + intToStr(_port.size() - 1));
-	return (_port[portNb]);
+	if (portNb >= _listen.size())
+		throw std::runtime_error("Port number out of range. Valid range: 0 to " + intToStr(_listen.size() - 1));
+	return (_listen[portNb]);
 }
 
-int Server::getPortSize(void) const
+int Server::getListenSize(void) const
 {
-	return (_port.size());
+	return (_listen.size());
 }
 
 std::string Server::getServerName(void) const
@@ -226,9 +212,9 @@ std::string Server::getRoot(void) const
 	return (_root);
 }
 
-size_t Server::getClientLimit(void) const
+size_t Server::getClientBodySize(void) const
 {
-	return (_clientLimit);
+	return (_clientBodySize);
 }
 
 size_t Server::getIndexSize() const
@@ -259,10 +245,10 @@ const std::map<int, std::string>& Server::getErrorPage() const
 void Server::setElements(std::string element)
 {
 	void (Server::*SetFunct[6])(const std::vector<std::string>&) = {
-		&Server::setPort, 
+		&Server::setListen, 
 		&Server::setServerName,
 		&Server::setRoot, 
-		&Server::setClientLimit, 
+		&Server::setClientBodySize, 
 		&Server::setIndex, 
 		&Server::setErrorPage
 		};
@@ -276,10 +262,10 @@ void Server::setElements(std::string element)
 size_t getElementNbr(std::string element)
 {
 	std::string elementsKeys[6] = {
-		"port",
+		"listen",
 		"server_name", 
 		"root", 
-		"client_limit", 
+		"client_body_size", 
 		"index", 
 		"error_page"
 		};
