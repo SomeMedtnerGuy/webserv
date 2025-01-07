@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/03 19:42:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:16:46 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,4 +187,15 @@ std::string cacthPath(std::string str)
         throw std::runtime_error("The location block must have only one specific path.");
  
     return (pathVec[1]);
+}
+
+Method  strToMethod(std::string str)
+{
+    const std::string methods[3] = {"GET", "POST", "DELETE"};
+    for (int i = 0; i < 3; i++)
+	{
+		if (str.compare(0, methods[i].length() + 1, methods[i] + " ") == 0)
+			return (static_cast<Method>(i));
+	}
+	return (UNKNOWN);
 }

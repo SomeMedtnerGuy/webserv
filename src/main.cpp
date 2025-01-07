@@ -1,8 +1,15 @@
 #include "../include/ConfigFile.hpp"
+#include "../include/ServerSettings.hpp"
 
 int main(int argc, char **argv)
 {
 	ConfigFile parsing(argc, argv);
+	// std::cout << "test" << std::endl;
+	ServerSettings serversettings(parsing);
+
+	// std::cout << serversettings.getReturnCode() << std::endl;
+	// std::cout << serversettings.getReturnURL() << std::endl;
+	
 	// parsing.run();
 	// std::string location = "/";
 	// parsing.getServer(0).getLocation();

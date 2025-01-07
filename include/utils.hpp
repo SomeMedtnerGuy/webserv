@@ -6,9 +6,12 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2024/12/18 15:18:57 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:24:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <iostream>
 #include <string>
@@ -19,6 +22,13 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+
+enum Method {
+	GET,
+	POST,
+	DELETE,
+	UNKNOWN
+};
 
 std::vector<std::string> splitServerBlocks(const std::string& content);
 std::vector<std::string> splitStr(const std::string& Str, char delimiter);
@@ -31,3 +41,6 @@ bool isDirectory(std::string path);
 bool isFile(std::string path);
 void checkCurlyBrace(std::string& line, bool begin);
 std::string cacthPath(std::string str);
+Method	strToMethod(std::string method);
+
+#endif
