@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/03 19:41:50 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:20:49 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,10 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 			_locations.push_back(fillLocation(serverVector, i + 1, j - 1));
 		}
 	}
-	std::string location = "/";
+	
+	// std::cout << "em loc " << _locations[0].getSpecificPath() << std::endl;
+
+	//std::string location = "/";
 }
 
 Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
@@ -182,6 +185,7 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 	Location realLocation;
 	std::string specificPath = cacthPath(serverVector[begin - 1]);
 	realLocation.setSpecificPath(specificPath);
+
 	for (size_t i = begin; i <= end; i++)
 		realLocation.setLocationElements(serverVector[i]);
 	
@@ -234,6 +238,16 @@ const std::vector<Location>& Server::getLocation() const
 {
 	return(this->_locations);
 }
+
+// const Location& Server::getOneLocation(std::string target) const
+// {
+// 	for (std::vector<Location>::const_iterator it = _locations.begin(); it != _locations.end(); ++it)
+// 	{
+// 		if (!it->getSpecificPath().compare(target))
+// 			return (*it);
+// 	}
+	
+// }
 
 const std::map<int, std::string>& Server::getErrorPage() const
 {

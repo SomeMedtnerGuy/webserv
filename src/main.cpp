@@ -4,10 +4,23 @@
 int main(int argc, char **argv)
 {
 	ConfigFile parsing(argc, argv);
+	//std::cout << parsing.getServer("localhost").getLocation()[0].getSpecificPath() << std::endl;
 	// std::cout << "test" << std::endl;
-	ServerSettings serversettings(parsing);
 
-	// std::cout << serversettings.getReturnCode() << std::endl;
+	//std::cout << parsing.getServer("localhosta").getServerName() << std::endl;
+
+	ServerSettings serversettings(parsing);
+	serversettings.setServer("localhost");
+	std::cout << serversettings.getIndex() << std::endl;
+
+	serversettings.setLocation("/");
+	std::cout << serversettings.getIndex() << std::endl;
+
+
+	/* check if root is a directory in location */
+	// std::ifstream file(serversettings.getErrorPage(404).c_str());
+	// if (file.is_open())
+		//std::cout << serversettings.getErrorPage(404) << std::endl;
 	// std::cout << serversettings.getReturnURL() << std::endl;
 	
 	// parsing.run();

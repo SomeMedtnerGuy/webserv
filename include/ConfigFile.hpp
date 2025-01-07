@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/02 15:58:20 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:12:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ public:
 	void run();
 	const std::string& getContent() const;
 	size_t getNbrOfServers() const;
-	Server getServer(size_t indexNbr) const;
-	/* get with server name and check more than one server name  */
+	Server getServer(std::string serverName) const;
+	void clearDuplicateServers();
+	/* check more than one server name  */
 
 	void isConfigFilePath();
 	void readingFile();

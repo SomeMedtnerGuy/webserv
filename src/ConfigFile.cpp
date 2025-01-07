@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/03 19:41:01 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:26:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void ConfigFile::run()
 		this->isConfigFilePath();
 		this->readingFile();
 		this->splitServers();
+		this->clearDuplicateServers();
 	}
 	catch(const std::exception& e)
 	{
@@ -61,9 +62,37 @@ size_t ConfigFile::getNbrOfServers() const
 	return (_nbrOfServers);
 }
 
-Server ConfigFile::getServer(size_t indexNbr) const
+Server ConfigFile::getServer(std::string serverName) const
 {
-	return (_serverObjs[indexNbr]);
+	for (size_t i = 0; i < _serverObjs.size(); i++)
+	{
+		if (!serverName.compare(_serverObjs[i].getServerName()))
+			return (_serverObjs[i]);
+	}
+	/* if there is no match, is that possible?? */
+	return (_serverObjs[_serverObjs.size() - 1]);
+}
+
+void ConfigFile::clearDuplicateServers()
+{
+	std::vector<Server>::iterator it = _serverObjs.begin();
+	while (it != _serverObjs.end())
+	{
+		std::string servername = it->getServerName();
+		std::vector<Server>::iterator copy = _serverObjs.begin();
+		while (copy != it)
+		{
+			if (copy->getServerName() == servername)
+			{
+				it = _serverObjs.erase(it);
+				it = _serverObjs.begin();
+				break ;
+			}
+			else
+				++copy;
+		}
+		++it;
+	}
 }
 
 void ConfigFile::isConfigFilePath()
@@ -138,16 +167,14 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 	realServer.setServerId(serverId);
 	for (size_t i = 0; i < serverVector.size(); ++i) 
 	{
-		if (!serverVector[i].compare("}"))
+		if (serverVector[i] == "}")
 			continue ;
 		if (serverVector[i].find("location") != std::string::npos)
 		{
 			realServer.setLocation(serverVector, i);
-			for (size_t j = i; j < serverVector.size() - 1; j++)
-			{
-				if (serverVector[j].find("}") != std::string::npos)
-					i = j;
-			}
+						
+			while (i < serverVector.size() - 1 && serverVector[i].find("}") == std::string::npos)
+                ++i;
 		}
 		else if (i != 0)
 			realServer.setElements(serverVector[i]);		

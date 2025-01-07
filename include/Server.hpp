@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 14:20:45 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:28:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ public:
 	std::string getIndex(size_t indexNbr) const;
 	const std::map<int, std::string>& getErrorPage() const;
 	const std::vector<Location>& getLocation() const;
+	//const Location& getOneLocation(std::string target) const;
 
 	void setElements(std::string element);
 };

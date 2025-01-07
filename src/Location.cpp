@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/03 18:56:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:35:06 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Location& Location::operator=(const Location& src)
 {
 	if (this != &src)
 	{
+		_specificPath = src._specificPath;
 		_allowMethods = src._allowMethods;
 		_autoindex = src._autoindex;
 		_index = src._index;
@@ -51,13 +52,8 @@ void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 	
 	for (size_t i = 1; i < methods.size(); i++) /* check methods allowed */
 	{
-		if (methods[i] == "GET")
-			continue;
-		if (methods[i] == "POST")
-			continue;
-		if (methods[i] == "DELETE")
-			continue;
-		throw std::runtime_error("Invalid directive allow_methods in " + _specificPath + " location.");
+		if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE")
+			throw std::runtime_error("Invalid directive allow_methods in " + _specificPath + " location.");
 	}
 	methods.erase(methods.begin());
 	_allowMethods = methods;

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 14:16:46 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:59:46 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ std::string intToStr(int i)
     return (ss.str());
 }
 
-bool validDomain(std::string& domainToValidate)
+bool validDomain(std::string& domainToValidate)/* check this */
 {
     if (domainToValidate.find('-') == 0)
         throw std::runtime_error("Invalid server_name value.");
