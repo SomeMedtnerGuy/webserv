@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 19:44:44 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:15:07 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,34 @@ ServerSettings::ServerSettings(ConfigFile& src) : _src(src)
 	_errorPages[414] = "./.default/414.html";
 	_errorPages[431] = "./.default/431.html";
 	_errorPages[501] = "./.default/501.html";
-	_allowMethods.push_back(strToMethod("GET"));
-	_allowMethods.push_back(strToMethod("POST"));
-	_allowMethods.push_back(strToMethod("DELETE"));
+	_allowMethods.push_back(GET);
+	_allowMethods.push_back(POST);
+	_allowMethods.push_back(DELETE);
 	_autoindex = false;
 	_returnCode = -1;
+}
+
+ServerSettings::ServerSettings(const ServerSettings& src) : _src(src._src)
+{
+	*this = src;
+}
+
+ServerSettings& ServerSettings::operator=(const ServerSettings& src)
+{
+	if (this != &src)
+	{
+		_serverName = src._serverName;
+		_root = src._root;
+		_clientBodySize = src._clientBodySize;
+		_index = src._index;
+		_errorPages = src._errorPages;
+		_allowMethods = src._allowMethods;
+		_autoindex = src._autoindex;
+		_returnCode = src._returnCode;
+		_returnURL = src._returnURL;
+	}
+
+	return (*this);
 }
 
 ServerSettings::~ServerSettings(){}
@@ -157,11 +180,11 @@ void ServerSettings::setAllowMethods(Location location)
 	_allowMethods.clear();
 	
 	if (location.getAllowMethods("GET"))
-		_allowMethods.push_back(strToMethod("GET"));
-	else if (location.getAllowMethods("POST"))
-		_allowMethods.push_back(strToMethod("POST"));
-	else if (location.getAllowMethods("DELETE"))
-		_allowMethods.push_back(strToMethod("DELETE"));
+		_allowMethods.push_back(GET);
+	if (location.getAllowMethods("POST"))
+		_allowMethods.push_back(POST);
+	if (location.getAllowMethods("DELETE"))
+		_allowMethods.push_back(DELETE);
 }
 
 void ServerSettings::setReturn(Location location)

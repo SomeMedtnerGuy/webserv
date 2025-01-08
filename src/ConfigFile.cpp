@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 19:26:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:48:41 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void ConfigFile::run()
 	catch(const std::exception& e)
 	{
 		std::cerr << "[ERROR]: " << e.what() << std::endl;
+		exit(1);
 	}
 }
 
