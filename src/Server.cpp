@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 19:20:49 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:20:52 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,109 +46,69 @@ void Server::setServerId(size_t serverId)
 void Server::setListen(const std::vector<std::string>& port)
 {
 	if (port.size() != 2)
-		throw std::runtime_error("Port directive must have exactly one value, and can't be empty.");
+		throw std::runtime_error("Listen directive must have exactly one value, and can't be empty.");
 	
 	for (size_t i = 0; i < port[1].size(); ++i)
 	{
 		if (!isdigit(port[1][i]) && i != port[1].size() - 1)
-			throw std::runtime_error("The value of Port directive must have only digits.");
-		if (i == port[1].size() - 1 && port[1][i] != ';')
-			throw std::runtime_error("The Port directive in server " + intToStr(_serverId) + " block does not end with \';\'");			
+			throw std::runtime_error("The value of Listen directive must have only digits.");
 	}
 	
-	std::string portNb = port[1];
-	portNb.erase(port[1].size() - 1);
-	long nbr = atoi(portNb.c_str());
+	long nbr = atoi(port[1].c_str());
 	if (nbr < 1024 || nbr > 65535)
-		throw std::runtime_error("Invalid port number: The port must be in the range 1024-65535.");
+		throw std::runtime_error("Invalid listen number: The port must be in the range 1024-65535.");
 	
 	_listen.push_back(nbr);
 }
 
 void Server::setServerName(const std::vector<std::string>& serverName)
 {
-	if (serverName.size() != 2)
+	if (serverName.size() != 2)/* one value only? */
 		throw std::runtime_error("Server name directive must have exactly one value, and can't be empty.");
 	
-	for (size_t i = 0; i < serverName[1].size(); ++i)
-	{
-		if (i == serverName[1].size() - 1 && serverName[1][i] != ';')
-			throw std::runtime_error("The Server name directive in server " + intToStr(_serverId) + " block does not end with \';\'");			
-	}
-	
 	std::string serverNameNotConst = serverName[1];
-	serverNameNotConst.erase(serverNameNotConst.size() - 1);
-	if (serverNameNotConst.empty())
-		return ;
 	if (!validDomain(serverNameNotConst))
-	{
 		if (serverNameNotConst != "localhost" && serverNameNotConst != "LOCALHOST")
 			throw std::runtime_error("Invalid server_name value.");
-	}
 	_serverName = serverNameNotConst;
 }
 
 void Server::setRoot(const std::vector<std::string>& root)
 {
 	if (root.size() != 2)
-		throw std::runtime_error("Root directive must not have more than one value");
+		throw std::runtime_error("Root directive must not have more than one value nad can't be empty.");
 	if (root[1].find("../") != std::string::npos)
 		throw std::runtime_error("Root directive must not have '../'. Access to parent directories is not allowed.");
-		
-	checkSemicolonAtEnd(root[1], _serverId, "Root");
-	std::string lastRootElement = root[1];
-	lastRootElement.erase(lastRootElement.size() - 1);
 	
-	if (!isDirectory(lastRootElement))
+	if (!isDirectory(root[1]))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
-	_root = lastRootElement;
+	_root = root[1];
 }
 
 void Server::setClientBodySize(const std::vector<std::string>& clientLimit)
 {
-	if (clientLimit.size() > 2)
-		throw std::runtime_error("Host directive must not have more than one value");
-	checkSemicolonAtEnd(clientLimit[1], _serverId, "Client Body Size");
-	std::string lastClientLimit = clientLimit[1];
-	lastClientLimit.erase(lastClientLimit.size() - 1);
-	for (size_t j = 0; j < lastClientLimit.size(); j++)
-	{
-		if (!isdigit(lastClientLimit[j]))
+	if (clientLimit.size() != 2)
+		throw std::runtime_error("Host directive must not have more than one value and can't be empty.");
+	for (size_t j = 0; j < clientLimit[1].size(); j++)
+		if (!isdigit(clientLimit[1][j]))
 			throw std::runtime_error("Invalid Client Limit directive: Expected a number value grater than 0.");
-	}
-	_clientBodySize = atoi(lastClientLimit.c_str());
+	_clientBodySize = atoi(clientLimit[1].c_str());
 }
 
 void Server::setIndex(const std::vector<std::string>& index)
 {
-	
 	if (index.size() < 2)
 		throw std::runtime_error("Host directive must have one value, at least.");
 	
-	checkSemicolonAtEnd(index[index.size() - 1], _serverId, "Index");
-	
 	for (size_t i = 1; i < index.size(); i++)
-	{
-		if (i == index.size() - 1)
-		{
-			std::string lastIndex = index[i];
-			lastIndex.erase(lastIndex.size() - 1);
-			_index.push_back(lastIndex);
-		}
-		else
 			_index.push_back(index[i]);
-	}
 }
 
 void Server::setErrorPage(const std::vector<std::string>& errorPage)
 {
 	if (errorPage.size() != 3)
 		throw std::runtime_error("The Error Page directive must have a error number and one path for a file.");
-	
-	checkSemicolonAtEnd(errorPage[2], _serverId, "Error Page");
-	std::string value = errorPage[2];
-	value.erase(errorPage[2].size() - 1);
 	
 	for (size_t j = 0; j < errorPage[1].size(); j++)
 	{
@@ -159,7 +119,7 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 	if (errorNbr < 100 || errorNbr >= 600)
 		throw std::runtime_error("Invalid Error Page directive.");
 	
-	_errorPage[errorNbr] = value;
+	_errorPage[errorNbr] = errorPage[2];
 }
 
 void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
@@ -174,10 +134,6 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 			_locations.push_back(fillLocation(serverVector, i + 1, j - 1));
 		}
 	}
-	
-	// std::cout << "em loc " << _locations[0].getSpecificPath() << std::endl;
-
-	//std::string location = "/";
 }
 
 Location Server::fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end)
@@ -208,6 +164,7 @@ int Server::getListenSize(void) const
 
 std::string Server::getServerName(void) const
 {
+	/* If it empty the server block will be used for any unmatched request. */
 	return (_serverName);
 }
 
@@ -238,16 +195,6 @@ const std::vector<Location>& Server::getLocation() const
 {
 	return(this->_locations);
 }
-
-// const Location& Server::getOneLocation(std::string target) const
-// {
-// 	for (std::vector<Location>::const_iterator it = _locations.begin(); it != _locations.end(); ++it)
-// 	{
-// 		if (!it->getSpecificPath().compare(target))
-// 			return (*it);
-// 	}
-	
-// }
 
 const std::map<int, std::string>& Server::getErrorPage() const
 {

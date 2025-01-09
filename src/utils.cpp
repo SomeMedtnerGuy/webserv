@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 18:59:46 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:12:37 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,3 +199,70 @@ Method  strToMethod(std::string str)
 	}
 	return (UNKNOWN);
 }
+
+void eraseExtraSpaces(std::string& line)
+{
+    std::istringstream stream(line);
+    std::string word, result;
+
+    while (stream >> word) {
+        if (!result.empty())
+            result += ' ';
+        result += word;
+    }
+
+    line.clear();
+    line = result;
+}
+
+void eraseComents(std::string& line)
+{
+    for (size_t i = 0; i < line.size(); i++)
+    {
+        if (line[i] == '#')
+        {
+            line = line.substr(0, i);
+            return ;
+        }
+    }
+}
+
+void checkSemicolon(std::string& line, int lineNbr)
+{
+    int end = line.size() - 1;
+    
+    if (line.size() == 0)
+        return;
+    
+    if (line[end] == '{' || line[end] == '}' || line[end] == ';')
+    {
+        if (line[end] == ';')
+        {
+            if (std::isspace(line[end - 1]))
+                throw std::runtime_error("Line " + intToStr(lineNbr) + " contains forbidden space before the semicolon.");                   
+            line.erase(end);        
+        }
+        return ;
+    }
+    throw std::runtime_error("Line " + intToStr(lineNbr) + " ends with an invalid character. The lines must end with ;, { or }");
+}
+
+void checkLine(std::string& line, int lineNbr)
+{
+    eraseComents(line);
+    eraseExtraSpaces(line);
+    checkSemicolon(line, lineNbr);
+}
+
+// if ((auxPos = line.find("#")) != std::string::npos)
+		// 	line = line.substr(0, auxPos - 1);
+		// if (line.length() == 0 || std::find_if(line.begin(), line.end(), std::not1(std::ptr_fun<int, int>(std::isspace))) == line.end())
+        //     continue;
+		// for (size_t i = 0; i < line.size(); ++i)
+		// {
+		// 	if (!isspace(line[i]))
+		// 	{
+		// 		auxPos = i;
+		// 		break ;
+		// 	}
+		// }

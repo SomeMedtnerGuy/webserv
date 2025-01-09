@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/08 16:48:41 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:03:51 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void ConfigFile::isConfigFilePath()
 void ConfigFile::readingFile()
 {
 	std::ifstream inFile;
-	size_t auxPos = 0;
+	size_t lineNbr = 1;
 	std::string auxStr;
 
 	inFile.open(_filePath.c_str(), std::ios::out);
@@ -121,19 +121,10 @@ void ConfigFile::readingFile()
 	std::string line;
 	while (getline(inFile, line))
 	{
-		if ((auxPos = line.find("#")) != std::string::npos)
-			line = line.substr(0, auxPos - 1);
-		if (line.length() == 0 || std::find_if(line.begin(), line.end(), std::not1(std::ptr_fun<int, int>(std::isspace))) == line.end())
-            continue;
-		for (size_t i = 0; i < line.size(); ++i)
-		{
-			if (!isspace(line[i]))
-			{
-				auxPos = i;
-				break ;
-			}
-		}
-		line = line.substr(auxPos);
+		checkLine(line, lineNbr);
+		lineNbr++;
+		if (line.size() == 0)
+			continue ;
 		_content = _content + line + "\n";
 	}
 	
@@ -146,6 +137,9 @@ void ConfigFile::readingFile()
 		if (i == _content.length() - 1)
 			throw std::runtime_error("Configuration File is empty.");
 	}
+
+	// std::cout << _content << std::endl;
+	
 }
 
 void ConfigFile::splitServers()

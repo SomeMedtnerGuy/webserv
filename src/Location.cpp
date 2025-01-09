@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 19:35:06 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:16:04 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,9 @@ void Location::setSpecificPath(std::string& specificPath)
 
 void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 {
-	
-	checkSemicolonAtEnd(const_cast<const std::string&>(allowMethods[allowMethods.size() - 1]), 0, "Allow Methods"); /* check id block */
-	
 	std::vector<std::string> methods = allowMethods;
-	methods[methods.size() - 1].erase(methods[methods.size() - 1].size() - 1);
 	
-	for (size_t i = 1; i < methods.size(); i++) /* check methods allowed */
+	for (size_t i = 1; i < methods.size(); i++)
 	{
 		if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE")
 			throw std::runtime_error("Invalid directive allow_methods in " + _specificPath + " location.");
@@ -61,16 +57,12 @@ void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 
 void Location::setAutoIndex(std::vector<std::string>& autoIndex)
 {
-	checkSemicolonAtEnd(const_cast<const std::string&>(autoIndex[autoIndex.size() - 1]), 0, "autoindex");
-	
-	std::vector<std::string> autoindex = autoIndex;
 	if (autoIndex.size() != 2)
 		throw std::runtime_error("Autoindex directive must have only one value in location block " + _specificPath + ".");
-	autoindex[1].erase(autoindex[1].size() - 1);
 	
-	if (autoindex[1] == "on")
+	if (autoIndex[1] == "on")
 		_autoindex = true;
-	else if (autoindex[1] == "off")
+	else if (autoIndex[1] == "off")
 		_autoindex = false;
 	else
 		throw std::runtime_error("The value of autoindex directive must be on of off.");
@@ -81,20 +73,8 @@ void Location::setIndex(std::vector<std::string>& index)
 	if (index.size() < 2)
 		throw std::runtime_error("Host directive must have one value, at least.");
 	
-	checkSemicolonAtEnd(index[index.size() - 1], 0, "Index");
-	
 	for (size_t i = 1; i < index.size(); i++)
-	{
-		if (i == index.size() - 1)
-		{
-			std::string lastIndex = index[i];
-			lastIndex.erase(lastIndex.size() - 1);
-			if (lastIndex.find_first_not_of(' ') != std::string::npos)
-				_index.push_back(lastIndex);
-		}
-		else
 			_index.push_back(index[i]);
-	}
 }
 
 void Location::setReturn(std::vector<std::string>& Return)
@@ -104,9 +84,7 @@ void Location::setReturn(std::vector<std::string>& Return)
 	if (Return.size() > 3)
 		throw std::runtime_error("The Error Page directive must have a http code and a value.");
 	
-	checkSemicolonAtEnd(Return[Return.size() - 1], 0, "Return");
 	std::string returnContent = Return[Return.size() - 1];
-	returnContent.erase(Return.size() - 1);
 	
 	if (Return.size() == 3)
 	{
@@ -133,14 +111,10 @@ void Location::setRoot(std::vector<std::string>& root)
 	if (root.size() != 2)
 		throw std::runtime_error("Root directive must not have more than one value");
 
-	checkSemicolonAtEnd(root[1], 0, "Root");
-	std::string lastRootElement = root[1];
-	lastRootElement.erase(lastRootElement.size() - 1);
-	
-	if (!isDirectory(lastRootElement))
+	if (!isDirectory(root[1]))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
-	_root = lastRootElement;
+	_root = root[1];
 }
 
 /* Getters */

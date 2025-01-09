@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 14:24:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:03:02 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ enum Method {
 	DELETE,
 	UNKNOWN
 };
+
+void checkLine(std::string& line, int lineNbr);
 
 std::vector<std::string> splitServerBlocks(const std::string& content);
 std::vector<std::string> splitStr(const std::string& Str, char delimiter);

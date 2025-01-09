@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/08 17:15:07 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:21:29 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,9 @@ void ServerSettings::setAllowMethods(Location location)
 void ServerSettings::setReturn(Location location)
 {
 	std::vector<std::string> returnVec = location.getReturn();
+	// std::cout << returnVec[0] << std::endl;
+	// std::cout << returnVec[1] << std::endl;
+	
 	if (returnVec == std::vector<std::string>())
 		return ;
 	if (returnVec.size() == 2)
