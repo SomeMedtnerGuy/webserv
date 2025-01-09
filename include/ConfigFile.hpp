@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 16:12:25 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:32:11 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ public:
 	~ConfigFile();
 
 	void run();
+	void createFile();
 	const std::string& getContent() const;
 	size_t getNbrOfServers() const;
 	Server getServer(std::string serverName) const;

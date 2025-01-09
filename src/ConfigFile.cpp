@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/09 15:03:51 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:56:18 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ ConfigFile::ConfigFile() {}
 
 ConfigFile::ConfigFile(int argc, char **argv)
 {
-	/* if (argc != 2)
-		createFile(); */
-	(void)argc;
-	_filePath = argv[1];
+	if (argc > 2)
+		throw std::invalid_argument("Only one file is accepted.");
+	if (argc == 1)
+		createFile();
+	argc == 1 ? _filePath = "configFileDefault.conf" :_filePath = argv[1];
 	run();
 }
 
@@ -37,20 +38,41 @@ ConfigFile& ConfigFile::operator=(const ConfigFile& src)
 
 ConfigFile::~ConfigFile(){}
 
+void ConfigFile::createFile()
+{
+	std::ofstream file("configFileDefault.conf");
+
+    if (!file)
+        return ;
+
+    file << "server {\n"
+	"\tserver_name localhost;\n"
+    "\tlisten 8080;\n"
+	"\troot src;\n"
+    "\tclient_body_size 1000000;\n"
+	"\tindex index2.html index4.html;\n"
+    "\terror_page 404 error_pages/404.html;\n"
+    "\terror_page 401 error_pages/401.html;\n"
+	"\n"
+    "\tlocation / {\n"
+    "\t\tallow_methods GET DELETE POST;\n" 
+    "\t\tautoindex on;\n"
+	"\t\treturn 505 /tours;\n"
+    "\t\tindex tours1.html;\n"
+    "\t\troot ./;\n"
+	"\t}\n"
+    "}" << std::endl;
+
+    file.close();
+    return ;
+}
+
 void ConfigFile::run()
 {
-	try
-	{
-		this->isConfigFilePath();
-		this->readingFile();
-		this->splitServers();
-		this->clearDuplicateServers();
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "[ERROR]: " << e.what() << std::endl;
-		exit(1);
-	}
+	this->isConfigFilePath();
+	this->readingFile();
+	this->splitServers();
+	this->clearDuplicateServers();
 }
 
 const std::string& ConfigFile::getContent() const
@@ -101,10 +123,8 @@ void ConfigFile::isConfigFilePath()
 	struct stat statbuf;
 	
 	if (stat(_filePath.c_str(), &statbuf) == 0)
-	{
 		if (S_ISREG(statbuf.st_mode) && statbuf.st_mode & S_IRUSR)
 			return ;
-	}
 	throw std::invalid_argument("Configuration File: Invalid path.");
 }
 
@@ -137,9 +157,6 @@ void ConfigFile::readingFile()
 		if (i == _content.length() - 1)
 			throw std::runtime_error("Configuration File is empty.");
 	}
-
-	// std::cout << _content << std::endl;
-	
 }
 
 void ConfigFile::splitServers()
