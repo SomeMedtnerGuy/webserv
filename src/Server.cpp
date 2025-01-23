@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/21 15:17:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:55:49 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void Server::setServerName(const std::vector<std::string>& serverName)
 void Server::setRoot(const std::vector<std::string>& root)
 {
 	if (root.size() != 2)
-		throw std::runtime_error("Root directive must not have more than one value nad can't be empty.");
+		throw std::runtime_error("Root directive must not have more than one value and can't be empty.");
 	if (root[1].find("../") != std::string::npos)
 		throw std::runtime_error("Root directive must not have '../'. Access to parent directories is not allowed.");
 	

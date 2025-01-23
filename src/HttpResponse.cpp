@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:05:10 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/02 20:55:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 19:03:50 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ HttpResponse::~HttpResponse(){}
 void    HttpResponse::setStatusCode(int statusCode)
 {
     _statusCode = statusCode;
-    //TODO: In order for this to work, response must hold a reference to ServerSettings
+    //TODO: In order for this to work, response must hold a reference to ServerSettings or send the path as argument (maybe better)
     // Later it will fetch the right path from there. Must do verification to check if it exists HERE
     setBodyPath("./.default/" + Helpers::ntostr(_statusCode) + ".html");
 }
@@ -33,6 +33,10 @@ void    HttpResponse::setBodyPath(std::string bodyPath)
 {
     _bodyPath = bodyPath;
     _headers["Content-Length"] = Helpers::ntostr(Helpers::getFileLength(_bodyPath));
+	if (bodyPath.find(".jpg") != bodyPath.npos)
+		_headers["Content-Type"] = "image/jpeg";
+	else if (bodyPath.find(".pdf") != bodyPath.npos)
+		_headers["Content-Type"] = "application/pdf";
 }
 
 int     HttpResponse::getStatusCode() const {return (_statusCode);}

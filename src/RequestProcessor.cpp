@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:42:09 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/22 19:09:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:28:01 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,17 @@ void	RequestProcessor::_checkReturnAndMethod(void)
 
 void	RequestProcessor::_buildFullTarget(void)
 {
-	std::string	target(_serverSettings.getRoot());
+	std::cerr << "root: " << _serverSettings.getRoot() << std::endl;
+	
+	std::string	target("root");
+	target.append(_serverSettings.getRoot());
+	
+	//std::string	target(_serverSettings.getRoot());
+
+
+
+
+	
 	target.append(_request.getTarget());
 	_request.setTarget(target);
 }
@@ -82,16 +92,25 @@ void	RequestProcessor::_buildFullTarget(void)
 void	RequestProcessor::_performGet(void)
 {
 	std::string	target(_request.getTarget());
-	if (target.find_last_of('/') == target.length() - 1)
+	struct stat	info;
+	std::cerr << target << std::endl;
+	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
+		throw RequestHandler::HttpError(404);
+	if (info.st_mode & S_IFDIR) // If target is directory
 	{
 		if (!_serverSettings.getAutoIndex())
+		{
 			target.append(_serverSettings.getIndex());
+			_response.setBodyPath(target);
+		}
 		else
-			; // TODO: Do some listing bullshit
+		{
+			_createAutoIndex(target);
+			_response.setBodyPath(".default/autoindex.html");
+		}
 	}
-	//TODO: Should check with access() the permissions of the file, and whether the file exists or not
-	_response.setBodyPath(target);
-	std::cout << _response.getBodyPath() << std::endl;
+	else
+		_response.setBodyPath(target);
 }
 
 void	RequestProcessor::_performPost(void)
@@ -102,4 +121,34 @@ void	RequestProcessor::_performPost(void)
 void	RequestProcessor::_performDelete(void)
 {
 	// TODO
+}
+
+void	RequestProcessor::_createAutoIndex(std::string target)
+{	
+	DIR*	dir;
+	struct dirent*	dp;
+	if ((dir = opendir(target.c_str())) == NULL) {
+        throw std::runtime_error("Could not open directory.");
+    }
+	std::ofstream	autoindexFile;
+	autoindexFile.open(".default/autoindex.html");
+	autoindexFile << 
+		"<html>"
+			"<head>"
+				"<title>Index of " << target << "</title>"
+			"</head>"
+			"<body>"
+				"<h1>Index of " << target << "</h1>"
+				"<hr>"
+				"<ul>";
+	while ((dp = readdir(dir)) != NULL)
+	{
+		autoindexFile << "<li><a href=\"" << dp->d_name << "\">" << dp->d_name << "</a></li>";
+	}
+	autoindexFile <<
+				"</ul>"
+			"</body>"
+		"</html>";
+	closedir(dir);
+	autoindexFile.close();
 }

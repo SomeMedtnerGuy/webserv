@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/22 17:34:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:48:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,17 @@ void ConfigFile::createFile()
 
     file << "server {\n"
 	"\tserver_name localhost;\n"
-    "\tlisten 8080;\n"
-	"\troot src;\n"
+    "\tlisten 1234;\n"
+	//"\troot ./;\n"
     "\tclient_body_size 1000000;\n"
-	"\tindex index2.html index4.html;\n"
+	"\tindex index.html;\n"
     "\terror_page 404 error_pages/404.html;\n"
     "\terror_page 401 error_pages/401.html;\n"
 	"\n"
     "\tlocation / {\n"
     "\t\tallow_methods GET DELETE POST;\n" 
-    "\t\tautoindex on;\n"
-	"\t\treturn 505 /tours;\n"
-    "\t\tindex tours1.html;\n"
-    "\t\troot ./;\n"
+    "\t\tautoindex off;\n"
+    //"\t\troot ./;\n"
 	"\t}\n"
     "}" << std::endl;
 

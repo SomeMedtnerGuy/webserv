@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 17:11:41 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/22 16:37:41 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 19:08:24 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,16 @@ void    RequestHandler::handleRequest(void)
 		}
 		else {_setFlags(REQUEST_PROCESSED);}
 	} catch (const HttpError& e) {
+		std::cerr << e.getStatusCode() << std::endl;
 		_responseObj.setStatusCode(e.getStatusCode());
 		_setFlags(REQUEST_PROCESSED);
 	}
 	if (_isFlagOn(REQUEST_PROCESSED)) {
 		// TODO: Send response. MUST CHECK HOW TO SEND BODY IN PIECES
+		
+		_sendResponse(); //TODO: EXPERIMENTAL ONLY
+
+		
 		_setFlags(REQUEST_HANDLED);
 	}
 	
@@ -125,4 +130,26 @@ std::string    RequestHandler::_receiveRequestHeader(void)
 	_stash.assign(_buffer + endOfHeader + 4, _buffer + BUFFER_SIZE + 1); //Save the rest of the buffer in the stash
     requestHeader.erase(endOfHeader + 4);
     return (requestHeader);
+}
+
+
+/* REVIEW */
+void	RequestHandler::_sendResponse(void)
+{
+	std::stringstream response;
+    std::ifstream file(_responseObj.getBodyPath().c_str(), std::ios::binary);
+    std::string fileLine;
+    std::string sendBuff;
+    
+    response << HTTP_VERSION << " " << _responseObj.getStatusCode() << "\r\n";
+    const HttpMessage::headers_dict headers = _responseObj.getHeaders();
+    HttpMessage::headers_dict::const_iterator cit;
+    for (cit = headers.begin(); cit != headers.end(); cit++)
+        response << cit->first << ": " << cit->second << "\r\n";
+    response << "\r\n";
+	response << file.rdbuf();
+    file.close();
+    sendBuff = response.str();
+	std::cerr << "RESPONSE: " << std::endl << sendBuff << std::endl; 
+    send(_sockfd, sendBuff.c_str(), sendBuff.length(), 0);
 }

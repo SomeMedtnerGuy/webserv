@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 12:44:30 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/22 15:39:16 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:08:08 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ private:
 	bool	_isFlagOn(int flag) const;
 
 	std::string	_receiveRequestHeader(void);
+	void        _sendResponse(void);
+	
 	
 public:
 	RequestHandler(int sockfd, ConfigFile& configs);
