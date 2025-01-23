@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/09 12:21:29 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:25:40 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ const std::string& ServerSettings::getReturnURL() const
 void ServerSettings::setServer(std::string serverName)
 {
 	Server aux = _src.getServer(serverName);
+
+	if(aux.getServerName() == "")
+		return ;
 
 	_serverName = aux.getServerName();
 	_root = aux.getRoot();

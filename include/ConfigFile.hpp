@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/09 15:32:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:23:15 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ public:
 	void readingFile();
 	void splitServers();
 	Server fillServersObjs(std::string& serverStr, size_t serverId);
+	//Server setDefaultServer();
 
 };
 

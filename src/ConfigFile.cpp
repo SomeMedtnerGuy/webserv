@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/09 16:56:18 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:24:27 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ Server ConfigFile::getServer(std::string serverName) const
 		if (!serverName.compare(_serverObjs[i].getServerName()))
 			return (_serverObjs[i]);
 	}
-	/* if there is no match, is that possible?? */
-	return (_serverObjs[_serverObjs.size() - 1]);
+	Server defaultServer;
+	return (defaultServer);
 }
 
 void ConfigFile::clearDuplicateServers()
