@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 12:44:30 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/23 17:08:08 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:10:41 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@
 # include <cstring>
 
 /* FLAGS */
-# define HEADER_PROCESSED	0b1
-# define BODY_EXISTS		0b10
-# define REQUEST_PROCESSED	0b100
-# define REQUEST_HANDLED	0b1000
+# define HEADER_PROCESSED		0b1
+# define BODY_EXISTS			0b10
+# define REQUEST_PROCESSED		0b100
+# define REQUEST_HANDLED		0b1000
+# define CLOSE_CONNECTION		0b10000
 
 class RequestHandler {
 private:
-	int	_sockfd; // The socket used to communicate with client
-	int	_flags; // Keep track of in which step the handler is in
+	int		_sockfd; // The socket used to communicate with client
+	int		_flags; // Keep track of in which step the handler is in
+	bool	_closeConnection; //Informs whether connection must be closed immediately
 
 	ServerSettings	_serverSettings;
 	HttpRequest		_requestObj;
@@ -58,8 +60,10 @@ public:
 	RequestHandler(int sockfd, ConfigFile& configs);
 	~RequestHandler();
 
+	//Returns. Should be used to close connection if required
 	void	handleRequest(void);
 	bool	isRequestHandled(void);
+	bool	shouldCloseConnection(void);
 
 	/* Exceptions */
 	class RecvSendError: public std::exception {

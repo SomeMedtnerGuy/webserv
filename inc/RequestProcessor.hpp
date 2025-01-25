@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:35:16 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/23 15:22:25 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 12:28:37 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define REQUEST_PROCESSOR_HPP
 
 # include <dirent.h> // To open directories
+# include <unistd.h> // For access()
 
 # include "ServerSettings.hpp"
 # include "HttpRequest.hpp"
@@ -31,6 +32,7 @@ private:
 		void	_matchLocation(void);
 		void	_buildFullTarget(void);
 		void	_checkReturnAndMethod(void);
+		void	_isThereABody(void);
 		void	_performGet(void);
 		void	_performPost(void);
 		void	_performDelete(void);

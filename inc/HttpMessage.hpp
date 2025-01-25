@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 10:09:39 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/03 16:20:06 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 10:17:09 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ public:
 	void	addHeader(std::string name, std::string value);
 	/* Getters */
 	const headers_dict&	getHeaders(void) const;
-
-	 //TODO: Move to better place
 
 protected:
 	headers_dict	_headers;

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 17:11:41 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/23 19:08:24 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:14:37 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,33 @@ void    RequestHandler::handleRequest(void)
 			requestProcessor.process();
 			_setFlags(HEADER_PROCESSED);
 		}
-		if (_isFlagOn(BODY_EXISTS) && !_isFlagOn(REQUEST_PROCESSED)) {
-			// TODO: Receive and process body
-			_setFlags(REQUEST_PROCESSED);
-		}
-		else {_setFlags(REQUEST_PROCESSED);}
 	} catch (const HttpError& e) {
 		std::cerr << e.getStatusCode() << std::endl;
 		_responseObj.setStatusCode(e.getStatusCode());
-		_setFlags(REQUEST_PROCESSED);
+		switch (_responseObj.getStatusCode()) {
+			case 400: case 408: case 413: case 414: case 431: case 500: case 503: //Codes which should terminate connection immediately
+				_setFlags(CLOSE_CONNECTION);
+				_setFlags(REQUEST_HANDLED);
+				return ;
+		}
 	}
+	try {
+		if (!_isFlagOn(REQUEST_PROCESSED))
+		{
+			// TODO: receive and process body depending on method
+			
+		}
+	} catch (const HttpError& e) { //TODO: Probably should create function out of this
+		std::cerr << e.getStatusCode() << std::endl;
+		_responseObj.setStatusCode(e.getStatusCode());
+		switch (_responseObj.getStatusCode()) {
+			case 400: case 408: case 413: case 414: case 431: case 500: case 503: //Codes which should terminate connection immediately
+				_setFlags(CLOSE_CONNECTION);
+				_setFlags(REQUEST_HANDLED);
+				return ;
+		}
+	}
+
 	if (_isFlagOn(REQUEST_PROCESSED)) {
 		// TODO: Send response. MUST CHECK HOW TO SEND BODY IN PIECES
 		
@@ -52,7 +69,6 @@ void    RequestHandler::handleRequest(void)
 		
 		_setFlags(REQUEST_HANDLED);
 	}
-	
 	
 
 
@@ -68,6 +84,7 @@ void    RequestHandler::handleRequest(void)
 	
 	// IN PIECES (if there is body):
 		// 1. Receive body from sockfd
+		// IMPORTANT: Body reading is dependant of the processing!! (method, etc)
 	// Things to consider:
 		// 1. If first time, should get the beginning of the body from before
 		// Perhaps should be saved in a file directly on the previous step??
@@ -84,6 +101,8 @@ void    RequestHandler::handleRequest(void)
 
 bool	RequestHandler::isRequestHandled(void)
 { return (_isFlagOn(REQUEST_HANDLED)); }
+bool	RequestHandler::shouldCloseConnection(void)
+{ return (_isFlagOn(CLOSE_CONNECTION)); }
 
 /* EXCEPTIONS */
 RequestHandler::RecvSendError::RecvSendError(){}
@@ -133,7 +152,9 @@ std::string    RequestHandler::_receiveRequestHeader(void)
 }
 
 
-/* REVIEW */
+
+
+/* THIS FUNCTION IS BEING USED JUST FOR TESTING, MUST BE REVIEWED */
 void	RequestHandler::_sendResponse(void)
 {
 	std::stringstream response;

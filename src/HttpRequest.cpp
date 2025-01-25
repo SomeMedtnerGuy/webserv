@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 13:32:28 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/03 17:03:42 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 14:34:25 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 /* PUIBLIC */
 /* Canonical */
-HttpRequest::HttpRequest(){}
+HttpRequest::HttpRequest(): _method(UNKNOWN), _hasBody(false){}
 HttpRequest::~HttpRequest(){}
 /* Setters */
-void    HttpRequest::setMethod(Method method) {_method = method;}
-void    HttpRequest::setTarget(std::string target) {_target = target;}
+void    	HttpRequest::setMethod(Method method) {_method = method;}
+void    	HttpRequest::setTarget(std::string target) {_target = target;}
+void		HttpRequest::setHasBody(bool hasBody) {_hasBody = hasBody;}
 /* Getters */
 Method      HttpRequest::getMethod(void) const {return (_method);}
 std::string HttpRequest::getTarget(void) const {return (_target);}
+bool		HttpRequest::getHasBody(void) const {return (_hasBody);}
 
 /* PRIVATE */
 /* Canonical */

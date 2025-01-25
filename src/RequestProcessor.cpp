@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:42:09 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/23 18:28:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 15:41:27 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,18 @@ void	RequestProcessor::process(void)
 	_matchLocation();
 	_checkReturnAndMethod();
 	_buildFullTarget();
+	_isThereABody();
 
+	/* THE FOLLOWING SHOULD BECOME INTERTWINED WITH THE RECEIVE-BODY LOGIC */ //TODO
 	switch (_request.getMethod())
 	{
 	case GET:
 		_performGet();
 		break;
-	case POST:
-		_performPost();
-		break;
 	case DELETE:
 		_performDelete();
-		break; 
-	default:
-		throw RequestHandler::HttpError(501);
 	}
+	//Post will be performed while body is being read.
 }
 
 void	RequestProcessor::_matchServer(void)
@@ -76,24 +73,26 @@ void	RequestProcessor::_buildFullTarget(void)
 {
 	std::cerr << "root: " << _serverSettings.getRoot() << std::endl;
 	
+	//TODO: Check this with Nicole
 	std::string	target("root");
 	target.append(_serverSettings.getRoot());
 	
-	//std::string	target(_serverSettings.getRoot());
-
-
-
-
-	
 	target.append(_request.getTarget());
 	_request.setTarget(target);
+}
+
+void	RequestProcessor::_isThereABody()
+{
+	const HttpMessage::headers_dict&	headers = _request.getHeaders();
+	if (headers.find("Transfer-Encoding") != headers.end() 
+		|| headers.find("Content-Lenght") != headers.end())
+		_request.setHasBody(true);
 }
 
 void	RequestProcessor::_performGet(void)
 {
 	std::string	target(_request.getTarget());
 	struct stat	info;
-	std::cerr << target << std::endl;
 	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
 		throw RequestHandler::HttpError(404);
 	if (info.st_mode & S_IFDIR) // If target is directory
@@ -101,7 +100,7 @@ void	RequestProcessor::_performGet(void)
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append(_serverSettings.getIndex());
-			_response.setBodyPath(target);
+			_response.setBodyPath(target); //TODO: must be able to download maybe?
 		}
 		else
 		{
@@ -115,12 +114,20 @@ void	RequestProcessor::_performGet(void)
 
 void	RequestProcessor::_performPost(void)
 {
-	// TODO
+	//MAYBE TODO: Hardcode a path for form handling
+	
 }
 
 void	RequestProcessor::_performDelete(void)
 {
-	// TODO
+	std::string	target(_request.getTarget());
+	struct stat	info;
+	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
+		throw RequestHandler::HttpError(404);
+	if (access(target.c_str(), W_OK) != 0)
+		throw RequestHandler::HttpError(403);
+	std::remove(target.c_str());
+	_response.setBodyPath(".default/default.html"); //TODO: Change to a more appropriate page
 }
 
 void	RequestProcessor::_createAutoIndex(std::string target)
@@ -152,3 +159,4 @@ void	RequestProcessor::_createAutoIndex(std::string target)
 	closedir(dir);
 	autoindexFile.close();
 }
+

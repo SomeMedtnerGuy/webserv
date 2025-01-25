@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:05:10 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/23 19:03:50 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 09:56:46 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void    HttpResponse::setBodyPath(std::string bodyPath)
 {
     _bodyPath = bodyPath;
     _headers["Content-Length"] = Helpers::ntostr(Helpers::getFileLength(_bodyPath));
-	if (bodyPath.find(".jpg") != bodyPath.npos)
+	//TODO: Create a list of accepted types and match them instead of ugly if chain
+	if (bodyPath.find(".jpg") != bodyPath.npos) 
 		_headers["Content-Type"] = "image/jpeg";
 	else if (bodyPath.find(".pdf") != bodyPath.npos)
 		_headers["Content-Type"] = "application/pdf";
