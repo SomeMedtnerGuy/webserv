@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:42:09 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 15:41:27 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:21:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	RequestProcessor::process(void)
 	_buildFullTarget();
 	_isThereABody();
 
-	/* THE FOLLOWING SHOULD BECOME INTERTWINED WITH THE RECEIVE-BODY LOGIC */ //TODO
 	switch (_request.getMethod())
 	{
 	case GET:
@@ -110,12 +109,6 @@ void	RequestProcessor::_performGet(void)
 	}
 	else
 		_response.setBodyPath(target);
-}
-
-void	RequestProcessor::_performPost(void)
-{
-	//MAYBE TODO: Hardcode a path for form handling
-	
 }
 
 void	RequestProcessor::_performDelete(void)

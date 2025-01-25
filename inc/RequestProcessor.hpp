@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:35:16 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 12:28:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:29:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ private:
 		void	_buildFullTarget(void);
 		void	_checkReturnAndMethod(void);
 		void	_isThereABody(void);
-		void	_performGet(void);
-		void	_performPost(void);
+		void	_performGet(void); //TODO: Either i keep these two here or in the object that will process body (Because POST will be there too) (PROBABLY BETTER THE LATTER)
 		void	_performDelete(void);
 
 		void	_createAutoIndex(std::string target);
