@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 13:32:28 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 14:34:25 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:53:34 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /* PUIBLIC */
 /* Canonical */
-HttpRequest::HttpRequest(): _method(UNKNOWN), _hasBody(false){}
+HttpRequest::HttpRequest(): _method(UNKNOWN), _hasBody(false), _bodySize(0){}
 HttpRequest::~HttpRequest(){}
 /* Setters */
 void    	HttpRequest::setMethod(Method method) {_method = method;}

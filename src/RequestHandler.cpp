@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 17:11:41 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 16:14:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:21:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void    RequestHandler::handleRequest(void)
 	try {
 		if (!_isFlagOn(HEADER_PROCESSED)) {
 			std::string	requestHeader = _receiveRequestHeader();
+			std::cerr << "REQUEST HEADER: " << std::endl << requestHeader << std::endl;
 			RequestParser		requestParser(requestHeader, _requestObj);
 			requestParser.parse();
 			RequestProcessor	requestProcessor(_serverSettings, _requestObj, _responseObj);
@@ -37,26 +38,47 @@ void    RequestHandler::handleRequest(void)
 	} catch (const HttpError& e) {
 		std::cerr << e.getStatusCode() << std::endl;
 		_responseObj.setStatusCode(e.getStatusCode());
+		_setFlags(REQUEST_PROCESSED);
 		switch (_responseObj.getStatusCode()) {
 			case 400: case 408: case 413: case 414: case 431: case 500: case 503: //Codes which should terminate connection immediately
 				_setFlags(CLOSE_CONNECTION);
-				_setFlags(REQUEST_HANDLED);
+				_setFlags(REQUEST_PROCESSED);
 				return ;
 		}
 	}
 	try {
 		if (!_isFlagOn(REQUEST_PROCESSED))
 		{
+			switch (_requestObj.getMethod())
+			{
+				case GET:
+					if (!_isFlagOn(METHOD_PERFORMED))
+						_performGet();
+					_readSomeBody();
+					break;
+				case DELETE:
+					if (!_isFlagOn(METHOD_PERFORMED))
+						_performDelete();
+					_readSomeBody();
+					break;
+				case POST:
+					_readSomeBody();
+					_performPost();
+					break;
+				default:
+					;
+			}
 			// TODO: receive and process body depending on method
-			
+			_setFlags(REQUEST_PROCESSED);
 		}
 	} catch (const HttpError& e) { //TODO: Probably should create function out of this
 		std::cerr << e.getStatusCode() << std::endl;
 		_responseObj.setStatusCode(e.getStatusCode());
+		_setFlags(REQUEST_PROCESSED);
 		switch (_responseObj.getStatusCode()) {
 			case 400: case 408: case 413: case 414: case 431: case 500: case 503: //Codes which should terminate connection immediately
 				_setFlags(CLOSE_CONNECTION);
-				_setFlags(REQUEST_HANDLED);
+				_setFlags(REQUEST_PROCESSED);
 				return ;
 		}
 	}
@@ -151,7 +173,80 @@ std::string    RequestHandler::_receiveRequestHeader(void)
     return (requestHeader);
 }
 
+void	RequestHandler::_readSomeBody(void)
+{
+	
+}
 
+void	RequestHandler::_performGet(void)
+{
+	std::string	target(_requestObj.getTarget());
+	struct stat	info;
+	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
+		throw RequestHandler::HttpError(404);
+	if (info.st_mode & S_IFDIR) // If target is directory
+	{
+		if (!_serverSettings.getAutoIndex())
+		{
+			target.append(_serverSettings.getIndex());
+			_responseObj.setBodyPath(target); //TODO: must be able to download maybe?
+		}
+		else
+		{
+			_createAutoIndex(target);
+			_responseObj.setBodyPath(".default/autoindex.html");
+		}
+	}
+	else
+		_responseObj.setBodyPath(target);
+}
+
+void	RequestHandler::_performDelete(void)
+{
+	std::string	target(_requestObj.getTarget());
+	struct stat	info;
+	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
+		throw RequestHandler::HttpError(404);
+	if (access(target.c_str(), W_OK) != 0)
+		throw RequestHandler::HttpError(403);
+	std::remove(target.c_str());
+	_responseObj.setBodyPath(".default/default.html"); //TODO: Change to a more appropriate page
+}
+
+void	RequestHandler::_performPost(void)
+{
+	
+}
+
+void	RequestHandler::_createAutoIndex(std::string target)
+{	
+	DIR*	dir;
+	struct dirent*	dp;
+	if ((dir = opendir(target.c_str())) == NULL) {
+        throw std::runtime_error("Could not open directory.");
+    }
+	std::ofstream	autoindexFile;
+	autoindexFile.open(".default/autoindex.html");
+	autoindexFile << 
+		"<html>"
+			"<head>"
+				"<title>Index of " << target << "</title>"
+			"</head>"
+			"<body>"
+				"<h1>Index of " << target << "</h1>"
+				"<hr>"
+				"<ul>";
+	while ((dp = readdir(dir)) != NULL)
+	{
+		autoindexFile << "<li><a href=\"" << dp->d_name << "\">" << dp->d_name << "</a></li>";
+	}
+	autoindexFile <<
+				"</ul>"
+			"</body>"
+		"</html>";
+	closedir(dir);
+	autoindexFile.close();
+}
 
 
 /* THIS FUNCTION IS BEING USED JUST FOR TESTING, MUST BE REVIEWED */

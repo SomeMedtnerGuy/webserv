@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 12:44:30 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 16:10:41 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:50:50 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@
 /* FLAGS */
 # define HEADER_PROCESSED		0b1
 # define BODY_EXISTS			0b10
-# define REQUEST_PROCESSED		0b100
-# define REQUEST_HANDLED		0b1000
-# define CLOSE_CONNECTION		0b10000
+# define METHOD_PERFORMED		0b100
+# define REQUEST_PROCESSED		0b1000
+# define REQUEST_HANDLED		0b10000
+# define CLOSE_CONNECTION		0b100000
 
 class RequestHandler {
 private:
@@ -54,6 +55,13 @@ private:
 
 	std::string	_receiveRequestHeader(void);
 	void        _sendResponse(void);
+
+	void		_performGet(void);
+	void		_performDelete(void);
+	void		_performPost(void);
+	
+	void		_readSomeBody(void);
+	void		_createAutoIndex(std::string target);
 	
 	
 public:

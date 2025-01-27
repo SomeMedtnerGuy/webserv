@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 12:12:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 12:27:07 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:53:13 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ private:
     Method			_method;
 	std::string		_target;
 	bool			_hasBody;
+	size_t			_bodySize;
 
     HttpRequest(const HttpRequest& other);
     HttpRequest&    operator=(const HttpRequest& other);

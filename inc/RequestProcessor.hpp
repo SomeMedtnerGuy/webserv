@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:35:16 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/25 16:29:03 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:04:06 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ private:
 		ServerSettings&	_serverSettings;
 		HttpRequest&	_request;
 		HttpResponse&	_response;
-
+		
 		void	_matchServer(void);
 		void	_matchLocation(void);
 		void	_buildFullTarget(void);

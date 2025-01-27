@@ -6,10 +6,9 @@
     	<title>File Upload</title>
 	</head>
 	<body>
-		<form method="post" action="/upload" enctype="multipart/form-data">
-			<input type="text" id="myName" name="myName">
-			<input type="file" id="myFile" name="filename">
-			<input type="submit">
+		<form action="/upload" method="POST" enctype="application/octet-stream">
+			<input type="file" name="file">
+			<button type="submit">Upload</button>
 		</form>
 	</body>
 </html>
