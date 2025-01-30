@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigFile.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/23 15:48:42 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/30 09:41:43 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ Server ConfigFile::getServer(std::string serverName) const
 		if (!serverName.compare(_serverObjs[i].getServerName()))
 			return (_serverObjs[i]);
 	}
-	/* if there is no match, is that possible?? */
-	return (_serverObjs[_serverObjs.size() - 1]); // TODO: Should return default somehow
+	// Server defaultServer;
+	return (_serverObjs[0]); /* If no server_name matches the request, Nginx will use the first server block in the configuration file as the default server.  */
 }
 
 void ConfigFile::clearDuplicateServers()

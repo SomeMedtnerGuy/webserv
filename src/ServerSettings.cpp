@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/22 18:02:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:20:37 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ const std::string& ServerSettings::getReturnURL() const
 void ServerSettings::setServer(std::string serverName)
 {
 	Server aux = _src.getServer(serverName);
+
+	if(aux.getServerName() == "")
+		return ;
 
 	_serverName = aux.getServerName();
 	_root = aux.getRoot();
