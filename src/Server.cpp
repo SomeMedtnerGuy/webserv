@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 10:29:50 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:10:56 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,12 @@ void Server::setRoot(const std::vector<std::string>& root)
 	if (root[1].find("../") != std::string::npos)
 		throw std::runtime_error("Root directive must not have '../'. Access to parent directories is not allowed.");
 	
-	if (!isDirectory(root[1]))
+	std::string rootPath = "root/" + root[1];
+	// std::cout << rootPath << std::endl;	
+	if (!isDirectory(rootPath))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
-	_root = root[1];
+	_root = rootPath;
 }
 
 void Server::setClientBodySize(const std::vector<std::string>& clientLimit)

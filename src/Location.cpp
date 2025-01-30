@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 10:33:03 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:42:29 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,13 @@ void Location::setAutoIndex(std::vector<std::string>& autoIndex)
 	if (autoIndex.size() != 2)
 		throw std::runtime_error("Autoindex directive must have only one value in location block " + _specificPath + ".");
 	
+	// std::cerr << "AUTOINDEX" << std::endl;
+	
 	if (autoIndex[1] == "on")
+	{
 		_autoindex = true;
+		// std::cerr << "true" << std::endl;
+	}
 	else if (autoIndex[1] == "off")
 		_autoindex = false;
 	else
@@ -111,6 +116,8 @@ void Location::setRoot(std::vector<std::string>& root)
 	if (root.size() != 2)
 		throw std::runtime_error("Root directive must not have more than one value");
 
+	/* location must be a path from location  */
+	
 	if (!isDirectory(root[1]))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
@@ -177,6 +184,8 @@ void Location::setLocationElements(std::string& element)
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
 	size_t nbr =  getLocationNbr(elementVector[0]);
+	
+	std::cout << _specificPath << "-> " << _autoindex << std::endl;
 	
 	(this->*SetFunct[nbr])(elementVector);
 }

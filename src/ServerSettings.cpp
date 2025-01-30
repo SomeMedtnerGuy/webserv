@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 10:37:08 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:38:55 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ void ServerSettings::setServer(std::string serverName)
 		return ;
 
 	_serverName = aux.getServerName();
-	_root = aux.getRoot();
+	if (aux.getRoot() != "")
+		_root = aux.getRoot();
 	_clientBodySize = aux.getClientBodySize();
 	setIndex(aux);
 	_errorPages = aux.getErrorPage();
@@ -152,10 +153,12 @@ void ServerSettings::setLocation(std::string target) // TODO: Matching from enti
 	
 	for (std::vector<Location>::const_iterator it = auxVec.begin(); it != auxVec.end(); ++it)
 	{
-		if (!it->getSpecificPath().compare(target))
+		if (!it->getSpecificPath().compare(target)) /* change this */
 		{
-			_autoindex = it->getAutoIndex();
-			_root = it->getRoot();
+			if (it->getAutoIndex() == true)
+				_autoindex = it->getAutoIndex();
+			if (it->getRoot() != "")
+				_root = it->getRoot();
 			setAllowMethods(*it);
 			setReturn(*it);
 			setIndexLocation(*it);
@@ -166,9 +169,12 @@ void ServerSettings::setLocation(std::string target) // TODO: Matching from enti
 
 void ServerSettings::setIndexLocation(Location location)
 {
+	if (location.getIndexSize() == 0)
+		return ;
 	for (size_t i = 0; i < location.getIndexSize(); i++)
 	{
-		std::string filePath = location.getRoot() + "/" + location.getIndex(i);  
+		std::string filePath = _root + "/" + location.getIndex(i);  
+		std::cout << filePath << std::endl;
 		std::ifstream file(filePath.c_str());
 		if (file.is_open())
 		{
