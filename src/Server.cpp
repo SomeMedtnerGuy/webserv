@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 09:40:15 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/30 10:29:50 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 		{
 			checkCurlyBrace(serverVector[j], false);
 			_locations.push_back(fillLocation(serverVector, i + 1, j - 1));
+			return ;
 		}
 	}
 }
@@ -141,6 +142,8 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 	Location realLocation;
 	std::string specificPath = cacthPath(serverVector[begin - 1]);
 	realLocation.setSpecificPath(specificPath);
+
+	// std::cout << serverVector[begin] << " ---- " << serverVector[end] << std::endl;
 
 	for (size_t i = begin; i <= end; i++)
 		realLocation.setLocationElements(serverVector[i]);

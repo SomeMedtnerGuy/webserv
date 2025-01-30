@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 20:23:43 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/30 09:42:27 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/30 10:31:14 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 
 		std::cout << std::endl;
 		std::cout << "Set server localhost:" << std::endl;
-		serversettings.setServer("localhosta");
+		serversettings.setServer("localhost");
 
 		std::cout << "Server name " << serversettings.getServerName() << std::endl;
 		std::cout << "Root " << serversettings.getRoot() << std::endl;
