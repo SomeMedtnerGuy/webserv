@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 17:38:55 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:38:13 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,34 @@ void ServerSettings::setIndex(Server& server)
 	}
 }
 
-void ServerSettings::setLocation(std::string target) // TODO: Matching from entire target has to be done here
+std::string matchLocation(const std::string& target, const std::vector<Location>& auxVec)
+{
+	std::string best_match = "/";
+    // size_t max_length = 0;
+
+	for (size_t i = 0; i < auxVec.size(); i++) 
+	{
+        if (target.find(auxVec[i].getSpecificPath()) == 0)
+		{
+			if(auxVec[i].getSpecificPath().length() == target.length() || 
+				target[auxVec[i].getSpecificPath().length()] == '/') 
+			{
+            	best_match = auxVec[i].getSpecificPath();
+            	// max_length = auxVec[i].getSpecificPath().length();
+			} 
+        }
+    }
+	return best_match;
+}
+
+void ServerSettings::setLocation(std::string target)
 {
 	std::vector<Location> auxVec = _src.getServer(_serverName).getLocation();
+	std::string searchLoc = matchLocation(target, auxVec);
 	
 	for (std::vector<Location>::const_iterator it = auxVec.begin(); it != auxVec.end(); ++it)
 	{
-		if (!it->getSpecificPath().compare(target)) /* change this */
+		if (it->getSpecificPath() == searchLoc)
 		{
 			if (it->getAutoIndex() == true)
 				_autoindex = it->getAutoIndex();
@@ -164,7 +185,8 @@ void ServerSettings::setLocation(std::string target) // TODO: Matching from enti
 			setIndexLocation(*it);
 			return ;
 		}
-	}	
+	}
+	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
 }
 
 void ServerSettings::setIndexLocation(Location location)

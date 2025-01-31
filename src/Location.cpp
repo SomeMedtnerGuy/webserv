@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 17:42:29 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:40:28 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,12 @@ void Location::setRoot(std::vector<std::string>& root)
 
 	/* location must be a path from location  */
 	
-	if (!isDirectory(root[1]))
+	std::string newRoot = "root/" + root[1];
+	
+	if (!isDirectory(newRoot))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
-	_root = root[1];
+	_root = newRoot;
 }
 
 /* Getters */
@@ -184,8 +186,6 @@ void Location::setLocationElements(std::string& element)
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
 	size_t nbr =  getLocationNbr(elementVector[0]);
-	
-	std::cout << _specificPath << "-> " << _autoindex << std::endl;
 	
 	(this->*SetFunct[nbr])(elementVector);
 }

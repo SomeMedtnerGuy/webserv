@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 20:23:43 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/30 17:20:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:44:53 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 	// }
 	// std::cerr << "End of program" << std::endl;
 
-	/* try
+	try
 	{
 		ConfigFile parsing(argc, argv);
 
@@ -110,8 +110,8 @@ int main(int argc, char **argv)
 		std::cout << "UNKNOWN " << serversettings.getAllowMethod(UNKNOWN) << std::endl;
 
 		std::cout << std::endl;
-		std::cout << "Set location /:" << std::endl;
-		serversettings.setLocation("/");
+		std::cout << "Set location /test/tchau:" << std::endl;
+		serversettings.setLocation("/test/tchau");
 
 		std::cout << "Server name " << serversettings.getServerName() << std::endl;
 		std::cout << "Root " << serversettings.getRoot() << std::endl;
@@ -129,18 +129,19 @@ int main(int argc, char **argv)
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
-	} */
+	}
 
-	ConfigFile parsing(argc, argv);
+/* 	ConfigFile parsing(argc, argv);
 
 	std::cout << parsing.getServer("localhost").getLocation()[0].getSpecificPath() << " - " << parsing.getServer("localhost").getLocation()[0].getAutoIndex() << std::endl;
 	std::cout << parsing.getServer("localhost").getLocation()[1].getSpecificPath() << " - " << parsing.getServer("localhost").getLocation()[1].getAutoIndex() << std::endl;
 
 	ServerSettings serversettings(parsing);
 	serversettings.setServer("localhost");
-	serversettings.setLocation("/test");
+	serversettings.setLocation("/");
 	
 	std::cout << "Location " << serversettings.getRoot() << std::endl;
 	std::cout << "Auto index " << serversettings.getAutoIndex() << std::endl;
+	std::cout << "Index " << serversettings.getIndex() << std::endl; */
 	
 }
