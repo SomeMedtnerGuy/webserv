@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestProcessor.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:42:09 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/01/27 14:04:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/07 16:30:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	RequestProcessor::_buildFullTarget(void)
 	std::cerr << "root: " << _serverSettings.getRoot() << std::endl;
 	
 	//TODO: Check this with Nicole
-	std::string	target("root");
+	std::string	target(""); // std::string	target("root");
 	target.append(_serverSettings.getRoot());
 	
 	target.append(_request.getTarget());
