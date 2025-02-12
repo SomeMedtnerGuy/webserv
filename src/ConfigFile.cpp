@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 16:30:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:25:10 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,30 @@ size_t ConfigFile::getNbrOfServers() const
 	return (_nbrOfServers);
 }
 
-Server ConfigFile::getServer(std::string serverName) const
+Server ConfigFile::getServer(std::string serverName, int port) const
 {
 	for (size_t i = 0; i < _serverObjs.size(); i++)
 	{
 		if (!serverName.compare(_serverObjs[i].getServerName()))
-			return (_serverObjs[i]);
+		{
+			int aux = _serverObjs[i].getListenSize();
+			for (int j = 0; j < aux; j++)
+			{
+				if (_serverObjs[i].getListen(j) == port)
+					return (_serverObjs[i]);
+			}
+		}
 	}
 	// Server defaultServer;
+	for (size_t i = 0; i < _serverObjs.size(); i++)
+	{
+		int aux = _serverObjs[i].getListenSize();
+		for (int j = 0; j < aux; j++)
+		{
+			if (_serverObjs[i].getListen(j) == port)
+				return (_serverObjs[i]);
+		}
+	}
 	return (_serverObjs[0]); /* If no server_name matches the request, Nginx will use the first server block in the configuration file as the default server.  */
 }
 

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 17:11:41 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/07 16:28:34 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:19:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 /* PUBLIC */
 RequestHandler::RequestHandler(int sockfd, ConfigFile& configs)
-	: _sockfd(sockfd),  _flags(0), _serverSettings(configs), _stash(0)
+	: _sockfd(sockfd),  _flags(0), _serverSettings(configs, 1234), _stash(0)
 {
     std::memset(_buffer, '\0', BUFFER_SIZE + 1);
 	

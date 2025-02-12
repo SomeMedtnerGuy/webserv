@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 15:55:34 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:08:21 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ public:
 	
 	const std::string& getContent() const;
 	size_t getNbrOfServers() const;
-	Server getServer(std::string serverName) const;
+	Server getServer(std::string serverName, int port) const;
 	const std::vector<Server>& getServers() const;
 	const std::vector<int>& getPorts() const;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/22 17:46:48 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:06:18 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 class ServerSettings {
 private:
+	int _port;
 	std::string _serverName;
 	std::string _root;
 	size_t _clientBodySize;
@@ -37,7 +38,7 @@ private:
 	void setIndexLocation(Location location);
 	
 public:
-	ServerSettings(ConfigFile& src);
+	ServerSettings(ConfigFile& src, int port);
 	ServerSettings(const ServerSettings& src);
 	ServerSettings& operator=(const ServerSettings& src);
 	~ServerSettings();

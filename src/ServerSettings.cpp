@@ -6,15 +6,14 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/31 16:38:13 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:38:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerSettings.hpp"
 
-ServerSettings::ServerSettings(ConfigFile& src) : _src(src)
+ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(src)
 {
-
 	_serverName = "default";
 	_root = "./root";
 	_clientBodySize = 1000 * 1000;
@@ -120,12 +119,11 @@ const std::string& ServerSettings::getReturnURL() const
 
 void ServerSettings::setServer(std::string serverName)
 {
-	Server aux = _src.getServer(serverName);
+	Server aux = _src.getServer(serverName, _port);
 
-	if(aux.getServerName() == "")
-		return ;
+	if(aux.getServerName() != "")
+		_serverName = aux.getServerName();
 
-	_serverName = aux.getServerName();
 	if (aux.getRoot() != "")
 		_root = aux.getRoot();
 	_clientBodySize = aux.getClientBodySize();
@@ -169,7 +167,7 @@ std::string matchLocation(const std::string& target, const std::vector<Location>
 
 void ServerSettings::setLocation(std::string target)
 {
-	std::vector<Location> auxVec = _src.getServer(_serverName).getLocation();
+	std::vector<Location> auxVec = _src.getServer(_serverName, _port).getLocation();
 	std::string searchLoc = matchLocation(target, auxVec);
 	
 	for (std::vector<Location>::const_iterator it = auxVec.begin(); it != auxVec.end(); ++it)

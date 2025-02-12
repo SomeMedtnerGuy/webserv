@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 20:23:43 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/12 16:28:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:43:55 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
 		std::cout << "Server Settings default:" << std::endl;
 
-		ServerSettings serversettings(parsing);
+		ServerSettings serversettings(parsing, 1234);
 		std::cout << "Server name " << serversettings.getServerName() << std::endl;
 		std::cout << "Root " << serversettings.getRoot() << std::endl;
 		std::cout << "Index " << serversettings.getIndex() << std::endl;
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 
 		std::cout << std::endl;
 		std::cout << "Set server localhost:" << std::endl;
-		serversettings.setServer("localhost");
+		serversettings.setServer("localhostt");
 
 		std::cout << "Server name " << serversettings.getServerName() << std::endl;
 		std::cout << "Root " << serversettings.getRoot() << std::endl;
@@ -144,4 +144,14 @@ int main(int argc, char **argv)
 	// std::cout << "Auto index " << serversettings.getAutoIndex() << std::endl;
 	// std::cout << "Index " << serversettings.getIndex() << std::endl;
 	
+	// try
+	// {
+	// 	ConfigFile parsing(argc, argv);
+		
+	// 	std::cout << parsing.getPorts()[0] << std::endl;
+	// }
+	// catch(const std::exception& e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
 }
