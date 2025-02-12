@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigFile.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/22 17:37:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:55:34 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ private:
 	size_t _nbrOfServers;
 	std::vector<std::string> _serverStr;
 	std::vector<Server> _serverObjs;
+	std::vector<int> _ports;
+	
 	ConfigFile();
 
 public:
@@ -33,12 +35,15 @@ public:
 
 	void run();
 	void createFile();
+	
 	const std::string& getContent() const;
 	size_t getNbrOfServers() const;
 	Server getServer(std::string serverName) const;
-	void clearDuplicateServers();
-	/* check more than one server name  */
+	const std::vector<Server>& getServers() const;
+	const std::vector<int>& getPorts() const;
 
+	void setPorts();
+	void clearDuplicateServers();
 	void isConfigFilePath();
 	void readingFile();
 	void splitServers();

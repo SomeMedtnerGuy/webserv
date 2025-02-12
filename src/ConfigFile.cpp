@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 09:41:43 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:30:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void ConfigFile::run()
 	this->readingFile();
 	this->splitServers();
 	this->clearDuplicateServers();
+	this->setPorts();
 }
 
 const std::string& ConfigFile::getContent() const
@@ -190,4 +191,24 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 			realServer.setElements(serverVector[i]);		
 	}
 	return (realServer);
+}
+
+void ConfigFile::setPorts()
+{
+	for (size_t i = 0; i <_serverObjs.size(); i++)
+	{
+		int aux = _serverObjs[i].getListenSize();
+		for (int j = 0; j < aux; j++)
+			_ports.push_back(_serverObjs[i].getListen(j));
+	}
+}
+
+const std::vector<Server>& ConfigFile::getServers() const
+{
+	return (_serverObjs);
+}
+
+const std::vector<int>& ConfigFile::getPorts() const
+{
+	return (_ports);
 }
