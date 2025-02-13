@@ -6,7 +6,7 @@
 /*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:13:15 by joamonte          #+#    #+#             */
-/*   Updated: 2024/12/09 11:18:04 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:48:53 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,12 @@ extern bool	g_shutdown;
 #define ERR_SCRIPT_EXEC					"execve() failed:"
 
 // printInfo messages
-#define START_MSG					"Starting Webserv Engine..."
-#define END_MSG						"Webserv Engine shutdown complete"
+#define START_MSG					"Starting Webserv ..."
+#define END_MSG						"Webserv shutdown complete"
 #define SETUP_MSG					"Setting up servers..."
 #define SET_SERVER_MSG(host, port)	"Server " + host + ":" + port + " setup complete"
 #define LAUNCH_MSG					"Launching servers..."
-#define SHUTDOWN_MSG				"Shutting down Webserv Engine..."
+#define SHUTDOWN_MSG				"Shutting down Webserv ..."
 #define POLLERR_MSG					"Connection closed. Error: POLLERR"
 #define POLLHUP_MSG					"Connection closed. Error: POLLHUP"
 #define POLLNVAL_MSG				"Connection closed. Error: POLLNVAL"

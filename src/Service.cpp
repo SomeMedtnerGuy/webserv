@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Service.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamonte <joamonte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:41:07 by joamonte          #+#    #+#             */
-/*   Updated: 2024/12/12 17:24:58 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:56:37 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ Service::Service(int ac, char **av)
 	std::signal(SIGINT, signalHandler);
 
 	Parser	input(ac, av); //Criar função no parser
-	this->_servers = input.getServerConfigs();
-	this->_defaultServers = this->_countDefaultServers();
 }
 
 Service::~Service()
@@ -48,9 +46,6 @@ void Service::setup()
 	std::vector<std::string>::iterator server = this->_servers.begin();
 	for(; server != this->_servers.end(); server++)
 	{
-		if (!server->getIsDefault())
-			continue;
-
 		this->_getSetupInfo(server);
 		this->_setReuseableAddress();
 		this->_convertHostToAddress();

@@ -6,7 +6,7 @@
 /*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:19:35 by joamonte          #+#    #+#             */
-/*   Updated: 2024/12/09 11:19:36 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:49:51 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #define SERVICE_HPP
 
 #include "Define.hpp"
+#include "ConfigFile.hpp"
 //#include "Parser.hpp"
 //#include "Client.hpp"
 
