@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chunked File Upload</title>
+</head>
+<body>
+    <input type="file" id="fileInput" />
+    <button id="uploadButton">Upload</button>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const chunkSize = 10 * 1024; // 1kB chunk size
+
+            for (let start = 0; start < file.size; start += chunkSize) {
+                const chunk = file.slice(start, start + chunkSize);
+                const formData = new FormData();
+                formData.append('file', chunk);
+
+                await fetch('/upload-endpoint', {
+                    method: 'POST',
+                    body: formData,
+                });
+            }
+        });
+    </script>
+</body>
+

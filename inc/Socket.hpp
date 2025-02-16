@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 10:21:16 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/15 14:26:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 21:27:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,23 @@ public:
 	void	setCanWrite(bool value);
 	void	resetState(void);
 
+	int						getSockfd(void) const;
 	const data_container	getStash(void) const;
 	void					consumeFromStash(size_t bytesAmount);
 
 	// I need to know if the read was successful, hence the return
 	ssize_t	readToStash(void);
+	//Returns how much of the ORIGINAL MESSAGE was sent
+	ssize_t sendToSocket(const unsigned char* data, size_t byteAmount);
 	
+	
+	void	printStash(void);//TODO: debug. remove
 
 private:
 	const int		_sockfd;
 	unsigned char	_buffer[BUFFER_SIZE];
 	data_container	_stash;
+	size_t			_writePos;
 	
 	bool		_canRead;
 	bool		_canWrite;

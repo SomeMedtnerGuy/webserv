@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 10:09:45 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/16 10:22:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 22:50:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,17 @@
 
 # include <cstdlib> // For abort(). Must be removed in production
 # include <iostream>
+# include <dirent.h>
 
+# include "ConfigFile.hpp"
+# include "ServerSettings.hpp"
 # include "Socket.hpp"
 # include "StateMachine.hpp"
 # include "HttpRequest.hpp"
 # include "HttpResponse.hpp"
-# include "HttpParser.hpp"
+# include "utils.hpp"
+
+# define TOKEN_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&'*+-.^_`|~"
 
 // This class will receive, process and answer a request when one is detected to exist in a socket
 // An instance of this class should be created each time a request is detected by its caller
@@ -29,7 +34,7 @@ class RequestManager
 public:
 	typedef unsigned int code;
 	
-	RequestManager(Socket& socket);
+	RequestManager(Socket& socket, ConfigFile& configFile);
 	~RequestManager();
 	
 	// The function that should be called in a loop until the handling is complete.
@@ -43,8 +48,10 @@ private:
 	enum State {
 		PARSING_REQUEST_LINE,
 		PARSING_HEADERS,
-		PROCESSING,
-		RESPONDING,
+		PROCESSING_REQUEST,
+		PERFORMING_REQUEST,
+		RESPONDING_HEADER,
+		RESPONDING_BODY,
 		DONE,
 		STATE_SIZE
 	};
@@ -57,18 +64,33 @@ private:
 		void	_setHandlingComplete(bool value);
 		bool	_getHandlingComplete(void) const;
 
-	
-
+	//Objects used for parsing
 	Socket&				_socket;
+	ServerSettings		_serverSettings;
 	HttpRequest			_request;
 	HttpResponse		_response;
 
+	//Main parsing routines
 	void	_parseRequestLine(void);
 	void	_parseHeaders(void);
-	bool	_processRequest(void);
-	bool	_sendResponse(void);
+	void	_processRequest(void);
+	void	_performRequest(void);
+	void	_sendResponseHeader(void);
+	void	_sendResponseBody(void);
 
-	void	_abortRequestHandling(unsigned int errorCode);
+	void	_abortRequestHandling(HttpResponse::status_code statusCode);
+
+	//Parsing sub-routines
+	HttpResponse::status_code	_httpSanitizer(std::string requestLine);
+	HttpResponse::status_code	_parseRequestLine(std::string requestLine);
+	HttpResponse::status_code	_parseHeaderField(std::string headerField);
+	
+	void	_performGet(void);
+	void	_performDelete(void);
+	void	_performPost(void);
+
+	void			_createAutoIndex(std::string target);
+	static Method	_strToMethod(std::string methodStr); //TODO put in utils lol
 };
 
 #endif

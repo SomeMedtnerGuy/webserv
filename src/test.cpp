@@ -6,13 +6,14 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 20:23:43 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/16 11:49:41 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 23:09:20 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "../inc/ConfigFile.hpp"
 #include "../inc/RequestManager.hpp"
 #include "Socket.hpp"
+#include "ConfigFile.hpp"
 
 #include <iostream>
 #include <fcntl.h>
@@ -23,7 +24,7 @@
 
 int main(int argc, char **argv)
 {
-	//ConfigFile configFile(argc, argv);
+	ConfigFile configFile(argc, argv);
 	int			insockfd;
 	socklen_t		clilen;
 	struct sockaddr_in	serv_addr, cli_addr;
@@ -55,16 +56,15 @@ int main(int argc, char **argv)
 	Socket	socket(fds[0].fd);
 	try
 	{
-		RequestManager	rh(socket);
+		//TODO: Put here a wrapper for the socket (ex. connection) which holds an auto_ptr for a request each time there is a new one
+		RequestManager	rh(socket, configFile);
 		while (true)
 		{
 			int ret = poll(fds, 1, -1);
-			//std::cerr << "Poll returned!" << std::endl;
 			if (ret > 0 && (fds[0].revents & POLLOUT))
                 socket.setCanWrite(true);
 			if (ret > 0 && (fds[0].revents & POLLIN))
 				socket.setCanRead(true);
-				//std::cerr << "Data available to read!" << std::endl;
 			try {
 				rh.handleMoreRequest();
 				if (rh.isHandlingComplete())
@@ -72,7 +72,6 @@ int main(int argc, char **argv)
 					close(fds[0].fd);
 					break ;
 				}
-				std::cerr << "lol" << std::endl;
 			} catch (std::exception& e){
 				std::cerr << "some shit went wrong" << std::endl;
 				continue ;
