@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 10:09:45 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/15 18:46:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:22:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include "StateMachine.hpp"
 # include "HttpRequest.hpp"
 # include "HttpResponse.hpp"
-# include "HttpParser.cpp"
+# include "HttpParser.hpp"
 
 // This class will receive, process and answer a request when one is detected to exist in a socket
 // An instance of this class should be created each time a request is detected by its caller

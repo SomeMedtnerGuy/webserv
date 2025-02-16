@@ -6,13 +6,13 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:27:30 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/15 17:13:23 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 11:34:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpParser.hpp"
 
-HttpParser::code	HttpParser::httpSanitizer(std::string requestLine)
+HttpResponse::status_code	HttpParser::httpSanitizer(std::string requestLine)
 {
 	size_t  crPos = requestLine.find('\r');;
     do
@@ -24,10 +24,10 @@ HttpParser::code	HttpParser::httpSanitizer(std::string requestLine)
     } while (crPos != requestLine.npos);
 	return (200);
 }
-HttpParser::code	HttpParser::parseRequestLine(HttpRequest& request, std::string requestLine)
+HttpResponse::status_code	HttpParser::parseRequestLine(HttpRequest& request, std::string requestLine)
 {
 	//Initial sanitizer
-	code	sanitizerResult = httpSanitizer(requestLine);
+	HttpResponse::status_code	sanitizerResult = httpSanitizer(requestLine);
 	if (sanitizerResult != 200)
 		return (sanitizerResult);
 	if (requestLine.compare(0, 2, "\r\n") == 0)
@@ -40,7 +40,7 @@ HttpParser::code	HttpParser::parseRequestLine(HttpRequest& request, std::string 
         return (501);
 	
 	//Set target
-	size_t separatorPos = requestLine.find(' ');
+	std::size_t separatorPos = requestLine.find(' ');
     request.setTarget(requestLine.substr(0, separatorPos));
     requestLine.erase(0, separatorPos + 1);
 
@@ -53,6 +53,39 @@ HttpParser::code	HttpParser::parseRequestLine(HttpRequest& request, std::string 
 	return (200);
 }
 
+HttpResponse::status_code	HttpParser::parseHeaderField(HttpRequest& request, std::string headerField)
+{
+	std::string	fieldName;
+	std::string	fieldValue;
+	
+	//Parse fieldName	
+	const size_t  colonPos = headerField.find(':');
+    if (colonPos == headerField.npos)
+        return (400);
+    fieldName = headerField.substr(0, colonPos);
+    if (fieldName.find_first_not_of(TOKEN_CHARS) != fieldName.npos)
+        return (400);
+	
+	//Parse fieldValue
+	fieldValue = headerField.substr(colonPos + 1);
+    std::string::iterator   it = fieldValue.begin();
+    while (*it == ' ' || *it == '\t')
+        it++;
+    fieldValue.erase(fieldValue.begin(), it);
+    std::string::reverse_iterator   rit = fieldValue.rbegin();
+    while (*rit == ' ' || *rit == '\t')
+        rit++;
+    fieldValue.resize(fieldValue.length() - (rit - fieldValue.rbegin()));
+	//Additional checking can be done here:
+	
+	//Place the header in the request.
+	try {
+		request.getHeaders().at(fieldName); //TODO: pass this check to inside of the addHeader func
+	} catch (std::out_of_range& e) {
+		request.addHeader(fieldName, fieldValue);
+	}
+    return (200);
+}
 
 
 HttpRequest::Method  HttpParser::strToMethod(std::string str)

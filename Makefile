@@ -6,7 +6,7 @@
 #    By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 11:43:02 by ndo-vale          #+#    #+#              #
-#    Updated: 2025/02/13 11:36:18 by ndo-vale         ###   ########.fr        #
+#    Updated: 2025/02/16 11:53:16 by ndo-vale         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,7 @@ NAME		= webserv
 CXX			= c++
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
 SRC_DIR		= src/
-SRCS		= $(addprefix $(SRC_DIR), test.cpp \
-					Connection.cpp TimeoutController.cpp \
-					ConfigFile.cpp Location.cpp Server.cpp ServerSettings.cpp utils.cpp) 
+SRCS 		= $(wildcard $(SRC_DIR)/*.cpp) 
 OBJ_DIR		= obj/
 OBJS		= $(SRCS:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 12:04:51 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/15 12:08:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 11:13:33 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <map>
 # include <string>
+# include <stdexcept> // for out_of_range exception
 
 class HttpMessage
 {
@@ -23,6 +24,9 @@ public:
 	
 	HttpMessage();
 	virtual ~HttpMessage();
+
+	void				addHeader(std::string fieldName, std::string fieldValue);
+	const headers_dict&	getHeaders(void) const;
 protected:
 	headers_dict	_headers;
 };

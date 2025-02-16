@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 11:06:46 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/15 19:04:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/16 11:52:28 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	RequestManager::_parseHeaders(void)
 		}
 		
         std::string field = stashStr.substr(0, fieldEnd);
-		code	parsingResult = HttpParser::parseHeaderField(_request, field); //TODO: implement plz
+		code	parsingResult = HttpParser::parseHeaderField(_request, field);
 		if (parsingResult != 200)
 		{
 			_abortRequestHandling(parsingResult);
@@ -125,21 +125,27 @@ void	RequestManager::_parseHeaders(void)
     }
 	_socket.consumeFromStash(2); //Take the "\r\n" away
 	_stateMachine.advanceState();
+
+	_request.printMessage(); //TODO: DEBUG. REMOVE
 }
 
 bool	RequestManager::_processRequest(void)
 {
 	//TODO
+	_stateMachine.advanceState();
 }
 
 bool	RequestManager::_sendResponse(void)
 {
 	//TODO
+	_stateMachine.advanceState();
 }
 
 void	RequestManager::_abortRequestHandling(unsigned int errorCode)
 {
 	//TODO
+	std::cerr << "ABORT" << std::endl;
+	_stateMachine.setCurrentState(RESPONDING);
 	//Build response
 	//Check if error is bad enough to close connection
 	//Change state directly to sending response
