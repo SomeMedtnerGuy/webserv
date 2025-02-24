@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 10:09:45 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/16 22:50:03 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/24 15:36:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define REQUEST_MANAGER_HPP
 
 # include <cstdlib> // For abort(). Must be removed in production
+# include <unistd.h> // For access()
 # include <iostream>
 # include <dirent.h>
 

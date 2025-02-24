@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 11:06:46 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/16 22:56:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:48:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ void	RequestManager::_parseHeaders(void)
 		}
     }
 	_socket.consumeFromStash(2); //Take the "\r\n" away
+	_request.printMessage();
 	_stateMachine.advanceState();
 }
 
@@ -184,11 +185,10 @@ void	RequestManager::_processRequest(void)
 	{
 		_abortRequestHandling(400);
 	}
-	
-	if (headers.find("Content-Lenght") != headers.end())
+	if (headers.find("Content-Length") != headers.end())
 	{
 		std::string	sizeStr = headers.at("Content-Length");
-		ssize_t bodySize = std::atoi(sizeStr.c_str()); //TODO Should check iff it is an integer
+		ssize_t bodySize = std::atoi(sizeStr.c_str()); //TODO Should check if it is an integer
 		if (bodySize > static_cast<ssize_t>(_serverSettings.getClientBodySize()))
 			_abortRequestHandling(413);
 		_request.setBodySize(std::atoi(sizeStr.c_str()));
@@ -199,9 +199,17 @@ void	RequestManager::_processRequest(void)
 void	RequestManager::_performRequest(void)
 {
 	//TODO complete
-	if (_request.getMethod() == GET)
-	{
-		_performGet();
+	if (_request.getMethod() == GET) {
+		_performGet(); //TODO: perhaps read body
+	}
+	else if (_request.getMethod() == DELETE) {
+		_performDelete();
+	}
+	else if (_request.getMethod() == POST) {
+		_performPost();
+	}
+	else {
+		std::cerr << "something went horribly wrong in _performRequest" << std::endl;
 	}
 	/*if (_request.getBodySize() != -1)
 	{
@@ -210,8 +218,6 @@ void	RequestManager::_performRequest(void)
 		//	static stream 
 		}
 	}*/
-		
-	_stateMachine.advanceState();
 }
 
 void	RequestManager::_sendResponseHeader(void)
@@ -388,11 +394,43 @@ void	RequestManager::_createAutoIndex(std::string target)
 
 void	RequestManager::_performDelete(void)
 {
-	//TODO
+	//TODO: perfect
+	std::string	target(_request.getTarget());
+	struct stat	info;
+	if (stat(target.c_str(), &info) == -1) // If stat fails, means the target does not exist
+		_abortRequestHandling(404);
+	if (access(target.c_str(), W_OK) != 0)
+		_abortRequestHandling(403);
+	std::remove(target.c_str());
+	_response.setBodyPath(".default/default.html"); //TODO: Change to a more appropriate page
 }
+
 void	RequestManager::_performPost(void)
 {
-	//TODO
+	//TODO: perfect
+	static std::ofstream	targetFile(_request.getTarget().c_str()); //TODO: protect
+	_socket.printStash();
+	std::cerr << "Body size: " << _request.getBodySize() << std::endl;
+	if (_request.getBodySize() != -1)
+	{
+		Socket::data_container currentStash = _socket.getStash();
+		if (currentStash.size() != 0)
+		{
+			for (size_t i = 0; i < _request.getBodySize(); i++)
+				targetFile << currentStash[i];
+			_request.setBodySize(_request.getBodySize() - currentStash.size());
+		}
+		if (_request.getBodySize() == 0)
+		{
+			targetFile.close();
+			_response.setBodyPath(".default/default.html");
+			_stateMachine.advanceState();
+		}
+	}
+	else
+	{
+		
+	}
 }
 
 Method  RequestManager::_strToMethod(std::string str)
