@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:12:50 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:14:35 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:39:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RESPONSE_SENDER
 
 # include "AMessageHandler.hpp"
+# include "Socket.hpp"
 
 class ResponseSender: public AMessageHandler
 {
@@ -21,7 +22,7 @@ public:
     ResponseSender(HttpRequest& request, HttpResponse& response);
     ~ResponseSender();
 
-    void    handle(void);
+    Socket::data_container_t    getMessageToSend(size_t byteLimit);
 };
 
 #endif

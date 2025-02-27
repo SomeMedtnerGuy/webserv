@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 19:43:47 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:10:46 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,16 @@ void    Client::handle(void)
 
     do {
         if (_isNewRequestRequired()) {
+            std::cerr << "should be called only once" << std::endl;
             _activeRequest = new RequestManager(_socket, _configFile);
         }
         if (_activeRequest) {
             _activeRequest->handle(); //The bulk of the work is done here
             if (_activeRequest->isDone()) {
+                //std::cerr << 
                 _setCloseConnection(_activeRequest->shouldCloseConnection());
                 delete _activeRequest;
+                _activeRequest = NULL;
             }
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());

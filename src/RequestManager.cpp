@@ -6,49 +6,50 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:53:34 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:10:55 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestManager.hpp"
 
 RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
-    :_stateMachine(RECV_HEADER, STATE_AM), _socket(socket), _configFile(configFile),
+    :_stateMachine(STATE_AM, RECV_HEADER), _socket(socket), _configFile(configFile),
         _requestParser(_request, _response), _requestPerformer(_request, _response),
         _responseSender(_request, _response)
-{
-    (void)_configFile; //TODO MUST REMOVE
-}
+{(void)_configFile;}
 RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)
 {
     if (_stateMachine.getCurrentState() == RECV_HEADER) {
+        //std::cerr << "header" << std::endl;
         //I cannot be sure by this point whether I actually need to read from socket
         // to parse the request, as it can be enough leftover from a previous read to
         // parse an entire nex request. Therefore I must try to parse leftovers and
         // only then read and parse more if necessary (and possible)
-        _requestParser.handle(); 
+        size_t  bytesParsed = _requestParser.parse(_socket.getRecvStash()); 
         if (!_requestParser.isDone() && _socket.canRecv()) {
             _socket.fillStash();
-            _requestParser.handle();
+            bytesParsed += _requestParser.parse(_socket.getRecvStash());
         }
+        _socket.consumeRecvStash(bytesParsed);
         if (_requestParser.isDone()) {
             _moveOnFromParsing();
         }
     }
     if (_stateMachine.getCurrentState() == RECV_BODY) {
-        _requestPerformer.handle();
+        size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         if (!_requestPerformer.isDone() && _socket.canRecv()) {
             _socket.fillStash();
-            _requestPerformer.handle();
+            bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         }
+        _socket.consumeRecvStash(bytesConsumed);
         if (_requestPerformer.isDone()) {
             _moveOnFromParsing();
         }
     }
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
-        _responseSender.handle(); 
+        _socket.addToSendStash(_responseSender.getMessageToSend(BUFFER_SIZE - _socket.getSendStash().size())); //TODO Check if this number can never be negative!!! 
         if (_socket.canSend()) {
             _socket.flushStash();
         }

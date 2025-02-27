@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/26 21:16:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:07:33 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ const Socket::data_container_t&   Socket::getSendStash(void) const
 {
     return (_sendStash);
 }
-void                Socket::addToSendStash(const byte_t* bytes, size_t bytesAm)
+void                Socket::addToSendStash(const data_container_t bytes)
 {
-    _sendStash.insert(_sendStash.end(), bytes, bytes + bytesAm);
+    _sendStash.insert(_sendStash.end(), bytes.begin(), bytes.end());
 }
 void                Socket::clearStashes(void)
 {
@@ -65,6 +65,7 @@ bool                Socket::canSend(void)
 }
 void                Socket::fillStash(void)
 {
+    std::cerr << "Fill stash was called" << std::endl;
     // That means this function was called when it shouldn't have been!
     if (!canRecv()) {
         std::cerr << "fill() was called when it should not have!" << std::endl;
@@ -90,14 +91,15 @@ void                Socket::flushStash(void)
     //Make sure that you don't try to send more bytes than the buffer allows!
     size_t  bytesToSend = std::min(_sendStash.size(), static_cast<std::size_t>(BUFFER_SIZE));
     std::memcpy(_buffer, _sendStash.data(), bytesToSend);
+    std::cerr << "right before sending" << std::endl;
     ssize_t bytesSent = send(_sockfd.fd, _buffer, bytesToSend, 0);
     if (bytesSent <= 0) {
         std::cerr << "send returned -1 or 0!" << std::endl;
         throw (std::exception()); //TODO: specify the error better so poller can catch it 
     }
-    std::cerr << "before: " << _sendStash.size() << std::endl;//TODO REPEATING SENDINGGGGG
+    std::cerr << "size: " << _sendStash.size() << std::endl;
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
-    std::cerr << "after: " << _sendStash.size() << std::endl;
+    std::cerr << "size: " << _sendStash.size() << std::endl;
     _setCanSend(false);
 }
 

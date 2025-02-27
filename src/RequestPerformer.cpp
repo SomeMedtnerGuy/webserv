@@ -6,20 +6,25 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:26:22 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:44:07 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestPerformer.hpp"
 
 RequestPerformer::RequestPerformer(HttpRequest& request, HttpResponse& response)
-    : AMessageHandler(request, response)
+    : AMessageHandler(request, response), _consumeMode(false)
 {}
 RequestPerformer::~RequestPerformer(){}
 
-void    RequestPerformer::handle()
+size_t    RequestPerformer::perform(Socket::data_container_t data)
 {
+    std::cerr << "Performer called" << std::endl;
     //TODO
+    /* THE FOLLOWING LINES ARE DEBUG */
+    std::cerr << std::string(data.begin(), data.end()) << std::endl;
+    _setIsDone(true);
+    return (data.size());
 }
 
 void    RequestPerformer::activateConsumeMode(void)

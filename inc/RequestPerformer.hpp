@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:25:43 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:43:34 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define REQUEST_PERFORMER
 
 # include "AMessageHandler.hpp"
+# include "Socket.hpp"
 
 class RequestPerformer: public AMessageHandler
 {
@@ -21,7 +22,7 @@ public:
     RequestPerformer(HttpRequest& request, HttpResponse& response);
     ~RequestPerformer();
 
-    void    handle(void);
+    size_t  perform(Socket::data_container_t data);
     void    activateConsumeMode(void);
 private:
     bool    _consumeMode;

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:08:32 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:09:07 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,13 @@ RequestParser::RequestParser(HttpRequest& request, HttpResponse& response)
 {}
 RequestParser::~RequestParser(){}
 
-void    RequestParser::handle()
+size_t    RequestParser::parse(Socket::data_container_t data)
 {
+    std::cerr << "Parsing called" << std::endl;
     //TODO
+    /* THE FOLLOWING TWO LINES ARE DEBUG */
+    std::cerr << std::string(data.begin(), data.end()) << std::endl;
+    if (data.size())
+        _setIsDone(true);
+    return (data.size());
 }
