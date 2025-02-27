@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RequestHandler.cpp                                 :+:      :+:    :+:   */
+/*   OldRequestHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 19:03:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/26 21:08:18 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:04:32 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RequestHandler.hpp"
+/* #include "OldRequestHandler.hpp"
 
 RequestHandler::RequestHandler(Socket& socket, ConfigFile& configFile)
     : _stateMachine(STATE_SIZE, PARSING_REQUEST_LINE),
@@ -90,8 +90,6 @@ bool    RequestHandler::isSending(void) const
 
 bool    RequestHandler::isDone(void) const {return (_getHandlingComplete());}
 bool    RequestHandler::shouldCloseConnection(void) const {return (_getCloseConnection());}
-
-/* PRIVATE */
 
 void    RequestHandler::_setHandlingComplete(bool value) {_handlingComplete = value;}
 bool    RequestHandler::_getHandlingComplete(void) const {return (_handlingComplete);}
@@ -352,4 +350,4 @@ Method  RequestHandler::_strToMethod(std::string str)
 			return (static_cast<Method>(i));
 	}
 	return (UNKNOWN);
-}
+} */

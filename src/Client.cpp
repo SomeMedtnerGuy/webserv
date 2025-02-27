@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 13:46:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:43:47 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void    Client::handle(void)
 
     do {
         if (_isNewRequestRequired()) {
-            _activeRequest = new RequestHandler(_socket, _configFile);
+            _activeRequest = new RequestManager(_socket, _configFile);
         }
         if (_activeRequest) {
             _activeRequest->handle(); //The bulk of the work is done here
@@ -76,7 +76,7 @@ bool    Client::_isNewRequestRequired(void) const
         
         if (mustCreateNewRequest) {
             std::cerr << "must create new request" << std::endl;
-            _activeRequest = new RequestHandler(_socket, _configFile);
+            _activeRequest = new RequestManager(_socket, _configFile);
         }
         else if (mustReceive) {
             std::cerr << "must receive" << std::endl;

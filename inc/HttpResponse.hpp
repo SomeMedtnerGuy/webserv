@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 12:16:31 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/26 15:00:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:24:22 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 class HttpResponse: public HttpMessage
 {
 public:
-	typedef unsigned int code_t;
+	typedef int code_t;
 
 	HttpResponse();
 	~HttpResponse();

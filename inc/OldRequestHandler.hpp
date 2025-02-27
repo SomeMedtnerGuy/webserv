@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RequestHandler.hpp                                 :+:      :+:    :+:   */
+/*   OldRequestHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 18:40:39 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/26 14:59:49 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:04:25 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_HANDLER_HPP
+/*#ifndef REQUEST_HANDLER_HPP
 # define REQUEST_HANDLER_HPP
 
 # define DELIMITOR "\r\n"
@@ -77,7 +77,8 @@ private:
 	code_t	_parseHeaderField(std::string headerField);
 	void	_abortRequestHandling(code_t statusCode);
 	Method	_strToMethod(std::string str);
+
 };
 
 
-#endif
+#endif*/
