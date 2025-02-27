@@ -6,11 +6,13 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/25 19:41:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:12:32 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+#include "Socket.hpp"
+#include "Client.hpp"
 
 int main(int argc, char** argv)
 {
@@ -19,7 +21,7 @@ int main(int argc, char** argv)
         std::cerr << WRONG_USAGE_MSG << std::endl;
         return (1);
     }
-    (void)argv; //TODO this will be used to set config file
+    ConfigFile  configFile(argc, argv);
     
     //Prepare sockets and listen for request for connections.
     //At the moment a single hardcoded socket is used.
@@ -45,7 +47,21 @@ int main(int argc, char** argv)
     fds[0].fd = accept(listenSocket, (struct sockaddr*)&cli_addr, &cli_len);
     fds[0].events = POLLIN | POLLOUT; // At the moment only listen for buffer activity
     std::cout << "Connection accepted!" << std::endl;
-
     
-    
+    try {
+        Socket  socket(fds[0]);
+        Client  client(socket, configFile);
+        while (true) {
+            //std::cerr << "Loop" << std::endl;
+            poll(fds, 1, -1);
+            // The following must be changed for a while loop through the clients
+            client.handle();
+            if (client.shouldCloseConnection()) {
+                break;
+            }
+        }
+    } catch (std::exception& e) {
+        std::cerr << "some shit went wrong." << std::endl;
+    }
+    std::cout << "Program done!" << std::endl;
 }

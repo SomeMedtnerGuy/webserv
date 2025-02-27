@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/25 19:40:43 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/26 21:16:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ Socket::Socket(sockfd_t& sockfd)
     :_sockfd(sockfd), _canRecv(false), _canSend(false) {}
 Socket::~Socket(){}
 
+int    Socket::getSockFd(void) const
+{
+    return (_sockfd.fd);
+}
 void    Socket::updateFlags(void)
 {
     if (_sockfd.revents & POLLIN) {
@@ -42,9 +46,14 @@ const Socket::data_container_t&   Socket::getSendStash(void) const
 {
     return (_sendStash);
 }
-void                Socket::addToSendStash(byte_t* bytes, size_t bytesAm)
+void                Socket::addToSendStash(const byte_t* bytes, size_t bytesAm)
 {
-    _recvStash.insert(_recvStash.end(), bytes, bytes + bytesAm);
+    _sendStash.insert(_sendStash.end(), bytes, bytes + bytesAm);
+}
+void                Socket::clearStashes(void)
+{
+    _recvStash.clear();
+    _sendStash.clear();
 }
 bool                Socket::canRecv(void)
 {
@@ -54,7 +63,7 @@ bool                Socket::canSend(void)
 {
     return (_getCanSend());
 }
-void                Socket::fill(void)
+void                Socket::fillStash(void)
 {
     // That means this function was called when it shouldn't have been!
     if (!canRecv()) {
@@ -70,7 +79,7 @@ void                Socket::fill(void)
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
 }
-void                Socket::flush(void)
+void                Socket::flushStash(void)
 {
     // That means this function was called when it shouldn't have been!
     if (!canSend()) {
@@ -86,7 +95,9 @@ void                Socket::flush(void)
         std::cerr << "send returned -1 or 0!" << std::endl;
         throw (std::exception()); //TODO: specify the error better so poller can catch it 
     }
+    std::cerr << "before: " << _sendStash.size() << std::endl;//TODO REPEATING SENDINGGGGG
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
+    std::cerr << "after: " << _sendStash.size() << std::endl;
     _setCanSend(false);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/25 19:40:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:10:08 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,18 @@ public:
     
     Socket(sockfd_t& sockfd);
     ~Socket();
+    
+    int                     getSockFd(void) const;
     void                    updateFlags(void);
     const data_container_t& getRecvStash(void) const;
     void                    consumeRecvStash(size_t byteAm);
     const data_container_t& getSendStash(void) const;
-    void                    addToSendStash(byte_t* bytes, size_t bytesAm);
+    void                    addToSendStash(const byte_t* bytes, size_t bytesAm);
+    void                    clearStashes(void);
     bool                    canRecv(void);
     bool                    canSend(void);
-    void                    fill(void);
-    void                    flush(void);
+    void                    fillStash(void);
+    void                    flushStash(void);
 
 private:
     sockfd_t&         _sockfd;

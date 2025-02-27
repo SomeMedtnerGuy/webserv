@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:19:05 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/25 18:42:16 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:27:47 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,18 @@
 class   Client
 {
 public:
-    Client(Socket& socket);
+    Client(Socket& socket, ConfigFile& configFile);
     ~Client();
 
     void    handle(void); //To be called in each iteration (between poll() calls)
-    bool    shouldCloseConnection(void); // Check after each time handleClient() is called
+    bool    shouldCloseConnection(void); // Check after each time handle() is called
 private:
     Socket&         _socket;
+    ConfigFile&     _configFile;
     RequestHandler* _activeRequest;
     bool            _closeConnection;
+        void    _setCloseConnection(bool closeConnection);
+        bool    _getCloseConnection(void) const;
 };
 
 #endif
