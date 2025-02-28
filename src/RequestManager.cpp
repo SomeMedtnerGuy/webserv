@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 23:10:55 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 12:17:59 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
     :_stateMachine(STATE_AM, RECV_HEADER), _socket(socket), _configFile(configFile),
-        _requestParser(_request, _response), _requestPerformer(_request, _response),
-        _responseSender(_request, _response)
+        _requestParser(_request, _response, _configFile, getPortFromSocket(_socket.getSockFd())),
+        _requestPerformer(_request, _response),
+        _responseSender(_request, _response),
+        _handlingComplete(false), _closeConnection(false)
 {(void)_configFile;}
 RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)
 {
     if (_stateMachine.getCurrentState() == RECV_HEADER) {
-        //std::cerr << "header" << std::endl;
         //I cannot be sure by this point whether I actually need to read from socket
         // to parse the request, as it can be enough leftover from a previous read to
         // parse an entire nex request. Therefore I must try to parse leftovers and
@@ -34,6 +35,12 @@ void    RequestManager::handle(void)
         }
         _socket.consumeRecvStash(bytesParsed);
         if (_requestParser.isDone()) {
+            std::cerr << "REQUEST" << std::endl;
+            _request.printMessage();
+            std::cerr << std::endl << std::endl;
+            std::cerr << "RESPONSE" << std::endl;
+            _response.printMessage();
+            std::cerr << std::endl << std::endl;
             _moveOnFromParsing();
         }
     }

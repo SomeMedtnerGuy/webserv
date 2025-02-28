@@ -6,12 +6,14 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:12:50 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 21:39:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 10:48:48 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_SENDER
 # define RESPONSE_SENDER
+
+# define DELIMITOR "\r\n"
 
 # include "AMessageHandler.hpp"
 # include "Socket.hpp"
@@ -19,10 +21,18 @@
 class ResponseSender: public AMessageHandler
 {
 public:
+    typedef Socket::data_container_t data_t;
+
     ResponseSender(HttpRequest& request, HttpResponse& response);
     ~ResponseSender();
 
-    Socket::data_container_t    getMessageToSend(size_t byteLimit);
+    data_t    getMessageToSend(size_t byteLimit);
+
+private:
+    std::ifstream   _file;
+    bool            _headersSent;
+
+    std::string _generateResponseHeader(void);
 };
 
 #endif

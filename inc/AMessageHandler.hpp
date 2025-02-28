@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:44:49 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 21:23:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 11:21:47 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 class AMessageHandler
 {
 public:
-    virtual ~AMessageHandler();
-    bool            isDone(void) const;
+    ~AMessageHandler();
+    bool    isDone(void) const;
 
 protected:
     AMessageHandler(HttpRequest& request, HttpResponse& response);

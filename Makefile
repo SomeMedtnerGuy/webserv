@@ -6,26 +6,30 @@
 #    By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 11:43:02 by ndo-vale          #+#    #+#              #
-#    Updated: 2025/02/25 13:03:56 by ndo-vale         ###   ########.fr        #
+#    Updated: 2025/02/28 12:05:53 by ndo-vale         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= webserv
-CXX			= c++
-CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
+CC			= c++
+CFLAGS		= -Wall -Wextra -Werror -std=c++98 -g
+ASAN		= -fsanitize=leak,address -fno-omit-frame-pointer
 SRC_DIR		= src/
-SRCS 		= $(wildcard $(SRC_DIR)*.cpp) 
+SRCS 		= $(wildcard $(SRC_DIR)*.cpp) #TODO CHANGE
 OBJ_DIR		= obj/
 OBJS		= $(SRCS:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -s -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	mkdir -p $(OBJ_DIR)
-	$(CXX) -I./inc $(CXXFLAGS) -c $< -o $@
+	$(CC) -I./inc $(CFLAGS) -c $< -o $@
+
+asan: fclean $(OBJS)
+	$(CC) $(CFLAGS) $(ASAN) -o $(NAME) $(OBJS)
 
 clean:
 	rm -fr $(OBJ_DIR)
