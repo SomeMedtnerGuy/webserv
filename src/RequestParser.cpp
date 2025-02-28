@@ -6,21 +6,22 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 12:44:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 14:01:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestParser.hpp"
 
 RequestParser::RequestParser(HttpRequest& request, HttpResponse& response,
-                            ConfigFile& configFile, int port)
+                            ServerSettings& serverSettings)
     : AMessageHandler(request, response), _stateMachine(STATE_AM, PARSING_REQUEST_LINE),
-        _serverSettings(configFile, port), _dataConsumed(0)
+        _serverSettings(serverSettings), _dataConsumed(0)
 {}
 RequestParser::~RequestParser(){}
 
 size_t    RequestParser::parse(const data_t& data)
-{   
+{
+    std::cerr << "Parser called" << std::endl;
     _dataStr = std::string(data.begin(), data.end());
     if (_dataStr.length() > BUFFER_SIZE * 4) {
         _abortRequestHandling(431);
@@ -30,12 +31,15 @@ size_t    RequestParser::parse(const data_t& data)
     do {
         switch (currentState) {
             case PARSING_REQUEST_LINE:
+                std::cerr << "Parser req" << std::endl;
                _parseRequestLine();
                break;
             case PARSING_HEADERS:
+                std::cerr << "Parser head" << std::endl;
                 _parseHeaders();
                 break;
             case PROCESSING_REQUEST:
+                std::cerr << "Parser proc" << std::endl;
                 _processRequest();
                 break;
             default:
@@ -162,7 +166,7 @@ void	RequestParser::_processRequest(void) //TODO make this its own object with a
 
 void	RequestParser::_abortRequestHandling(code_t statusCode)
 {
-	std::cerr << "ABORT! error code: " << statusCode << std::endl;
+	//std::cerr << "ABORT! error code: " << statusCode << std::endl;
 	_response.setStatusCode(statusCode, _serverSettings.getErrorPage(statusCode));
 }
 
@@ -179,7 +183,8 @@ RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string request
     _request.setMethod(_strToMethod(requestLine));
     requestLine.erase(0, requestLine.find(" ") + 1);
     if (_request.getMethod() == UNKNOWN)
-        {return (501);}
+        {   std::cerr << "FUCK" << std::endl; //TODO means for the second request I am not cleaning enough!! Check consumption at the end of the first request
+            return (501);}
 	
 	//Set target
 	std::size_t separatorPos = requestLine.find(' ');

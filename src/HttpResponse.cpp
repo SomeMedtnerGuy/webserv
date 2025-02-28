@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 12:49:56 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:49:51 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCod
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
-	std::cerr << "BODY PATH: " << bodyPath << std::endl;
+	//std::cerr << "BODY PATH: " << bodyPath << std::endl;
 
-	std::cerr << "BODY SIZE: " << ntostr(getFileLength(_bodyPath)) << std::endl;
+	//std::cerr << "BODY SIZE: " << ntostr(getFileLength(_bodyPath)) << std::endl;
 
 	_headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
 	//TODO: Create a list of accepted types and match them instead of ugly if chain

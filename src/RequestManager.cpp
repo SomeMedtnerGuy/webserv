@@ -6,19 +6,20 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 12:17:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:46:10 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestManager.hpp"
 
 RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
-    :_stateMachine(STATE_AM, RECV_HEADER), _socket(socket), _configFile(configFile),
-        _requestParser(_request, _response, _configFile, getPortFromSocket(_socket.getSockFd())),
-        _requestPerformer(_request, _response),
+    :_stateMachine(STATE_AM, RECV_HEADER), _socket(socket),
+        _serverSettings(configFile, getPortFromSocket(_socket.getSockFd())),
+        _requestParser(_request, _response, _serverSettings),
+        _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
         _handlingComplete(false), _closeConnection(false)
-{(void)_configFile;}
+{}
 RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)

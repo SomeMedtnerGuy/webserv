@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:36 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 20:52:24 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:36:26 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ private:
     };
     
     Socket&             _socket;
-    ConfigFile&         _configFile; //TODO Probably not needed to save here
+    ServerSettings      _serverSettings;
 
     RequestParser       _requestParser;
     RequestPerformer    _requestPerformer;

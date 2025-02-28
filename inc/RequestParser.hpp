@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:37:12 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 09:22:15 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:37:34 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ public:
     typedef Socket::data_container_t data_t;
     
     RequestParser(HttpRequest& request, HttpResponse& response,
-                    ConfigFile& configFile, int port);
+                    ServerSettings& serverSettings);
     ~RequestParser();
     
     size_t  parse(const data_t& data);
@@ -44,7 +44,7 @@ private:
     };
     StateMachine<State> _stateMachine;
 
-    ServerSettings      _serverSettings;
+    ServerSettings&     _serverSettings;
     
     std::string         _dataStr;
         void    _setDataStr(std::string dataStr);
