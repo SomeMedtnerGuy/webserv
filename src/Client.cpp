@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 14:21:05 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:37:48 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,6 @@ void    Client::handle(void)
             static int amountOfRequests = 0;
             amountOfRequests += 1;
             _activeRequest = new RequestManager(_socket, _configFile);
-            std::string reason = _socket.canRecv() ? "socket" : "stash";
-            std::cerr << "new request created. Reason: there's shit in the " << reason << std::endl;
-            std::cerr << "Amount of requests: " << amountOfRequests << std::endl;
-            
         }
         if (_activeRequest) {
             _activeRequest->handle(); //The bulk of the work is done here

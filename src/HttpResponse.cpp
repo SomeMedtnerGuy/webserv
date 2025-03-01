@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 09:27:25 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:47:35 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 HttpResponse::HttpResponse(): _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH) 
 {
+	
+	
 	_headers["Content-Type"] = "text/html; charset=UTF-8";
     _headers["Server"] = "localhost";
     _headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
@@ -29,12 +31,15 @@ HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCod
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
+
 	_headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
-	//TODO: Create a list of accepted types and match them instead of ugly if chain
-	if (bodyPath.find(".jpg") != bodyPath.npos) 
-		_headers["Content-Type"] = "image/jpeg";
-	else if (bodyPath.find(".pdf") != bodyPath.npos)
-		_headers["Content-Type"] = "application/pdf";
+	for (header_map::const_iterator cit = _fileTypeMap.begin();
+			cit != _fileTypeMap.end(); cit++) {
+		if (bodyPath.find(cit->first) != bodyPath.npos) {
+			_headers["Content-Type"] = cit->second;
+			break;
+		}
+	}
 }
 std::string					HttpResponse::getBodyPath(void) const {return (_bodyPath);}
 
@@ -50,3 +55,12 @@ void	HttpResponse::printMessage(void)
 		std::cerr << it->first << ": " << it->second << std::endl;
 	}
 }
+
+const HttpResponse::header_map	HttpResponse::_createFileTypeMap(void)
+{
+	header_map	m;
+	m[".jpg"] = "image.jpeg";
+	m[".pdf"] = "application/pdf";
+	return (m);
+}
+const HttpResponse::header_map	HttpResponse::_fileTypeMap = HttpResponse::_createFileTypeMap();

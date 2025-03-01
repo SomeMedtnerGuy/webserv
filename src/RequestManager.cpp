@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 14:01:22 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:07:59 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    RequestManager::handle(void)
         }
         _socket.consumeRecvStash(bytesParsed);
 
-        _moveOnFromParsing(); //TODO It does not move on anymore, change name!
+        _checkAndActOnErrors();
         if (_requestParser.isDone()) {
             _stateMachine.advanceState();
         }
@@ -48,13 +48,15 @@ void    RequestManager::handle(void)
             bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         }
         _socket.consumeRecvStash(bytesConsumed);
-        _moveOnFromParsing();
+        _checkAndActOnErrors();
         if (_requestPerformer.isDone()) {
             _stateMachine.advanceState();
         }
     }
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
-        _socket.addToSendStash(_responseSender.getMessageToSend(BUFFER_SIZE - _socket.getSendStash().size())); //TODO Check if this number can never be negative!!! 
+        size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
+                                                        static_cast<size_t>(BUFFER_SIZE));
+        _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));
         if (_socket.canSend()) {
             _socket.flushStash();
         }
@@ -73,7 +75,7 @@ bool    RequestManager::_getHandlingComplete(void) const {return (_handlingCompl
 void    RequestManager::_setCloseConnection(bool value) {_closeConnection = value;}
 bool    RequestManager::_getCloseConnection(void) const {return (_closeConnection);}
 
-void    RequestManager::_moveOnFromParsing(void)
+void    RequestManager::_checkAndActOnErrors(void)
 {
     ErrorSeverity   errorSeverity = _getErrorSeverity(_response.getStatusCode());
     switch (errorSeverity) {
@@ -100,11 +102,9 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
     switch (statusCode) {
         case 200:
             return (NO_ERROR);
-        case 405:
+        case 405: 
             return (CONSUME_AND_ANSWER);
-        case 404:
-            return (ANSWER_AND_CLOSE);
-        case 431:
+        case 404: case 431:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);

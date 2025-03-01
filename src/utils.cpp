@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/16 15:02:38 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:46:20 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,6 +274,16 @@ size_t getFileLength(std::string filename)
     file.seekg(pos, std::ios::end);
     length = file.tellg();
     return (static_cast<int>(length));
+}
+
+bool    isStrNum(std::string str)
+{
+    for (size_t i = 0; i < str.length(); i++) {
+        if (!std::isdigit(str[i])) {
+            return (false);
+        }
+    }
+    return (true);
 }
 
 // if ((auxPos = line.find("#")) != std::string::npos)

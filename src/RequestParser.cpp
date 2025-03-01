@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 14:28:36 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:45:15 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	RequestParser::_parseHeaders(void)
     // if the end of the header section is reached, so the state must be advanced
     _stateMachine.advanceState();
 }
-void	RequestParser::_processRequest(void) //TODO make this its own object with access only to the request, and remove access to serverSettings from RequestParser
+void	RequestParser::_processRequest(void)
 {
     //Check return code
     int  output = _serverSettings.getReturnCode();
@@ -128,10 +128,11 @@ void	RequestParser::_processRequest(void) //TODO make this its own object with a
         _abortRequestHandling(returnCode);
         return;
     }
-    //Check if method is allowed
-    if (_serverSettings.getAllowMethod(_request.getMethod()) == false) {
+    //Check if method is implemented or allowed
+    if (_request.getMethod() == NOT_IMPLEMENTED) {
+        _abortRequestHandling(501);
+    } else if (_serverSettings.getAllowMethod(_request.getMethod()) == false) {
 		_abortRequestHandling(405);
-        return;
 	}
     //build full target
 	std::string	target(_serverSettings.getRoot());
@@ -146,14 +147,21 @@ void	RequestParser::_processRequest(void) //TODO make this its own object with a
 		&& headers.find("Transfer-Encoding") == headers.end());
 	if (postWithNoBody) {
 		_abortRequestHandling(400);
+        return ;
 	}
     // Set bodysize
 	if (headers.find("Content-Length") != headers.end())
 	{
 		std::string	sizeStr = headers.at("Content-Length");
-		ssize_t bodySize = std::atoi(sizeStr.c_str()); //TODO Should check if it is an integer
-		if (bodySize > static_cast<ssize_t>(_serverSettings.getClientBodySize()))
+        if (!isStrNum(sizeStr)) {
+            _abortRequestHandling(400);
+            return ;
+        }
+		ssize_t bodySize = std::atoi(sizeStr.c_str());
+		if (bodySize > static_cast<ssize_t>(_serverSettings.getClientBodySize())) {
 			_abortRequestHandling(413);
+            return ;
+        }
 		_request.setBodySize(bodySize);
 	}
 	_setIsDone(true);
@@ -178,8 +186,8 @@ RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string request
     _request.setMethod(_strToMethod(requestLine));
     requestLine.erase(0, requestLine.find(" ") + 1);
     if (_request.getMethod() == UNKNOWN){
-            return (501);
-    } //TODO should not return immediately. There are more severe errors down the line that must be checked
+            return (400);
+    }
 	
 	//Set target
 	std::size_t separatorPos = requestLine.find(' ');
@@ -251,11 +259,19 @@ RequestParser::code_t	RequestParser::_httpSanitizer(std::string line)
 
 Method  RequestParser::_strToMethod(std::string str)
 {
-    const std::string methods[3] = {"GET", "POST", "DELETE"};
+    static const std::string implementedMethods[3] = {"GET", "POST", "DELETE"};
     for (int i = 0; i < 3; i++)
 	{
-		if (str.compare(0, methods[i].length() + 1, methods[i] + " ") == 0)
+		if (str.compare(0, implementedMethods[i].length() + 1, implementedMethods[i] + " ") == 0)
 			return (static_cast<Method>(i));
+	}
+    static const std::string otherMethods[] = {
+        "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE", "PATCH"
+    };
+    for (int i = 0; i < 6; i++)
+	{
+		if (str.compare(0, otherMethods[i].length() + 1, otherMethods[i] + " ") == 0)
+			return (NOT_IMPLEMENTED);
 	}
 	return (UNKNOWN);
 }

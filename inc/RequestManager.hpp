@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:36 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 13:36:26 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:51:52 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ private:
 
     RequestParser       _requestParser;
     RequestPerformer    _requestPerformer;
-    ResponseSender      _responseSender; //TODO NOTE: Add headers no matter what, add only what is possible from body!
-                                            //headers can then be skipped after being sent once, and pos on file can be saved for next iteration.
+    ResponseSender      _responseSender;
 
     HttpRequest			_request;
 	HttpResponse		_response;
@@ -68,7 +67,7 @@ private:
 		void	_setCloseConnection(bool value);
 		bool	_getCloseConnection(void) const;
     
-    void    _moveOnFromParsing(void);
+    void            _checkAndActOnErrors(void);
     ErrorSeverity   _getErrorSeverity(code_t statusCode);
 };
 

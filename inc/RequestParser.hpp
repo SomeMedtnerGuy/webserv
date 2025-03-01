@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:37:12 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 13:37:34 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:52:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include "ServerSettings.hpp"
 # include "utils.hpp"
 
-//TODO: Make sure all errors returned by this class require closing the connection
 class RequestParser: public AMessageHandler
 {
 public:

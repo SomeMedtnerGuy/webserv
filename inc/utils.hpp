@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/16 21:09:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:37:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ enum Method {
 	POST,
 	DELETE,
 	METHOD_SIZE,
+	NOT_IMPLEMENTED,
 	UNKNOWN
 };
 
@@ -48,6 +49,7 @@ std::string cacthPath(std::string str);
 Method	strToMethod(std::string method);
 int	getPortFromSocket(int sockfd);
 size_t getFileLength(std::string filename);
+bool	isStrNum(std::string str);
 
 template<typename T>
 static std::string  ntostr(T number)
