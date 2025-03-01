@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 13:46:10 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:01:22 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,10 @@ void    RequestManager::handle(void)
             bytesParsed += _requestParser.parse(_socket.getRecvStash());
         }
         _socket.consumeRecvStash(bytesParsed);
+
+        _moveOnFromParsing(); //TODO It does not move on anymore, change name!
         if (_requestParser.isDone()) {
-            std::cerr << "REQUEST" << std::endl;
-            _request.printMessage();
-            std::cerr << std::endl << std::endl;
-            std::cerr << "RESPONSE" << std::endl;
-            _response.printMessage();
-            std::cerr << std::endl << std::endl;
-            _moveOnFromParsing();
+            _stateMachine.advanceState();
         }
     }
     if (_stateMachine.getCurrentState() == RECV_BODY) {
@@ -52,8 +48,9 @@ void    RequestManager::handle(void)
             bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         }
         _socket.consumeRecvStash(bytesConsumed);
+        _moveOnFromParsing();
         if (_requestPerformer.isDone()) {
-            _moveOnFromParsing();
+            _stateMachine.advanceState();
         }
     }
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
@@ -81,11 +78,9 @@ void    RequestManager::_moveOnFromParsing(void)
     ErrorSeverity   errorSeverity = _getErrorSeverity(_response.getStatusCode());
     switch (errorSeverity) {
         case NO_ERROR:
-            _stateMachine.advanceState();
             break;
         case CONSUME_AND_ANSWER:
             _requestPerformer.activateConsumeMode();
-            _stateMachine.advanceState();
             break;
         case ANSWER_AND_CLOSE:
             _setCloseConnection(true);
@@ -108,6 +103,8 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
         case 405:
             return (CONSUME_AND_ANSWER);
         case 404:
+            return (ANSWER_AND_CLOSE);
+        case 431:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);

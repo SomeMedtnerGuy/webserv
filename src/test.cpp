@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 12:24:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 12:12:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     struct sockaddr_in  serv_addr;
     serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons(1239); // hardcode right here
+	serv_addr.sin_port = htons(1234); // hardcode right here
     int bindStatus = bind(listenSocket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     if (bindStatus < 0){
         std::cerr << BINDING_ERROR_MSG << std::endl;
@@ -52,8 +52,8 @@ int main(int argc, char** argv)
         Socket  socket(fds[0]);
         Client  client(socket, configFile);
         while (true) {
-            //std::cerr << "Loop" << std::endl;
             poll(fds, 1, -1);
+            //std::cerr << "Loop" << std::endl;
             // The following must be changed for a while loop through the clients
             client.handle();
             if (client.shouldCloseConnection()) {
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
             }
         }
     } catch (std::exception& e) {
-        std::cerr << "some shit went wrong." << std::endl;
+        std::cerr << "hit went wrong." << std::endl;
     }
     std::cout << "Program done!" << std::endl;
 }

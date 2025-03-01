@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 12:12:22 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 11:45:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,10 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
         _file.read(reinterpret_cast<char*>(buffer), byteLimit - std::strlen(DELIMITOR));
         output.insert(output.end(), buffer, buffer + _file.gcount());
         if (_file.eof()) {
-            output.insert(output.end(), '\r');
-            output.insert(output.end(), '\n');
             _file.close();
             _setIsDone(true);
         }
     }
-    
-    //TODO
-    /* THE FOLLOWING LINES ARE DEBUG
-    _setIsDone(true);
-    (void)byteLimit;
-    Socket::data_container_t    output(0);
-    output.insert(output.end(), 'l');
-    output.insert(output.end(), 'o');
-    output.insert(output.end(), 'l');
-    std::cerr << "loles: " << output.size() << std::endl;*/
     return (output);
 }
 

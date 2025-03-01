@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/31 16:40:28 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/01 09:27:40 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,9 @@ void Location::setAutoIndex(std::vector<std::string>& autoIndex)
 	if (autoIndex.size() != 2)
 		throw std::runtime_error("Autoindex directive must have only one value in location block " + _specificPath + ".");
 	
-	// std::cerr << "AUTOINDEX" << std::endl;
-	
 	if (autoIndex[1] == "on")
 	{
 		_autoindex = true;
-		// std::cerr << "true" << std::endl;
 	}
 	else if (autoIndex[1] == "off")
 		_autoindex = false;

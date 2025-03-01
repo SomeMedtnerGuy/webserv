@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 13:48:05 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 09:29:38 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ RequestPerformer::~RequestPerformer(){}
 
 size_t    RequestPerformer::perform(const data_t& data)
 {
-    std::cerr << "Performer called" << std::endl;
-    
     size_t  dataConsumed = 0;
     
     if (_getConsumeMode() == false) {
@@ -44,12 +42,12 @@ size_t    RequestPerformer::perform(const data_t& data)
     }
     if (_getConsumeMode() == true) {
         //TODO
+		if (data.data()[0] == '\r' && data.data()[1] == '\n') {
+			dataConsumed += 2;
+		}
+		
         _setIsDone(true);
     }
-    /* THE FOLLOWING LINES ARE DEBUG */
-    /*(void)data;
-    _response.setBodyPath(_request.getTarget());
-    _setIsDone(true);*/
     return (dataConsumed);
 }
 

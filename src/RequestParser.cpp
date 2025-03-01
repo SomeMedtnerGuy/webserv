@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 14:01:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:28:36 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ RequestParser::~RequestParser(){}
 
 size_t    RequestParser::parse(const data_t& data)
 {
-    std::cerr << "Parser called" << std::endl;
+    //std::cerr << "lol" << std::endl;
     _dataStr = std::string(data.begin(), data.end());
     if (_dataStr.length() > BUFFER_SIZE * 4) {
         _abortRequestHandling(431);
@@ -31,15 +31,13 @@ size_t    RequestParser::parse(const data_t& data)
     do {
         switch (currentState) {
             case PARSING_REQUEST_LINE:
-                std::cerr << "Parser req" << std::endl;
                _parseRequestLine();
                break;
             case PARSING_HEADERS:
-                std::cerr << "Parser head" << std::endl;
+                //std::cerr << "lol" << std::endl;
                 _parseHeaders();
                 break;
             case PROCESSING_REQUEST:
-                std::cerr << "Parser proc" << std::endl;
                 _processRequest();
                 break;
             default:
@@ -93,10 +91,12 @@ void	RequestParser::_parseRequestLine()
 void	RequestParser::_parseHeaders(void)
 {
     const size_t    delimitorSize = std::string(DELIMITOR).length();
-
-    static size_t   headersSize = 0;
     
-    while (_dataStr.compare(0, 2, DELIMITOR) != 0) {// As headers are consumed dinamically, delimitor of header section will be at the beginning
+    while (_dataStr.compare(0, 2, DELIMITOR) != 0) { // As headers are consumed dinamically, delimitor of header section will be at the beginning
+        if (_request.getHeadersSize() > BUFFER_SIZE * 4) {
+            _abortRequestHandling(431);
+            return;
+        }
         size_t  fieldEnd = _dataStr.find(DELIMITOR);
         if (fieldEnd == _dataStr.npos) {
             return; //Header field is not complete, so a new recv must be done before continuing parsing
@@ -108,11 +108,7 @@ void	RequestParser::_parseHeaders(void)
             return;
         }
         _consumefromDataStr(fieldEnd + delimitorSize);
-        headersSize += fieldEnd + delimitorSize;
-        if (headersSize > BUFFER_SIZE * 4) {
-            _abortRequestHandling(431);
-            return;
-        }
+        _request.setHeadersSize(_request.getHeadersSize() + fieldEnd + delimitorSize);
     }
     //Since all conditions inside the while loop have returns, this section is only reached
     // if the end of the header section is reached, so the state must be advanced
@@ -137,7 +133,6 @@ void	RequestParser::_processRequest(void) //TODO make this its own object with a
 		_abortRequestHandling(405);
         return;
 	}
-    
     //build full target
 	std::string	target(_serverSettings.getRoot());
 	target.append(_request.getTarget());
@@ -166,8 +161,8 @@ void	RequestParser::_processRequest(void) //TODO make this its own object with a
 
 void	RequestParser::_abortRequestHandling(code_t statusCode)
 {
-	//std::cerr << "ABORT! error code: " << statusCode << std::endl;
 	_response.setStatusCode(statusCode, _serverSettings.getErrorPage(statusCode));
+    _setIsDone(true);
 }
 
 RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string requestLine)
@@ -182,9 +177,9 @@ RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string request
 	//Set Method
     _request.setMethod(_strToMethod(requestLine));
     requestLine.erase(0, requestLine.find(" ") + 1);
-    if (_request.getMethod() == UNKNOWN)
-        {   std::cerr << "FUCK" << std::endl; //TODO means for the second request I am not cleaning enough!! Check consumption at the end of the first request
-            return (501);}
+    if (_request.getMethod() == UNKNOWN){
+            return (501);
+    } //TODO should not return immediately. There are more severe errors down the line that must be checked
 	
 	//Set target
 	std::size_t separatorPos = requestLine.find(' ');
