@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:36 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 17:51:52 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:58:17 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ private:
     
     Socket&             _socket;
     ServerSettings      _serverSettings;
+    
 
     RequestParser       _requestParser;
     RequestPerformer    _requestPerformer;
     ResponseSender      _responseSender;
+    
 
     HttpRequest			_request;
 	HttpResponse		_response;

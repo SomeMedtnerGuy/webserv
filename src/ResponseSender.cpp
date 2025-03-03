@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 11:45:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:13:29 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,18 @@ ResponseSender::~ResponseSender(){}
 
 ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
 {
-    if (!_file.is_open()) {
-        _file.open(_response.getBodyPath().c_str(), std::ios::binary);;
-    }
     Socket::data_container_t    output;
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());
         output.insert(output.end(), headerSection.begin(), headerSection.end());
     } else {
+        if (_response.getStatusCode() == 204) {
+            _setIsDone(true);
+            return (output);
+        }
+        if (!_file.is_open()) {
+            _file.open(_response.getBodyPath().c_str(), std::ios::binary);;
+        }
         unsigned char   buffer[byteLimit];
         _file.read(reinterpret_cast<char*>(buffer), byteLimit - std::strlen(DELIMITOR));
         output.insert(output.end(), buffer, buffer + _file.gcount());

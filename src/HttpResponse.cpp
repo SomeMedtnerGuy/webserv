@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 17:47:35 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:06:33 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 HttpResponse::HttpResponse(): _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH) 
 {
-	
-	
 	_headers["Content-Type"] = "text/html; charset=UTF-8";
     _headers["Server"] = "localhost";
     _headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
@@ -40,6 +38,9 @@ void						HttpResponse::setBodyPath(std::string bodyPath)
 			break;
 		}
 	}
+	//It is possible to tell the browser to download the file directly by adding the following header:
+	//'Content-Disposition = attachment; filename="<filename>"' where <filename> is the filename.
+	//A possible feature is to add this header to any bodyPath that does not have the ".html" extension
 }
 std::string					HttpResponse::getBodyPath(void) const {return (_bodyPath);}
 

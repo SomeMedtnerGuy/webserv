@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 12:12:03 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:56:45 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Socket.hpp"
 #include "Client.hpp"
 
+#include <signal.h>
 int main(int argc, char** argv)
 {
     // User should call webserv with no arguments or one config file only
@@ -21,6 +22,10 @@ int main(int argc, char** argv)
         std::cerr << WRONG_USAGE_MSG << std::endl;
         return (1);
     }
+    // This makes sure that the i/o operations do not get fucked by clients unexpectedly closing connection.
+    // Now, recv/send return -1 instead, which should make the server clean up the client and stay alive
+    signal(SIGPIPE, SIG_IGN);
+    
     ConfigFile  configFile(argc, argv);
     
     //Prepare sockets and listen for request for connections.
@@ -55,13 +60,14 @@ int main(int argc, char** argv)
             poll(fds, 1, -1);
             //std::cerr << "Loop" << std::endl;
             // The following must be changed for a while loop through the clients
+            
             client.handle();
             if (client.shouldCloseConnection()) {
                 break;
             }
         }
     } catch (std::exception& e) {
-        std::cerr << "hit went wrong." << std::endl;
+        std::cerr << "some shit went wrong." << std::endl;
     }
     std::cout << "Program done!" << std::endl;
 }

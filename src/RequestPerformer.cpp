@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 09:29:38 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:59:59 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ RequestPerformer::~RequestPerformer(){}
 size_t    RequestPerformer::perform(const data_t& data)
 {
     size_t  dataConsumed = 0;
-    
     if (_getConsumeMode() == false) {
         switch (_request.getMethod()) {
+			
             case GET:
                 _performGet();
                 _setConsumeMode(true);
@@ -41,12 +41,17 @@ size_t    RequestPerformer::perform(const data_t& data)
         };
     }
     if (_getConsumeMode() == true) {
-        //TODO
-		if (data.data()[0] == '\r' && data.data()[1] == '\n') {
-			dataConsumed += 2;
+		if (_request.getBodySize() != -1) { //If theres body to consume
+			size_t	bodySize = static_cast<size_t>(_request.getBodySize());
+			// I want to consume as much as possible. That means as much as bodysize there is in data
+        	dataConsumed += std::min(bodySize, data.size());
+			if (dataConsumed == bodySize) {
+				_setIsDone(true);
+			}
+		} else { // If there is not, just fuck off
+			_setIsDone(true);
 		}
-		
-        _setIsDone(true);
+        
     }
     return (dataConsumed);
 }
@@ -59,6 +64,7 @@ void    RequestPerformer::activateConsumeMode(void)
 void    RequestPerformer::_setConsumeMode(bool newValue) {_consumeMode = newValue;}
 bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 
+//TODO use utils for the next few functions to check for validity of files
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
@@ -72,7 +78,7 @@ void    RequestPerformer::_performGet(void)
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append(_serverSettings.getIndex());
-			_response.setBodyPath(target); //TODO: must be able to download maybe?
+			_response.setBodyPath(target);
 		}
 		else
 		{
@@ -86,7 +92,17 @@ void    RequestPerformer::_performGet(void)
 
 void    RequestPerformer::_performDelete(void)
 {
-    //TODO
+	std::string	target(_request.getTarget());
+    if (!isFile(target)) {
+		_response.setStatusCode(404, _serverSettings.getErrorPage(404));
+		return ;
+	}
+	if (access(target.c_str(), W_OK) != 0) {
+		_response.setStatusCode(403, _serverSettings.getErrorPage(403));
+		return ;
+	}
+	std::remove(target.c_str());
+	_response.setStatusCode(204, "");
 }
 
 size_t  RequestPerformer::_performPost(data_t data)

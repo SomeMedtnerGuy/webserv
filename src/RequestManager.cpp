@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 18:07:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:51:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)
 {
+    //TODO make the following logic into a switch
     if (_stateMachine.getCurrentState() == RECV_HEADER) {
         //I cannot be sure by this point whether I actually need to read from socket
         // to parse the request, as it can be enough leftover from a previous read to
@@ -39,8 +40,10 @@ void    RequestManager::handle(void)
         _checkAndActOnErrors();
         if (_requestParser.isDone()) {
             _stateMachine.advanceState();
+            _request.printMessage();
         }
     }
+    
     if (_stateMachine.getCurrentState() == RECV_BODY) {
         size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         if (!_requestPerformer.isDone() && _socket.canRecv()) {
@@ -100,11 +103,11 @@ void    RequestManager::_checkAndActOnErrors(void)
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
     switch (statusCode) {
-        case 200:
+        case 200: case 204:
             return (NO_ERROR);
-        case 405: 
+        case 404: case 405: 
             return (CONSUME_AND_ANSWER);
-        case 404: case 431:
+        case 431:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);

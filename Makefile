@@ -6,7 +6,7 @@
 #    By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 11:43:02 by ndo-vale          #+#    #+#              #
-#    Updated: 2025/02/28 12:05:53 by ndo-vale         ###   ########.fr        #
+#    Updated: 2025/03/03 10:57:19 by ndo-vale         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC			= c++
 CFLAGS		= -Wall -Wextra -Werror -std=c++98 -g
 ASAN		= -fsanitize=leak,address -fno-omit-frame-pointer
 SRC_DIR		= src/
-SRCS 		= $(wildcard $(SRC_DIR)*.cpp) #TODO CHANGE
+SRCS 		= $(wildcard $(SRC_DIR)*.cpp) #TODO WILDCARD IS FORBIDDEN
 OBJ_DIR		= obj/
 OBJS		= $(SRCS:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 

@@ -6,14 +6,15 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/28 13:47:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:50:10 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUEST_PERFORMER
 # define REQUEST_PERFORMER
 
-#include <dirent.h>
+# include <dirent.h>
+# include <unistd.h>
 
 # include "AMessageHandler.hpp"
 # include "Socket.hpp"

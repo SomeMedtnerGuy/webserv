@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 11:45:05 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:39:10 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ bool                Socket::canRecv(void)
 }
 bool                Socket::canSend(void)
 {
-    return (_getCanSend());
+    return (_getCanSend() && _sendStash.size() != 0);
 }
 void                Socket::fillStash(void)
 {
