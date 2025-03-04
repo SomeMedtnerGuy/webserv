@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestParser.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:37:12 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 16:52:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 09:35:08 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "Socket.hpp"
 # include "StateMachine.hpp"
 # include "ServerSettings.hpp"
+# include "CGIHandler.hpp"
 # include "utils.hpp"
 
 class RequestParser: public AMessageHandler

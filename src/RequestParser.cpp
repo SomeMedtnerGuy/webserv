@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:47:56 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 09:45:33 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,16 @@ void	RequestParser::_processRequest(void)
 	std::string	target(_serverSettings.getRoot());
 	target.append(_request.getTarget());
 	_request.setTarget(target);
+
+    //check if it is cgi
+    if (target.find("cgi-bin"))
+    {
+        std::cout << "CGI!" << std::endl;
+        CGIHandler cgi(_request, _response, _serverSettings);
+        cgi.run();
+    	_setIsDone(true);
+        return ;
+    }
 
 	// Processing based on header fields
 	const HttpMessage::headers_dict&	headers = _request.getHeaders();
