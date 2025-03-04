@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/04 10:12:53 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:12:58 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,7 @@ void CGIHandler::_getCGIEnv()
 
     for (std::map<std::string, std::string>::const_iterator it = _cgiEnv.begin(); it != _cgiEnv.end(); ++it) 
         envStrings.push_back(it->first + "=" + it->second);
-
-    // for (size_t i = 0; i < envStrings.size(); ++i)
-        // envPointers.push_back(const_cast<char*>(envStrings[i].c_str()));
-    // envPointers.push_back(NULL);
-
+		
     _env = new char*[envStrings.size() + 1];
     for (size_t i = 0; i < envStrings.size(); ++i)
 	{
@@ -106,8 +102,6 @@ void CGIHandler::_getCGIEnv()
 
 		_env[i][envStrings[i].size()] = '\0';
 	}
-	std::cerr << "ihhhh" << std::endl;
-        // _env[i] = envPointers[i];
 	
     _env[envStrings.size()] = NULL; 
 }
@@ -161,7 +155,7 @@ void CGIHandler::execute()
 	for (size_t i = 0; i < _cgiEnv.size(); i++)
 		std::cout << "ENV: " << _env[i] << std::endl;
 		
-	const char* tempFileName = "/tmp/scriptresulta";
+	const char* tempFileName = "/tmp/scriptresult";
 	int fd = open(tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
 		throw std::runtime_error("CGI file result creat failed.");

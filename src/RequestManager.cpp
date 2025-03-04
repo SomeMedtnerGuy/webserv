@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 16:51:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:03:26 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ void    RequestManager::handle(void)
             _stateMachine.advanceState();
         }
     }
+    
+    
+    
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
         size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));

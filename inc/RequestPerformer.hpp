@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestPerformer.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 12:50:10 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:06:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include "AMessageHandler.hpp"
 # include "Socket.hpp"
 # include "ServerSettings.hpp"
+# include "CGIHandler.hpp"
+
 
 class RequestPerformer: public AMessageHandler
 {

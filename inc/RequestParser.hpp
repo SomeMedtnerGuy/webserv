@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:37:12 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 09:35:08 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:06:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include "Socket.hpp"
 # include "StateMachine.hpp"
 # include "ServerSettings.hpp"
-# include "CGIHandler.hpp"
 # include "utils.hpp"
 
 class RequestParser: public AMessageHandler

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 09:45:33 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:02:33 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,14 +141,12 @@ void	RequestParser::_processRequest(void)
 	_request.setTarget(target);
 
     //check if it is cgi
-    if (target.find("cgi-bin"))
-    {
-        std::cout << "CGI!" << std::endl;
-        CGIHandler cgi(_request, _response, _serverSettings);
-        cgi.run();
-    	_setIsDone(true);
-        return ;
-    }
+    // if (target.find("cgi-bin"))
+    // {
+    //     std::cout << "CGI!" << std::endl;
+    //     CGIHandler cgi(_request, _response, _serverSettings);
+    //     cgi.run();
+    // }
 
 	// Processing based on header fields
 	const HttpMessage::headers_dict&	headers = _request.getHeaders();

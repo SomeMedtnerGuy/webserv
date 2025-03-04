@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 16:06:33 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:11:00 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCod
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
+	std::cout << _bodyPath << std::endl;
 
 	_headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
 	for (header_map::const_iterator cit = _fileTypeMap.begin();

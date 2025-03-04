@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestPerformer.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:59:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:09:52 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ size_t    RequestPerformer::perform(const data_t& data)
 {
     size_t  dataConsumed = 0;
     if (_getConsumeMode() == false) {
+		
         switch (_request.getMethod()) {
 			
             case GET:
@@ -69,6 +70,15 @@ void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
 	struct stat	info;
+
+	if (target.find("cgi-bin") != std::string::npos)
+    {
+        std::cout << "CGI!" << std::endl;
+        CGIHandler cgi(_request, _response, _serverSettings);
+        cgi.run();
+		return ;
+    }
+	
 	if (stat(target.c_str(), &info) == -1) { // If stat fails, means the target does not exist
 		_response.setStatusCode(404, _serverSettings.getErrorPage(404));
         return;

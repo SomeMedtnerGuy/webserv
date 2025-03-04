@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/04 09:25:30 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:01:56 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ private:
 	const HttpRequest& _request;
 	HttpResponse& _response;
 	std::string _cgiPath;
+	// std::string _serverName;
 	ServerSettings& _server;
 	std::map<std::string, std::string> _cgiEnv;
 	char **_env;

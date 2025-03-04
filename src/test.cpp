@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   test.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:56:45 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:54:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "Socket.hpp"
 #include "Client.hpp"
+#include "PollManager.hpp"
 
 #include <signal.h>
 int main(int argc, char** argv)
@@ -27,6 +28,7 @@ int main(int argc, char** argv)
     signal(SIGPIPE, SIG_IGN);
     
     ConfigFile  configFile(argc, argv);
+    
     
     //Prepare sockets and listen for request for connections.
     //At the moment a single hardcoded socket is used.
