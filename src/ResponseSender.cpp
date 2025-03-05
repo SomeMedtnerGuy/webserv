@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 13:13:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 13:21:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
             return (output);
         }
         if (!_file.is_open()) {
-            _file.open(_response.getBodyPath().c_str(), std::ios::binary);;
+            _file.open(_response.getBodyPath().c_str(), std::ios::binary);
         }
         unsigned char   buffer[byteLimit];
         _file.read(reinterpret_cast<char*>(buffer), byteLimit - std::strlen(DELIMITOR));

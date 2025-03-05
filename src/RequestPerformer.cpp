@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:59:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:01:24 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 RequestPerformer::RequestPerformer(HttpRequest& request, HttpResponse& response,
                                     ServerSettings& serverSettings)
     : AMessageHandler(request, response), _serverSettings(serverSettings),
-        _consumeMode(false)
+        _consumeMode(false), _postPerformer(NULL)
 {}
 RequestPerformer::~RequestPerformer(){}
 
@@ -107,9 +107,26 @@ void    RequestPerformer::_performDelete(void)
 
 size_t  RequestPerformer::_performPost(data_t data)
 {
-    (void)data;
-    return (0);
-    //TODO
+	std::cerr << "post called" << std::endl;
+	size_t	dataConsumed = 0;
+	if (!_postPerformer) {
+		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
+		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
+			_postPerformer = new ChunkedPoster(_response, _request.getTarget());
+		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
+			dataConsumed = _postRaw(data);
+		} else { // It should never get to this point, because the presence of a body was already previously checked
+			throw (std::exception()); // TODO specify
+		}
+	}
+	dataConsumed += _postPerformer->post(data);
+	if (_postPerformer->isDone()) {
+		delete _postPerformer;
+		std::cerr << "deleted" << std::endl;
+		_postPerformer = NULL;
+		_setIsDone(true);
+	}
+    return (dataConsumed);
 }
 
 void	RequestPerformer::_createAutoIndex(std::string target)
@@ -140,4 +157,22 @@ void	RequestPerformer::_createAutoIndex(std::string target)
 		"</html>";
 	closedir(dir);
 	autoindexFile.close();
+}
+
+size_t	RequestPerformer::_postChunked(data_t data)
+{
+	
+	size_t consumed = _postPerformer->post(data);
+	if (_postPerformer->isDone()) {
+		delete _postPerformer;
+		_postPerformer = NULL;
+	}
+	return (consumed);
+}
+
+size_t	RequestPerformer::_postRaw(data_t data)
+{
+	(void)data;//TODO
+	std::cerr << "post raw called!" << std::endl;
+	return (0);
 }

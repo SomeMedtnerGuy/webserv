@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 16:37:48 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:15:20 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void    Client::handle(void)
         }
         if (_activeRequest) {
             _activeRequest->handle(); //The bulk of the work is done here
+            
             if (_activeRequest->isDone()) {
                 _setCloseConnection(_activeRequest->shouldCloseConnection());
                 delete _activeRequest;

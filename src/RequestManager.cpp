@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 16:51:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:36:22 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
         _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
         _handlingComplete(false), _closeConnection(false)
-{}
+{
+    
+}
 RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)
@@ -43,7 +45,6 @@ void    RequestManager::handle(void)
             _request.printMessage();
         }
     }
-    
     if (_stateMachine.getCurrentState() == RECV_BODY) {
         size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         if (!_requestPerformer.isDone() && _socket.canRecv()) {
@@ -56,6 +57,8 @@ void    RequestManager::handle(void)
             _stateMachine.advanceState();
         }
     }
+
+    
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
         size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));

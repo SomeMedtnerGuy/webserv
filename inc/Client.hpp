@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:19:05 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 19:43:27 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:34:44 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ private:
     Socket&         _socket;
     ConfigFile&     _configFile;
     RequestManager* _activeRequest;
+    
     bool            _closeConnection;
         void    _setCloseConnection(bool closeConnection);
         bool    _getCloseConnection(void) const;

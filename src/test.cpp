@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:56:45 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:15:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,17 @@ int main(int argc, char** argv)
     std::cout << "Connection accepted!" << std::endl;
     
     try {
+
         Socket  socket(fds[0]);
         Client  client(socket, configFile);
         while (true) {
+            std::cerr << "poll" << std::endl;
             poll(fds, 1, -1);
             //std::cerr << "Loop" << std::endl;
             // The following must be changed for a while loop through the clients
             
             client.handle();
+            
             if (client.shouldCloseConnection()) {
                 break;
             }
