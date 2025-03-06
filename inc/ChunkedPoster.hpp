@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:58:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 12:37:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:45:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "StateMachine.hpp"
 # include <cstdlib> //for strtol
 # include <fstream>
+# include "utils.hpp"
 
 class ChunkedPoster: public APostPerformer
 {
@@ -32,7 +33,7 @@ private:
         STATE_AM
     };
     StateMachine<State> _stateMachine;
-
+    
     data_t          _data;
     size_t          _currentChunkSize;
     std::ofstream  _saveFile;  

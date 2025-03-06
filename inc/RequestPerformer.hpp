@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 13:12:16 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:02:18 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ private:
 
     void    _createAutoIndex(std::string target);
 
-    size_t  _postChunked(data_t data);
     size_t  _postRaw(data_t data);
 };
 

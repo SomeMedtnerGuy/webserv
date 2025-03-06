@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 14:48:39 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:01:31 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,19 @@
 ChunkedPoster::ChunkedPoster(HttpResponse&  response, std::string saveFileName)
     : APostPerformer(response), _stateMachine(STATE_AM, CHUNK_SIZE), _currentChunkSize(0)
 {
+    int i = 0;
+    while (isFile(saveFileName)) {
+        saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
+        i++;
+        if (i >= 100) {
+            _response.setStatusCode(409, "");
+            return ;
+        }
+    }
     _saveFile.open(saveFileName.c_str(), std::ios::binary);
+    if (_saveFile.badbit) {
+        _response.setStatusCode(500, "");
+    }
 }
 ChunkedPoster::~ChunkedPoster()
 {
@@ -47,17 +59,8 @@ size_t  ChunkedPoster::post(data_t& data)
 
 void    ChunkedPoster::_parseChunkSize(void)
 {
-    std::cerr << "This shit should be called" << std::endl;
-    std::cerr << "Data size: " << _data.size() << std::endl;
     std::string dataStr(_data.begin(), _data.begin() + std::min(_data.size(), size_t(16)));
-    std::cerr << std::endl;
-    //for (size_t i = 0; i < _data.size(); i++) {
-    //    std::cerr << _data[i];
-    //}
-    //std::cerr << std::endl << std::endl;
-    std::cerr << "str: " << dataStr << std::endl;
     if (dataStr.find("0\r\n\r\n") == 0) { //Indication that body is done
-        std::cerr << "1" << std::endl;
         _data.erase(_data.begin(), _data.begin() + 5);
         _setIsDone(true);
         return;
@@ -69,29 +72,22 @@ void    ChunkedPoster::_parseChunkSize(void)
         }
         _response.setStatusCode(400, ""); //TODO Take care of this. Must give response access to serverSettings somehow
         _setIsDone(true);
-        std::cerr << "2" << std::endl;
         return;
     }
     char*   endPointer;
     _currentChunkSize = std::strtol(dataStr.c_str(), &endPointer, 16);
-    std::cerr << "AAAAAAAAAAAAAAAAAAAAAAAAAAA " << _currentChunkSize << std::endl;
     if (endPointer == dataStr.c_str()
         || size_t(endPointer - dataStr.c_str()) != endPosOfSize) { //No conversion was possible, so request is malformed
         _response.setStatusCode(400, ""); //TODO Take care of this. Must give response access to serverSettings somehow
         _setIsDone(true);
-        std::cerr << "3" << std::endl;
         return;
     }
-    std::cerr << "4" << std::endl;
     _data.erase(_data.begin(), _data.begin() + endPosOfSize + 2);
-    std::cerr << _currentChunkSize << std::endl;
     _stateMachine.advanceState();
 }
 
 void    ChunkedPoster::_parseChunk(void)
 {
-    std::cerr << "data size: " << _data.size() << std::endl << "chunk size: " << _currentChunkSize << std::endl;
-
     size_t  maxBytesPossible = std::min(_data.size(), _currentChunkSize);
     size_t  bytesToSave = std::min(size_t(BUFFER_SIZE), maxBytesPossible);
     _saveFile.write(reinterpret_cast<char*>(_data.data()), bytesToSave);

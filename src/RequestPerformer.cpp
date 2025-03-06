@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 14:01:24 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:02:13 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ void    RequestPerformer::_performDelete(void)
 
 size_t  RequestPerformer::_performPost(data_t data)
 {
-	std::cerr << "post called" << std::endl;
 	size_t	dataConsumed = 0;
 	if (!_postPerformer) {
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
@@ -122,7 +121,6 @@ size_t  RequestPerformer::_performPost(data_t data)
 	dataConsumed += _postPerformer->post(data);
 	if (_postPerformer->isDone()) {
 		delete _postPerformer;
-		std::cerr << "deleted" << std::endl;
 		_postPerformer = NULL;
 		_setIsDone(true);
 	}
@@ -157,17 +155,6 @@ void	RequestPerformer::_createAutoIndex(std::string target)
 		"</html>";
 	closedir(dir);
 	autoindexFile.close();
-}
-
-size_t	RequestPerformer::_postChunked(data_t data)
-{
-	
-	size_t consumed = _postPerformer->post(data);
-	if (_postPerformer->isDone()) {
-		delete _postPerformer;
-		_postPerformer = NULL;
-	}
-	return (consumed);
 }
 
 size_t	RequestPerformer::_postRaw(data_t data)
