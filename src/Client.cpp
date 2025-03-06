@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 10:43:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:32:17 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void    Client::handle(void)
             _activeRequest = new RequestManager(_socket, _configFile);
         }
         if (_activeRequest) {
+            
             _activeRequest->handle(); //The bulk of the work is done here
             
             if (_activeRequest->isDone()) {

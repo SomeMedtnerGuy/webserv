@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:36 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 16:26:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:54:57 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ private:
     };
     StateMachine<State> _stateMachine;
 
+    typedef void (RequestManager::*state_function)();
+    std::map<State, state_function>  _stateFunctionsMap;
+
     enum ErrorSeverity {
         NO_ERROR,
         CONSUME_AND_ANSWER,
@@ -70,6 +73,10 @@ private:
 		void	_setCloseConnection(bool value);
 		bool	_getCloseConnection(void) const;
     
+    void    _recvHeader(void);
+    void    _recvBody(void);
+    void    _sendResponse(void);
+
     void            _checkAndActOnErrors(void);
     ErrorSeverity   _getErrorSeverity(code_t statusCode);
 };
