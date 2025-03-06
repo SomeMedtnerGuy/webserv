@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 11:40:14 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:47:43 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
 {
     Socket::data_container_t    output;
 
-    if (_request.getTarget().find("cgi-bin"))
-    {
-        //check if its right
-    }    
+    // if (_request.getTarget().find("cgi-bin"))
+    // {
+    //     //check if its right
+    // }    
     
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());

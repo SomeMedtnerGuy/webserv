@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:20:49 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/05 08:46:31 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:35:45 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ void PollManager::destroyInstance() {
     }
 }
 
+void PollManager::addDescriptor(int fd, short events)
+{
+    struct pollfd pollfd;
+
+    pollfd.fd = fd;
+    pollfd.events = events;
+    
+    _fds.push_back(pollfd);
+}
+
 void PollManager::removeDescriptor(int fd)
 {
 	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) 
@@ -41,6 +51,11 @@ void PollManager::removeDescriptor(int fd)
             return;
         }
     }
+}
+
+void PollManager::updatePoll()
+{
+    
 }
 
 std::vector<pollfd>& PollManager::getPollFds(){return (_fds);}

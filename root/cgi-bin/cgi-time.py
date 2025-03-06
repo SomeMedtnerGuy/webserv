@@ -7,7 +7,7 @@ import datetime
 #print("Content-Type: text/html\n")
 
 #import os
-#import sys
+import sys
 
 #query_string = os.environ.get("QUERY_STRING", "")
 #index = query_string.find("name")

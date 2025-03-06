@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/06 11:21:35 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:19:19 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,18 @@
 
 class CGIHandler {
 private:
-	const HttpRequest& _request;
-	HttpResponse& _response;
-	std::string _cgiPath;
-	// std::string _serverName;
-	ServerSettings& _server;
-	std::map<std::string, std::string> _cgiEnv;
-	char **_env;
-	char ** _cgiArgs;
+	const HttpRequest& 					_request;
+	HttpResponse&						_response;
+	ServerSettings&						_server;
+	std::map<std::string, std::string>	_cgiEnv;
+	std::string							_cgiPath;
+	char **								_env;
+	char **								_cgiArgs;
+	int									_pipefds[2];
 	
 	std::string _getMethod(Method method);
 	void _getCgiEnv();
-	void _redirectPipes(int fds[2]);
+	void _openPipe();
 
 	
 public:
@@ -45,7 +45,9 @@ public:
 	// CGIHandler& operator=(const CGIHandler& src);
 	~CGIHandler();
 
-	bool isCgi(std::string& target);
+	int getReadPipe();
+
+
 	void CGIGet();
 	void CGIPost();
 	void getRequiredCgiArgs();
@@ -53,6 +55,8 @@ public:
 	void setEnv();
 	void execute();
 	void run();
+	
+	static bool isCgi(std::string target);
 };
 
 #endif // CGIHANDLER_HPP

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/06 11:39:07 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:15:23 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ CGIHandler::~CGIHandler()
 	}
 }
 
-bool CGIHandler::isCgi(std::string& target)
+bool CGIHandler::isCgi(std::string target)
 {
 	int pos = target.find("./root/cgi-bin");
 	
-	if (pos != 0)
+	if (pos != 0/*  || target.size() > 15 */)
 		return (false);
 		
 	return (true);
@@ -155,13 +155,13 @@ void CGIHandler::execute()
 {
 	_getCgiEnv();
 		
-	/* const char* tempFileName = "/tmp/scriptresult";
+	const char* tempFileName = "/tmp/scriptresult";
 	int fd = open(tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
-		throw std::runtime_error("CGI file result creat failed."); */
+		throw std::runtime_error("CGI file result creat failed.");
 
-	int pipefd[2];
-	_redirectPipes(pipefd);
+	// int pipefd[2];
+	//_openPipe();
 		
 	pid_t pid = fork();
 	if (pid == -1)
@@ -169,31 +169,32 @@ void CGIHandler::execute()
 	
 	if (pid == 0)
 	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		// close(_pipefds[1]);
 		
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		std::cerr << "CGI Execution failed!" << std::endl;
         std::exit(1);
     } else { 
-        close(pipefd[0]);
-		//waitpid(pid, NULL, 0);
+        close(_pipefds[0]);
+		waitpid(pid, NULL, 0);
 	}
-	// _response.setStatusCode(200);
-	// _response.setBodyPath(tempFileName);
+	_response.setBodyPath(tempFileName);
 	
 }
 
-void CGIHandler::_redirectPipes(int fds[2])
+void CGIHandler::_openPipe()
 {
-	if (pipe(fds) == -1)
+	if (pipe(_pipefds) == -1)
 			throw std::runtime_error("Pipe failed.");
-	PollManager::getInstance()->addDescriptor(fds[1], POLLIN);
-	if (_request.getMethod() == POST)
-	{
-		
-	}
+	PollManager::getInstance()->addDescriptor(_pipefds[1], POLLIN);
+	
+}
+
+int CGIHandler::getReadPipe()
+{
+	return (_pipefds[1]);
 }
 
 void CGIHandler::run()

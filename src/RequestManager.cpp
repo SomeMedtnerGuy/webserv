@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 16:03:26 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:37:48 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
         _requestParser(_request, _response, _serverSettings),
         _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
+        _cgiHandler(_request, _response, _serverSettings), 
         _handlingComplete(false), _closeConnection(false)
 {}
 RequestManager::~RequestManager(){}
@@ -56,8 +57,17 @@ void    RequestManager::handle(void)
             _stateMachine.advanceState();
         }
     }
-    
-    
+    // std::cout << _stateMachine.getCurrentState() << "\n\n" << std::endl;
+    if (_stateMachine.getCurrentState() == CGI_PROCESS)
+    {
+        
+        // std::cout << "\nOI\n" << _request.getTarget() << std::endl;
+        if (CGIHandler::isCgi(_request.getTarget()))
+        {
+            _cgiHandler.run();
+        }
+	    _stateMachine.advanceState();
+    }
     
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
         size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
@@ -105,6 +115,7 @@ void    RequestManager::_checkAndActOnErrors(void)
 
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
+    std::cerr << statusCode << std::endl;
     switch (statusCode) {
         case 200: case 204:
             return (NO_ERROR);

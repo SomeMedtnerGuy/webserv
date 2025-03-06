@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 11:21:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:24:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,13 @@ void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
 	struct stat	info;
-	CGIHandler cgi(_request, _response, _serverSettings);
+	// CGIHandler cgi(_request, _response, _serverSettings);
 
-	// if (target.find("cgi-bin") != std::string::npos)
-	if (cgi.isCgi(target))
-    {
-        cgi.run();
-		return ;
-    }
+	// // if (target.find("cgi-bin") != std::string::npos)
+	// if (CGIHandler::isCgi(target))
+    // {
+        
+    // }
 	
 	if (stat(target.c_str(), &info) == -1) { // If stat fails, means the target does not exist
 		_response.setStatusCode(404, _serverSettings.getErrorPage(404));
