@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:20:49 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/04 18:55:40 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/05 08:46:31 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ PollManager* PollManager::getInstance()
     if (_instance == NULL)
         _instance = new PollManager;
     return _instance;
+}
+
+void PollManager::destroyInstance() {
+    if (_instance != NULL) {
+        delete _instance;
+        _instance = NULL;
+    }
 }
 
 void PollManager::removeDescriptor(int fd)

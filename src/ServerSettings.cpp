@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/16 18:04:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/05 11:11:42 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,15 +169,15 @@ void ServerSettings::setLocation(std::string target)
 {
 	std::vector<Location> auxVec = _src.getServer(_serverName, _port).getLocation();
 	std::string searchLoc = matchLocation(target, auxVec);
-	
+
 	for (std::vector<Location>::const_iterator it = auxVec.begin(); it != auxVec.end(); ++it)
 	{
 		if (it->getSpecificPath() == searchLoc)
 		{
 			if (it->getAutoIndex() == true)
-				_autoindex = it->getAutoIndex();
+			_autoindex = it->getAutoIndex();
 			if (it->getRoot() != "")
-				_root = it->getRoot();
+			_root = it->getRoot();
 			setAllowMethods(*it);
 			setReturn(*it);
 			setIndexLocation(*it);
@@ -191,10 +191,10 @@ void ServerSettings::setIndexLocation(Location location)
 {
 	if (location.getIndexSize() == 0)
 		return ;
+		
 	for (size_t i = 0; i < location.getIndexSize(); i++)
 	{
-		std::string filePath = _root + "/" + location.getIndex(i);  
-		std::cout << filePath << std::endl;
+		std::string filePath = _root + location.getSpecificPath() + "/" + location.getIndex(i);  
 		std::ifstream file(filePath.c_str());
 		if (file.is_open())
 		{

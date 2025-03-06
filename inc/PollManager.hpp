@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:11:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/04 18:53:17 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/05 08:45:58 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ private:
 
 public:
 	static PollManager* getInstance();
+	static void destroyInstance();
 	
 	void addDescriptor(int fd, short events);
 	void removeDescriptor(int fd);

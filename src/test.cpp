@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 18:54:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/05 08:59:16 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,5 @@ int main(int argc, char** argv)
         std::cerr << "some shit went wrong." << std::endl;
     }
     std::cout << "Program done!" << std::endl;
+    PollManager::destroyInstance();
 }

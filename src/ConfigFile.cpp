@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 17:25:10 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/05 11:30:51 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ ConfigFile::ConfigFile(int argc, char **argv)
 		throw std::invalid_argument("Only one file is accepted.");
 	if (argc == 1)
 		createFile();
-	argc == 1 ? _filePath = "configFileDefault.conf" :_filePath = argv[1];
+	argc == 1 ? _filePath = ".default/configFileDefault.conf" :_filePath = argv[1];
 	run();
 }
 
@@ -40,7 +40,7 @@ ConfigFile::~ConfigFile(){}
 
 void ConfigFile::createFile()
 {
-	std::ofstream file("configFileDefault.conf");
+	std::ofstream file(".default/configFileDefault.conf");
 
     if (!file)
         return ;

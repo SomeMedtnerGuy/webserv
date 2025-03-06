@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseSender.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 13:13:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:40:14 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ ResponseSender::~ResponseSender(){}
 ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
 {
     Socket::data_container_t    output;
+
+    if (_request.getTarget().find("cgi-bin"))
+    {
+        //check if its right
+    }    
+    
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());
         output.insert(output.end(), headerSection.begin(), headerSection.end());

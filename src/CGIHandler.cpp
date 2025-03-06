@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/04 14:12:58 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:39:07 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,33 @@ CGIHandler::CGIHandler(const HttpRequest& request, HttpResponse& response, Serve
 
 CGIHandler::~CGIHandler()
 {
-	// int i = -1;
-	// if (_env)
-	// {
-	// 	while (_env[++i] != NULL)
-	// 		free(_env[i]);
-	// 	delete[] _env;
-	// }
-	// if (_cgiArgs)
-	// {
-	// 	i = -1;
-	// 	while (_cgiArgs[++i] != NULL)
-	// 		free(_cgiArgs[i]);
-	// 	delete[] _cgiArgs;
-	// }
-	delete[] _env;
-	delete[] _cgiArgs;
+	if (_env)
+	{
+		for (size_t i = 0; _env[i] != NULL; ++i)
+			delete[] _env[i];
+		delete[] _env;
+	}
+
+	if (_cgiArgs)
+	{
+		for (size_t i = 0; _cgiArgs[i] != NULL; ++i)
+			delete[] _cgiArgs[i];
+		delete[] _cgiArgs;
+	}
 }
 
-void CGIHandler::setCGIPath()
+bool CGIHandler::isCgi(std::string& target)
+{
+	int pos = target.find("./root/cgi-bin");
+	
+	if (pos != 0)
+		return (false);
+		
+	return (true);
+			//TODO change parser for cgi paths  
+}
+
+void CGIHandler::setCgiPath()
 {
 	_cgiPath = _request.getTarget();
 	
@@ -53,7 +61,7 @@ void CGIHandler::setCGIPath()
 	
 	struct stat buffer;
     if (stat(_cgiPath.c_str(), &buffer) != 0)
-		throw std::runtime_error("CGI script path doesn't exist.");
+		throw std::runtime_error("CGI script path doesn't exist.");/* check errors */
 
 	if (access(_cgiPath.c_str(), X_OK) != 0)
 		throw std::runtime_error("CGI script path doesn't have execute permission.");
@@ -84,7 +92,7 @@ void CGIHandler::setEnv()
 	_cgiEnv["CONTENT_TYPE"] = "text/plain"; //check this and content length from body size for post
 }
 
-void CGIHandler::_getCGIEnv()
+void CGIHandler::_getCgiEnv()
 {
 	std::vector<std::string> envStrings;
     std::vector<char*> envPointers;
@@ -128,7 +136,7 @@ void CGIHandler::CGIPost()
 	
 }
 
-void CGIHandler::getRequiredCGIArgs()
+void CGIHandler::getRequiredCgiArgs()
 {
 	switch (_request.getMethod())
 	{
@@ -145,51 +153,53 @@ void CGIHandler::getRequiredCGIArgs()
 
 void CGIHandler::execute()
 {
-	_getCGIEnv();
-	// getRequiredCGIArgs();
-
-	// std::cout << "QUERY" << _cgiEnv["QUERY_STRING"] << std::endl;
-	int i = -1;
-	while (_cgiArgs[++i] != NULL)
-		std::cout << "ARG " << _cgiArgs[i] << std::endl;
-	for (size_t i = 0; i < _cgiEnv.size(); i++)
-		std::cout << "ENV: " << _env[i] << std::endl;
+	_getCgiEnv();
 		
-	const char* tempFileName = "/tmp/scriptresult";
+	/* const char* tempFileName = "/tmp/scriptresult";
 	int fd = open(tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
-		throw std::runtime_error("CGI file result creat failed.");
+		throw std::runtime_error("CGI file result creat failed."); */
 
 	int pipefd[2];
-	if (pipe(pipefd) == -1)
-		throw std::runtime_error("Pipe failed.");
-	
+	_redirectPipes(pipefd);
+		
 	pid_t pid = fork();
 	if (pid == -1)
 		throw std::runtime_error("Fork failed.");
 	
 	if (pid == 0)
 	{
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
 		
-		std::cout << "CGI Execution!" << std::endl;
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		std::cerr << "CGI Execution failed!" << std::endl;
         std::exit(1);
     } else { 
-        close(fd);
-		waitpid(pid, NULL, 0);
+        close(pipefd[0]);
+		//waitpid(pid, NULL, 0);
 	}
 	// _response.setStatusCode(200);
-	_response.setBodyPath(tempFileName);
+	// _response.setBodyPath(tempFileName);
 	
+}
+
+void CGIHandler::_redirectPipes(int fds[2])
+{
+	if (pipe(fds) == -1)
+			throw std::runtime_error("Pipe failed.");
+	PollManager::getInstance()->addDescriptor(fds[1], POLLIN);
+	if (_request.getMethod() == POST)
+	{
+		
+	}
 }
 
 void CGIHandler::run()
 {
-	setCGIPath();
+	setCgiPath();
 	setEnv();
-	getRequiredCGIArgs();
+	getRequiredCgiArgs();
 	execute();	
 }
