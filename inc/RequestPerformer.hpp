@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 17:02:18 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:29:36 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include "ServerSettings.hpp"
 # include "APostPerformer.hpp"
 # include "ChunkedPoster.hpp"
+# include "RawPoster.hpp"
 
 class RequestPerformer: public AMessageHandler
 {
@@ -46,8 +47,6 @@ private:
     size_t  _performPost(data_t data);
 
     void    _createAutoIndex(std::string target);
-
-    size_t  _postRaw(data_t data);
 };
 
 #endif

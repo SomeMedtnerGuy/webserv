@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 17:02:13 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:35:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void    RequestPerformer::_performGet(void)
     std::string	target(_request.getTarget());
 	struct stat	info;
 	if (stat(target.c_str(), &info) == -1) { // If stat fails, means the target does not exist
-		_response.setStatusCode(404, _serverSettings.getErrorPage(404));
+		_response.setStatusCode(404);
         return;
     }
 	if (info.st_mode & S_IFDIR) // If target is directory
@@ -94,15 +94,15 @@ void    RequestPerformer::_performDelete(void)
 {
 	std::string	target(_request.getTarget());
     if (!isFile(target)) {
-		_response.setStatusCode(404, _serverSettings.getErrorPage(404));
+		_response.setStatusCode(404);
 		return ;
 	}
 	if (access(target.c_str(), W_OK) != 0) {
-		_response.setStatusCode(403, _serverSettings.getErrorPage(403));
+		_response.setStatusCode(403);
 		return ;
 	}
 	std::remove(target.c_str());
-	_response.setStatusCode(204, "");
+	_response.setStatusCode(204);
 }
 
 size_t  RequestPerformer::_performPost(data_t data)
@@ -113,10 +113,13 @@ size_t  RequestPerformer::_performPost(data_t data)
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
 			_postPerformer = new ChunkedPoster(_response, _request.getTarget());
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
-			dataConsumed = _postRaw(data);
+			_postPerformer = new RawPoster(_response, _request.getTarget(), _request.getBodySize());
 		} else { // It should never get to this point, because the presence of a body was already previously checked
 			throw (std::exception()); // TODO specify
 		}
+	}
+	if (_response.getStatusCode() != 200) {
+		return (dataConsumed);
 	}
 	dataConsumed += _postPerformer->post(data);
 	if (_postPerformer->isDone()) {
@@ -155,11 +158,4 @@ void	RequestPerformer::_createAutoIndex(std::string target)
 		"</html>";
 	closedir(dir);
 	autoindexFile.close();
-}
-
-size_t	RequestPerformer::_postRaw(data_t data)
-{
-	(void)data;//TODO
-	std::cerr << "post raw called!" << std::endl;
-	return (0);
 }

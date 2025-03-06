@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/01 18:46:20 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 10:16:18 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,15 +265,18 @@ int		getPortFromSocket(int sockfd)
 	return (ntohs(addr.sin_port));
 }
 
-size_t getFileLength(std::string filename)
+ssize_t getFileLength(std::string filename)
 {
-    std::ifstream       file(filename.c_str()); //TODO: Protect this
+    std::ifstream       file(filename.c_str());
+    if (file.fail()) {
+        return (-1);
+    }
     std::streampos      length;
     std::streampos      pos(file.tellg());
     
     file.seekg(pos, std::ios::end);
     length = file.tellg();
-    return (static_cast<int>(length));
+    return (static_cast<ssize_t>(length));
 }
 
 bool    isStrNum(std::string str)

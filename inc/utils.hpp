@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/01 18:37:53 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 10:16:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void checkCurlyBrace(std::string& line, bool begin);
 std::string cacthPath(std::string str);
 Method	strToMethod(std::string method);
 int	getPortFromSocket(int sockfd);
-size_t getFileLength(std::string filename);
+ssize_t getFileLength(std::string filename);
 bool	isStrNum(std::string str);
 
 template<typename T>

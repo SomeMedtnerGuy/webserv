@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 12:16:31 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 17:39:48 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:19:36 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define DEFAULT_PAGE_PATH "./.default/default.html"
 
 # include "HttpMessage.hpp"
+# include "ServerSettings.hpp"
 # include "utils.hpp"
 
 # include <iostream> //TODO: debug. remove
@@ -25,10 +26,10 @@ class HttpResponse: public HttpMessage
 public:
 	typedef int code_t;
 
-	HttpResponse();
+	HttpResponse(ServerSettings& serverSettings);
 	~HttpResponse();
 
-	void		setStatusCode(code_t statusCode, std::string errorPagePath);
+	void		setStatusCode(code_t statusCode);
 	code_t		getStatusCode(void) const;
 	void		setBodyPath(std::string bodyPath);
 	std::string	getBodyPath(void) const;
@@ -40,8 +41,10 @@ private:
 	static const header_map	_createFileTypeMap(void);
 	static const header_map	_fileTypeMap;
 
+	ServerSettings&	_serverSettings;
 	unsigned int	_statusCode;
 	std::string		_bodyPath;
+	
 
 	
 };

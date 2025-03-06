@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 16:36:22 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:32:48 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
         _requestParser(_request, _response, _serverSettings),
         _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
+        _request(), _response(_serverSettings),
         _handlingComplete(false), _closeConnection(false)
 {
     
@@ -51,6 +52,7 @@ void    RequestManager::handle(void)
             _socket.fillStash();
             bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
         }
+
         _socket.consumeRecvStash(bytesConsumed);
         _checkAndActOnErrors();
         if (_requestPerformer.isDone()) {
@@ -108,9 +110,9 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
     switch (statusCode) {
         case 200: case 204:
             return (NO_ERROR);
-        case 404: case 405: 
+        case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);
-        case 431:
+        case 431: case 400:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);

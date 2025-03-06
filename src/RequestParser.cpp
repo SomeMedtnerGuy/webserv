@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 14:47:56 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:33:01 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ RequestParser::~RequestParser(){}
 
 size_t    RequestParser::parse(const data_t& data)
 {
-    //std::cerr << "lol" << std::endl;
     _dataStr = std::string(data.begin(), data.end());
     if (_dataStr.length() > BUFFER_SIZE * 4) {
         _abortRequestHandling(431);
@@ -34,7 +33,6 @@ size_t    RequestParser::parse(const data_t& data)
                _parseRequestLine();
                break;
             case PARSING_HEADERS:
-                //std::cerr << "lol" << std::endl;
                 _parseHeaders();
                 break;
             case PROCESSING_REQUEST:
@@ -172,7 +170,7 @@ void	RequestParser::_processRequest(void)
 
 void	RequestParser::_abortRequestHandling(code_t statusCode)
 {
-	_response.setStatusCode(statusCode, _serverSettings.getErrorPage(statusCode));
+	_response.setStatusCode(statusCode);
     _setIsDone(true);
 }
 
