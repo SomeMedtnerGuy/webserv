@@ -6,7 +6,7 @@
 /*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:41:07 by joamonte          #+#    #+#             */
-/*   Updated: 2025/02/13 14:56:37 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:20:43 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,12 @@ bool	g_shutdown = false;
 // Constructor and destructor
 
 Service::Service(int ac, char **av)
+	:	_parsing(ac, av);
 {
 	printMsg(START_MSG, GREEN);
 
 	std::signal(SIGPIPE, SIG_IGN);
 	std::signal(SIGINT, signalHandler);
-
-	Parser	input(ac, av); //Criar função no parser
 }
 
 Service::~Service()
@@ -43,8 +42,9 @@ void Service::setup()
 
 	this->_initAddressParameters();
 
-	std::vector<std::string>::iterator server = this->_servers.begin();
-	for(; server != this->_servers.end(); server++)
+	std::vector<std::string>::const_iterator server = _parsing.getServers().begin();
+
+	for(; server != _parsing.getServers().end(); server++)
 	{
 		this->_getSetupInfo(server);
 		this->_setReuseableAddress();
@@ -100,7 +100,6 @@ void Service::_pollingManager()
 			continue;
 		if (this->_isServerSocket())
 			continue;
-
 		this->_hasDataToSend();
 	}
 }
@@ -274,10 +273,10 @@ void Service::_initAddressParameters()
 
 void Service::_getSetupInfo(serverVector::iterator server)
 {
-	server->createSocket();
-	this->_tmp.socket = server->getSocket();
+	server->createSocket(); // Inserir funcao de criar Socket
+	this->_tmp.socket = server->getSocket(); // Inserir funcao de atribuir socket
 	this->_tmp.host = server->getHost();
-	this->_tmp.port = server->getPort();
+	this->_tmp.port = server.getListen(getListenSize());
 	this->_tmp.launch = false;
 }
 

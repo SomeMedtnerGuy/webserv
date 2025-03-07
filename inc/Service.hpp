@@ -6,7 +6,7 @@
 /*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:19:35 by joamonte          #+#    #+#             */
-/*   Updated: 2025/02/13 12:49:51 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:47:52 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 
 #include "Define.hpp"
 #include "ConfigFile.hpp"
-//#include "Parser.hpp"
-//#include "Client.hpp"
+#include "ServerSettings.hpp"
 
 struct serviceInfo
 {
@@ -37,19 +36,14 @@ struct serviceInfo
 
 typedef std::vector<pollfd>	pollfdVector;
 typedef std::vector<Client>	clientVector;
-typedef std::vector<Server>	serverVector;
 
 class Service
 {
 	private:
-		serverVector	_servers;
 		clientVector	_clients;
 		pollfdVector	_pollingRequests;
-		size_t			_defaultServers;
 		serviceInfo		_tmp;
-
-		// Constructor auxiliar
-		size_t	_countDefaultServers();
+		ConfigFile		_parsing;
 
 		//Setup auxiliars
 		void	_initAddressParameters();
