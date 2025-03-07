@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 11:14:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:49:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@
 # include <iostream>
 # include <algorithm> //for min()
 
-
 class   Socket
 {
 public:
+    enum Action {
+        RECV,
+        SEND
+    };
     typedef struct pollfd       sockfd_t;
     typedef unsigned char       byte_t;
     typedef std::vector<byte_t>	data_container_t;
@@ -48,10 +51,6 @@ public:
     class SocketException: public std::exception
     {
     public:
-        enum Action {
-            RECV,
-            SEND
-        };
         enum ActionReturn {
             ERROR = -1,
             CONN_CLOSED = 0
@@ -76,7 +75,6 @@ private:
     bool            _canSend;
         void    _setCanSend(bool canSend);
         bool    _getCanSend(void) const;
-    
 };
 
 #endif

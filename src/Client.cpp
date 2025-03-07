@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 11:44:10 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:43:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Client::Client(int id, struct pollfd& sockfd, ConfigFile& configFile)
     : _id(id), _socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false){}
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60){}
 Client::~Client()
 {
     if (_activeRequest) {
@@ -27,19 +27,19 @@ void    Client::handle(void)
     // Update flags only once per call
     _socket.updateFlags();
 
-    //TODO Check timeout
     do {
         if (_isNewRequestRequired()) {
             _activeRequest = new RequestManager(_socket, _configFile);
         }
         if (_activeRequest) {
-            
             _activeRequest->handle(); //The bulk of the work is done here
             if (_activeRequest->isDone()) {
                 _setCloseConnection(_activeRequest->shouldCloseConnection());
                 delete _activeRequest;
                 _activeRequest = NULL;
             }
+        } else if (hasTimedOut(_lastActionTime, _timeoutTime)) { //TODO: Must find way to update _lastActionTime. Perhaps a member of Socket which it can update every time recv or send is called?
+            _setCloseConnection(true);
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());
 }

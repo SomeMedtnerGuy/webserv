@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:19:05 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 11:43:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:37:41 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Socket.hpp"
 # include "ConfigFile.hpp"
 # include "RequestManager.hpp"
+# include "utils.hpp"
 
 class   Client
 {
@@ -39,6 +40,9 @@ private:
         bool    _getCloseConnection(void) const;
     
     bool    _isNewRequestRequired(void) const;
+    
+    const int   _timeoutTime;
+    long        _lastActionTime;
 };
 
 #endif

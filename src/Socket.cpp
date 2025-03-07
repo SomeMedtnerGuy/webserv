@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 11:39:07 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:43:26 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /* PUBLIC */
 Socket::Socket(sockfd_t& sockfd)
-    :_sockfd(sockfd), _canRecv(false), _canSend(false) {}
+    :_sockfd(sockfd), _canRecv(false), _canSend(false){}
 Socket::~Socket(){}
 
 int    Socket::getSockFd(void) const
@@ -72,7 +72,7 @@ void                Socket::fillStash(void)
 	std::memset(_buffer, 0x0, BUFFER_SIZE);
 	ssize_t	recvOutput = recv(_sockfd.fd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
 	if (recvOutput <= 0) {
-		throw (SocketException(SocketException::RECV,
+		throw (SocketException(RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
@@ -91,7 +91,7 @@ void                Socket::flushStash(void)
     std::memcpy(_buffer, _sendStash.data(), bytesToSend);
     ssize_t bytesSent = send(_sockfd.fd, _buffer, bytesToSend, 0);
     if (bytesSent <= 0) {
-        throw (SocketException(SocketException::SEND,
+        throw (SocketException(SEND,
             static_cast<SocketException::ActionReturn>(bytesSent)));
     }
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);

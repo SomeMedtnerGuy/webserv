@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/07 10:34:38 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:48:25 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,6 +286,22 @@ bool    isStrNum(std::string str)
         }
     }
     return (true);
+}
+
+long long   getCurrentTimestamp() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long long   currentTimestamp = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
+    return (currentTimestamp);
+}
+
+bool    hasTimedOut(long long lastActionTime, const int timeoutTime) {
+    long long   currentActionTime = getCurrentTimestamp();
+    if (lastActionTime + timeoutTime < currentActionTime) {
+        return (true);
+    } else {
+        return (false);
+    } 
 }
 
 // if ((auxPos = line.find("#")) != std::string::npos)
