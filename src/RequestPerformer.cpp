@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 15:35:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 08:49:35 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ size_t    RequestPerformer::perform(const data_t& data)
                 dataConsumed = _performPost(data);
                 break;
             default:
-                throw (std::exception()); //TODO specify
+                throw (std::runtime_error("Request manager achieved an unexpected state."));
         };
     }
     if (_getConsumeMode() == true) {
@@ -115,7 +115,7 @@ size_t  RequestPerformer::_performPost(data_t data)
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
 			_postPerformer = new RawPoster(_response, _request.getTarget(), _request.getBodySize());
 		} else { // It should never get to this point, because the presence of a body was already previously checked
-			throw (std::exception()); // TODO specify
+			throw (std::runtime_error("Body is erroneously expected"));
 		}
 	}
 	if (_response.getStatusCode() != 200) {

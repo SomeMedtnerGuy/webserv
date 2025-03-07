@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 18:31:13 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 09:05:14 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,35 @@ void    RequestManager::_recvHeader(void)
     // only then read and parse more if necessary (and possible)
     size_t  bytesParsed = _requestParser.parse(_socket.getRecvStash()); 
     if (!_requestParser.isDone() && _socket.canRecv()) {
-        _socket.fillStash();
+        try {
+            _socket.fillStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
         bytesParsed += _requestParser.parse(_socket.getRecvStash());
     }
     _socket.consumeRecvStash(bytesParsed);
     _checkAndActOnErrors();
     if (_requestParser.isDone()) {
         _stateMachine.advanceState();
-        _request.printMessage();
+        //_request.printMessage();
     }
 }
 void    RequestManager::_recvBody(void)
 {
     size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
     if (!_requestPerformer.isDone() && _socket.canRecv()) {
-        _socket.fillStash();
+        try {
+            _socket.fillStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
         bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
     }
 
@@ -88,7 +102,14 @@ void    RequestManager::_sendResponse(void)
                                                         static_cast<size_t>(BUFFER_SIZE));
     _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));
     if (_socket.canSend()) {
-        _socket.flushStash();
+        try {
+            _socket.flushStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
     }
     if (_responseSender.isDone()) {
         _setHandlingComplete(true);
@@ -113,7 +134,7 @@ void    RequestManager::_checkAndActOnErrors(void)
             _setCloseConnection(true);
             break;
         default:
-            throw (std::exception()); //TODO explicit
+            throw (std::runtime_error("Request manager achieved an unexpected state."));
     }
 }
 
@@ -129,6 +150,6 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
         default:
-            throw (std::exception()); //TODO explicit
+            throw ("The status code is not recognized by the server");
     }
 }

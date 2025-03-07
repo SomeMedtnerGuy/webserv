@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/02/27 21:53:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 08:14:57 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,26 @@ public:
     bool                    canSend(void);
     void                    fillStash(void);
     void                    flushStash(void);
+
+    class SocketException: public std::exception
+    {
+    public:
+        enum Action {
+            RECV,
+            SEND
+        };
+        enum ActionReturn {
+            ERROR = -1,
+            CONN_CLOSED = 0
+        };
+        SocketException(Action action, ActionReturn actionReturn);
+        ~SocketException() throw();
+        const char* what() const throw();
+    private:
+        Action          _action;
+        ActionReturn    _actionReturn;
+        std::string     _message;
+    };
 
 private:
     sockfd_t&         _sockfd;
