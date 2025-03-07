@@ -6,14 +6,15 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 11:39:41 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:44:10 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client(struct pollfd& sockfd, ConfigFile& configFile)
-    : _socket(sockfd), _configFile(configFile), _activeRequest(NULL), _closeConnection(false){}
+Client::Client(int id, struct pollfd& sockfd, ConfigFile& configFile)
+    : _id(id), _socket(sockfd), _configFile(configFile),
+        _activeRequest(NULL), _closeConnection(false){}
 Client::~Client()
 {
     if (_activeRequest) {
@@ -42,6 +43,8 @@ void    Client::handle(void)
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());
 }
+
+int     Client::getId(void) const {return (_id);}
 
 bool    Client::shouldCloseConnection(void) const
 {
