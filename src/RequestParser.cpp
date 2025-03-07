@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 15:33:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 10:17:49 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,6 @@ void	RequestParser::_processRequest(void)
         }
 		_request.setBodySize(bodySize);
 	}
-
-    //TODO check for keep alive
 	_setIsDone(true);
 }
 

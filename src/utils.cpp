@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/06 10:16:18 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 10:34:38 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ bool isDirectory(std::string path)
     struct stat statbuf;
 	if (stat(path.c_str(), &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR))
     {
-        perror("Erro ao acessar o path");
         return (false);
     }
     return (true);

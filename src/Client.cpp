@@ -6,14 +6,14 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 18:32:17 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:39:41 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client(Socket& socket, ConfigFile& configFile)
-    : _socket(socket), _configFile(configFile), _activeRequest(NULL), _closeConnection(false){}
+Client::Client(struct pollfd& sockfd, ConfigFile& configFile)
+    : _socket(sockfd), _configFile(configFile), _activeRequest(NULL), _closeConnection(false){}
 Client::~Client()
 {
     if (_activeRequest) {
@@ -26,6 +26,7 @@ void    Client::handle(void)
     // Update flags only once per call
     _socket.updateFlags();
 
+    //TODO Check timeout
     do {
         if (_isNewRequestRequired()) {
             _activeRequest = new RequestManager(_socket, _configFile);
@@ -33,7 +34,6 @@ void    Client::handle(void)
         if (_activeRequest) {
             
             _activeRequest->handle(); //The bulk of the work is done here
-            
             if (_activeRequest->isDone()) {
                 _setCloseConnection(_activeRequest->shouldCloseConnection());
                 delete _activeRequest;

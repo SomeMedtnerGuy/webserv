@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 08:49:35 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 09:53:25 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ size_t    RequestPerformer::perform(const data_t& data)
     size_t  dataConsumed = 0;
     if (_getConsumeMode() == false) {
         switch (_request.getMethod()) {
-			
             case GET:
                 _performGet();
                 _setConsumeMode(true);
@@ -50,8 +49,7 @@ size_t    RequestPerformer::perform(const data_t& data)
 			}
 		} else { // If there is not, just fuck off
 			_setIsDone(true);
-		}
-        
+		} 
     }
     return (dataConsumed);
 }
@@ -64,16 +62,14 @@ void    RequestPerformer::activateConsumeMode(void)
 void    RequestPerformer::_setConsumeMode(bool newValue) {_consumeMode = newValue;}
 bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 
-//TODO use utils for the next few functions to check for validity of files
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
-	struct stat	info;
-	if (stat(target.c_str(), &info) == -1) { // If stat fails, means the target does not exist
+	if (!(isFile(target) || isDirectory(target))) { // If stat fails, means the target does not exist
 		_response.setStatusCode(404);
         return;
     }
-	if (info.st_mode & S_IFDIR) // If target is directory
+	if (isDirectory(target)) // If target is directory
 	{
 		if (!_serverSettings.getAutoIndex())
 		{

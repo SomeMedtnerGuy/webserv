@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 09:05:14 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 10:39:40 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,18 @@ void    RequestManager::handle(void)
     State           currentState = _stateMachine.getCurrentState();
     State           prevState = currentState;
     do {
-        
         stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
         (this->*stateFunction)();
+        
+        // This is absolutely disgusting. It should be absolutely be checked and set on Request Processor.
+        // Probably the best way would be to have this characteristic be part of the request itself?
+        // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
+        if (_request.getHeaders().find("Connection") != _request.getHeaders().end()) {
+            std::string connectionType = _request.getHeaders().at("Connection");
+            if (connectionType.compare("close") == 0) {
+                _setCloseConnection(true);
+            }
+        }
         prevState = currentState;
         currentState = _stateMachine.getCurrentState();
     } while (currentState != prevState);

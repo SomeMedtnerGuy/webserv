@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 09:08:17 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:39:07 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ void                Socket::clearStashes(void)
     _recvStash.clear();
     _sendStash.clear();
 }
-bool                Socket::canRecv(void)
+bool                Socket::canRecv(void) const
 {
     return (_getCanRecv());
 }
-bool                Socket::canSend(void)
+bool                Socket::canSend(void) const
 {
     return (_getCanSend() && _sendStash.size() != 0);
 }
@@ -72,7 +72,6 @@ void                Socket::fillStash(void)
 	std::memset(_buffer, 0x0, BUFFER_SIZE);
 	ssize_t	recvOutput = recv(_sockfd.fd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
 	if (recvOutput <= 0) {
-        std::cerr << "lol?" << std::endl;
 		throw (SocketException(SocketException::RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}

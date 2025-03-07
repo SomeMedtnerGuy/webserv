@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 16:05:56 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:36:35 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,23 @@ int main(int argc, char** argv)
     
     try {
 
-        Socket  socket(fds[0]);
-        Client  client(socket, configFile);
+        //Socket  socket(fds[0]);
+        //TODO change client to receive fds[0] and create the socket inside
+        //TODO also receive id and expose it so caller can know which one it is to clean corresponding socket if necessary
+        Client  client(fds[0], configFile);
         while (true) {
             poll(fds, 1, -1);
             //std::cerr << "Loop" << std::endl;
             // The following must be changed for a while loop through the clients
+            //for (client in clients)
+            //{
+                client.handle();
             
-            client.handle();
-            
-            if (client.shouldCloseConnection()) {
-                break;
-            }
+                if (client.shouldCloseConnection()) {
+                    //cleanClient();
+                    break;
+                };
+            //}
         }
     } catch (std::exception& e) {
         std::cerr << "some shit went wrong." << std::endl;

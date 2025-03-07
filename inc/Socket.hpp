@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 08:14:57 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:14:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ public:
     const data_container_t& getSendStash(void) const;
     void                    addToSendStash(const data_container_t bytes);
     void                    clearStashes(void);
-    bool                    canRecv(void);
-    bool                    canSend(void);
+    bool                    canRecv(void) const;
+    bool                    canSend(void) const;
     void                    fillStash(void);
     void                    flushStash(void);
 
