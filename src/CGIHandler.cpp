@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/07 17:19:03 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/07 21:11:02 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+/* Constructor and destructor */
 CGIHandler::CGIHandler(const HttpRequest& request, HttpResponse& response, ServerSettings& server) : _request(request), _response(response), _server(server)
 {
 	_env = NULL;
@@ -36,20 +37,12 @@ CGIHandler::~CGIHandler()
 			delete[] _cgiArgs[i];
 		delete[] _cgiArgs;
 	}
+	close(_fileFd);
 }
 
-bool CGIHandler::isCgi(std::string target)
-{
-	int pos = target.find("./root/cgi-bin");
-	
-	if (pos != 0/*  || target.size() > 15 */)
-		return (false);
-		
-	return (true);
-			//TODO change parser for cgi paths  
-}
+/* Private Methods */
 
-void CGIHandler::setCgiPath()
+void CGIHandler::_setCgiPath()
 {
 	_cgiPath = _request.getTarget();
 	
@@ -63,19 +56,11 @@ void CGIHandler::setCgiPath()
 
 std::string CGIHandler::_getMethod(Method method)
 {
-	switch (method) {
-        case GET:
-			return "GET";
-        case POST:
-			return "POST";
-        case DELETE:
-			return "DELETE";
-        default:
-			return "UNKNOWN";
-    }
+	const char* methods[] = {"GET", "POST"};
+    return methods[method];
 }
 
-void CGIHandler::setEnv()
+void CGIHandler::_setEnv()
 {
 	_cgiEnv["SERVER_NAME"] = _server.getServerName();
 	_cgiEnv["GATEWAY_INTERFACE"] = "CGI/1.1";
@@ -84,16 +69,18 @@ void CGIHandler::setEnv()
 	_cgiEnv["SCRIPT_FILENAME"] = _cgiPath;
 	_cgiEnv["SERVER_PROTOCOL"] = "HTTP/1.1";
 	_cgiEnv["CONTENT_TYPE"] = "text/plain"; //check this and content length from body size for post
+	if (_request.getMethod() == POST)
+	_cgiEnv["CONTENT_LENGTH"] = _request.getBodySize();
 }
 
 void CGIHandler::_getCgiEnv()
 {
 	std::vector<std::string> envStrings;
     std::vector<char*> envPointers;
-
+	
     for (std::map<std::string, std::string>::const_iterator it = _cgiEnv.begin(); it != _cgiEnv.end(); ++it) 
-        envStrings.push_back(it->first + "=" + it->second);
-		
+	envStrings.push_back(it->first + "=" + it->second);
+	
     _env = new char*[envStrings.size() + 1];
     for (size_t i = 0; i < envStrings.size(); ++i)
 	{
@@ -101,7 +88,7 @@ void CGIHandler::_getCgiEnv()
 		
 		for (size_t j = 0; j < envStrings[i].size(); ++j)
 		_env[i][j] = envStrings[i][j];
-
+		
 		_env[i][envStrings[i].size()] = '\0';
 	}
 	
@@ -109,108 +96,139 @@ void CGIHandler::_getCgiEnv()
 }
 
 
-void CGIHandler::CGIGet()
+void CGIHandler::_cgiGetArgs()
 {
 	_cgiArgs = new char*[3];
 	std::string cgiExec = "/usr/bin/python3";
 	_cgiArgs[0] = new char[cgiExec.size() + 1];
     for (size_t i = 0; i < cgiExec.size(); ++i)
-        _cgiArgs[0][i] = cgiExec[i];
+	_cgiArgs[0][i] = cgiExec[i];
     _cgiArgs[0][cgiExec.size()] = '\0';
-
+	
     _cgiArgs[1] = new char[_cgiPath.size() + 1];
     for (size_t i = 0; i < _cgiPath.size(); ++i)
-        _cgiArgs[1][i] = _cgiPath[i];
+	_cgiArgs[1][i] = _cgiPath[i];
     _cgiArgs[1][_cgiPath.size()] = '\0';
 	_cgiArgs[2] = NULL; 
 }
 
-void CGIHandler::CGIPost()
+void CGIHandler::_cgiPostArgs()
 {
-	
+	if (pipe(_pipefd) == -1)
+	throw std::runtime_error("Pipe failed.");
 }
 
-void CGIHandler::getRequiredCgiArgs()
+void CGIHandler::_getRequiredCgiArgs()
 {
-	switch (_request.getMethod())
-	{
-		case GET:
-			CGIGet();
-			break;
-		case POST:
-			CGIPost();
-			break;
-		default:
-			break;
+	if (_request.getMethod() == GET)
+	_cgiGetArgs();
+	if (_request.getMethod() == POST)
+	_cgiPostArgs();
+}
+
+void CGIHandler::_openFile()
+{
+	_tempFileName = "/tmp/scriptresult";
+	_fileFd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	if (_fileFd == -1)
+		throw std::runtime_error("CGI file result creat failed.");
 	}
+	
+	void CGIHandler::_forkProcess()
+	{
+		_pid = fork();
+		if (_pid == -1)
+		throw std::runtime_error("Fork failed.");
+	}
+	
+	void CGIHandler::_cgiGetExec()
+	{
+		if (_pid == 0)
+		{
+			dup2(_fileFd, STDOUT_FILENO);
+			close(_fileFd);
+			
+			execve(_cgiArgs[0], _cgiArgs, _env);
+			
+			std::cerr << "CGI Execution failed!" << std::endl;
+			std::exit(1);
+		}
+	}
+	
+	void CGIHandler::_cgiPostExec()
+	{
+		if (_pid == 0)
+		{
+			close(_pipefd[1]);
+			dup2(_pipefd[0], STDIN_FILENO);
+			close(_pipefd[0]);
+			
+			dup2(_fileFd, STDOUT_FILENO);
+			close(_fileFd);
+			
+			execve(_cgiArgs[0], _cgiArgs, _env);
+			std::cerr << "CGI Execution failed!" << std::endl;
+			std::exit(1);
+		}
+		
+		close(_pipefd[0]);
+		
+		// write(_pipefd[1], ...);
+		close(_pipefd[1]);
 }
 
-void CGIHandler::execute()
+void CGIHandler::_execute()
 {
 	_getCgiEnv();
 	_isRunning = true;
+	_openFile();
+	_forkProcess();
 	
-	
-	_tempFileName = "/tmp/scriptresult";
-	int fd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
-	if (fd == -1)
-		throw std::runtime_error("CGI file result creat failed.");
-		
-	_pid = fork();
-	if (_pid == -1)
-		throw std::runtime_error("Fork failed.");
-	
-	if (_pid == 0)
-	{
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-		
-		execve(_cgiArgs[0], _cgiArgs, _env);
-		
-		std::cerr << "CGI Execution failed!" << std::endl;
-        std::exit(1);
-    }
-	
-    // close(_pipefds[0]);
-	// _pid = waitpid(pid, NULL, WNOHANG);
-	// if (_pid == 0)
-		
-	// _response.setBodyPath(tempFileName);
-	
+	if (_request.getMethod() == GET)
+	_cgiGetExec();
+	if (_request.getMethod() == POST)
+	_cgiPostExec();
 }
+
+/* Public Methods */
 
 bool CGIHandler::isCgiRunning(){return (_isRunning);}
 
 bool CGIHandler::cgiDone()
 {
-	pid_t pidCheck = waitpid(_pid, NULL, WNOHANG);
-	if (pidCheck != 0)
+	int status;
+	pid_t pidCheck = waitpid(_pid, &status, WNOHANG);
+	if (pidCheck > 0)
 	{
+		if (WIFSIGNALED(status))
+		{
+			_response.setStatusCode(502, _server.getErrorPage(502)); /* Bad gateway */
+			return (true);
+		}
+		if (WEXITSTATUS(status) != 0)
+		_response.setStatusCode(500, _server.getErrorPage(500));/* internal server error */
+		else
 		_response.setBodyPath(_tempFileName);
 		return (true);
 	}
 	return (false);
 }
 
-void CGIHandler::_openPipe()
-{
-	if (pipe(_pipefds) == -1)
-			throw std::runtime_error("Pipe failed.");
-	PollManager::getInstance()->addDescriptor(_pipefds[1], POLLIN);
-	
-}
-
-int CGIHandler::getReadPipe()
-{
-	return (_pipefds[1]);
-}
-
 void CGIHandler::run()
 {
+	_setCgiPath();
+	_setEnv();
+	_getRequiredCgiArgs();
+	_execute();	
+}
+
+bool CGIHandler::isCgi(std::string target)
+{
+	int pos = target.find("./root/cgi-bin");
 	
-	setCgiPath();
-	std::cerr << "\nSHIT\n" << std::endl;
-	setEnv();
-	getRequiredCgiArgs();
-	execute();	
+	if (pos != 0)
+		return (false);
+		
+	return (true);
+			//TODO change parser for cgi paths  
 }

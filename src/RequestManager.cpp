@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 17:25:03 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:46:27 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void    RequestManager::handle(void)
             _stateMachine.advanceState();
         }
     }
-    
+    // std::cerr << _stateMachine.getCurrentState() << std::endl;
     if (_stateMachine.getCurrentState() == CGI_PROCESS)
     {        
         if (!CGIHandler::isCgi(_request.getTarget()))
