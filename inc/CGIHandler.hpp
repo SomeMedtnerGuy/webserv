@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/06 15:19:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:44:07 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@
 
 class CGIHandler {
 private:
+	bool								_isRunning;
+	pid_t 								_pid;
+	const char* 						_tempFileName;
+	// struct timeval 						_startTime;
+	
 	const HttpRequest& 					_request;
 	HttpResponse&						_response;
 	ServerSettings&						_server;
@@ -46,8 +51,8 @@ public:
 	~CGIHandler();
 
 	int getReadPipe();
-
-
+	
+	
 	void CGIGet();
 	void CGIPost();
 	void getRequiredCgiArgs();
@@ -55,6 +60,9 @@ public:
 	void setEnv();
 	void execute();
 	void run();
+	bool isCgiRunning();
+	bool cgiDone();
+
 	
 	static bool isCgi(std::string target);
 };

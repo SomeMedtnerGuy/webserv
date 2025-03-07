@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/06 18:15:23 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:19:03 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ CGIHandler::CGIHandler(const HttpRequest& request, HttpResponse& response, Serve
 {
 	_env = NULL;
 	_cgiArgs = NULL;
+	_isRunning = false;
 }
 
 CGIHandler::~CGIHandler()
@@ -58,13 +59,6 @@ void CGIHandler::setCgiPath()
 		_cgiEnv["QUERY_STRING"] = _cgiPath.substr(hasArgs + 1, _cgiPath.size());		
 		_cgiPath = _cgiPath.substr(0, hasArgs);
 	}
-	
-	struct stat buffer;
-    if (stat(_cgiPath.c_str(), &buffer) != 0)
-		throw std::runtime_error("CGI script path doesn't exist.");/* check errors */
-
-	if (access(_cgiPath.c_str(), X_OK) != 0)
-		throw std::runtime_error("CGI script path doesn't have execute permission.");
 }
 
 std::string CGIHandler::_getMethod(Method method)
@@ -154,34 +148,48 @@ void CGIHandler::getRequiredCgiArgs()
 void CGIHandler::execute()
 {
 	_getCgiEnv();
-		
-	const char* tempFileName = "/tmp/scriptresult";
-	int fd = open(tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	_isRunning = true;
+	
+	
+	_tempFileName = "/tmp/scriptresult";
+	int fd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
 		throw std::runtime_error("CGI file result creat failed.");
-
-	// int pipefd[2];
-	//_openPipe();
 		
-	pid_t pid = fork();
-	if (pid == -1)
+	_pid = fork();
+	if (_pid == -1)
 		throw std::runtime_error("Fork failed.");
 	
-	if (pid == 0)
+	if (_pid == 0)
 	{
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
-		// close(_pipefds[1]);
 		
 		execve(_cgiArgs[0], _cgiArgs, _env);
+		
 		std::cerr << "CGI Execution failed!" << std::endl;
         std::exit(1);
-    } else { 
-        close(_pipefds[0]);
-		waitpid(pid, NULL, 0);
-	}
-	_response.setBodyPath(tempFileName);
+    }
 	
+    // close(_pipefds[0]);
+	// _pid = waitpid(pid, NULL, WNOHANG);
+	// if (_pid == 0)
+		
+	// _response.setBodyPath(tempFileName);
+	
+}
+
+bool CGIHandler::isCgiRunning(){return (_isRunning);}
+
+bool CGIHandler::cgiDone()
+{
+	pid_t pidCheck = waitpid(_pid, NULL, WNOHANG);
+	if (pidCheck != 0)
+	{
+		_response.setBodyPath(_tempFileName);
+		return (true);
+	}
+	return (false);
 }
 
 void CGIHandler::_openPipe()
@@ -199,7 +207,9 @@ int CGIHandler::getReadPipe()
 
 void CGIHandler::run()
 {
+	
 	setCgiPath();
+	std::cerr << "\nSHIT\n" << std::endl;
 	setEnv();
 	getRequiredCgiArgs();
 	execute();	

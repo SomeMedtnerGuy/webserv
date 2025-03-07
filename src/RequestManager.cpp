@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 18:37:48 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:25:03 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,19 @@ void    RequestManager::handle(void)
             _stateMachine.advanceState();
         }
     }
-    // std::cout << _stateMachine.getCurrentState() << "\n\n" << std::endl;
+    
     if (_stateMachine.getCurrentState() == CGI_PROCESS)
-    {
-        
-        // std::cout << "\nOI\n" << _request.getTarget() << std::endl;
-        if (CGIHandler::isCgi(_request.getTarget()))
+    {        
+        if (!CGIHandler::isCgi(_request.getTarget()))
+	        _stateMachine.advanceState();
+        else
         {
-            _cgiHandler.run();
+            if (!_cgiHandler.isCgiRunning())
+                _cgiHandler.run();
+            if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
+                _stateMachine.advanceState();
         }
-	    _stateMachine.advanceState();
+
     }
     
     if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
