@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 10:39:40 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:38:31 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    RequestManager::handle(void)
         stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
         (this->*stateFunction)();
         
-        // This is absolutely disgusting. It should be absolutely be checked and set on Request Processor.
+        // This is absolutely disgusting. It should definitely be checked and set on Request Processor.
         // Probably the best way would be to have this characteristic be part of the request itself?
         // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
         if (_request.getHeaders().find("Connection") != _request.getHeaders().end()) {

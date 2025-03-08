@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:19:05 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 21:53:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:24:34 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ public:
     void    updateSocketFlags(short revents);
     bool    shouldCloseConnection(void) const; // Check after each time handle() is called
 private:
-    //const int       _id;
     Socket          _socket;
     ConfigFile&     _configFile;
     RequestManager* _activeRequest;
