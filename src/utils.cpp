@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/07 13:48:25 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 09:14:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,8 +296,8 @@ long long   getCurrentTimestamp() {
 }
 
 bool    hasTimedOut(long long lastActionTime, const int timeoutTime) {
-    long long   currentActionTime = getCurrentTimestamp();
-    if (lastActionTime + timeoutTime < currentActionTime) {
+    long long   currentTimestamp = getCurrentTimestamp();
+    if (lastActionTime + (timeoutTime * 1000) < currentTimestamp) {
         return (true);
     } else {
         return (false);

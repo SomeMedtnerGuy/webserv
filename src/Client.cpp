@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 13:43:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 09:10:11 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 Client::Client(int id, struct pollfd& sockfd, ConfigFile& configFile)
     : _id(id), _socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60){}
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(5)
+{
+    _lastActionTime = getCurrentTimestamp();
+}
 Client::~Client()
 {
     if (_activeRequest) {
@@ -38,6 +41,9 @@ void    Client::handle(void)
                 delete _activeRequest;
                 _activeRequest = NULL;
             }
+        }
+        if (_socket.wasActionMade()) {
+            _lastActionTime = getCurrentTimestamp();
         } else if (hasTimedOut(_lastActionTime, _timeoutTime)) { //TODO: Must find way to update _lastActionTime. Perhaps a member of Socket which it can update every time recv or send is called?
             _setCloseConnection(true);
         }

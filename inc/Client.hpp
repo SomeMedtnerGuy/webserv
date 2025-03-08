@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:19:05 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 13:37:41 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 09:08:11 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ private:
     bool    _isNewRequestRequired(void) const;
     
     const int   _timeoutTime;
-    long        _lastActionTime;
+    long long   _lastActionTime;
 };
 
 #endif

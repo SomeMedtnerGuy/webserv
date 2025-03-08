@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 13:43:26 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 09:03:58 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void    Socket::updateFlags(void)
     if (_sockfd.revents & POLLOUT) {
         _setCanSend(true);
     }
+    _actionMade = false;
 }
 const Socket::data_container_t&   Socket::getRecvStash(void) const
 {
@@ -77,6 +78,7 @@ void                Socket::fillStash(void)
 	}
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
+    _actionMade = true;
 }
 
 void                Socket::flushStash(void)
@@ -96,7 +98,10 @@ void                Socket::flushStash(void)
     }
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
+    _actionMade = true;
 }
+
+bool    Socket::wasActionMade(void) const {return (_actionMade);}
 
 /* EXCEPTION */
 Socket::SocketException::SocketException(Action action, ActionReturn actionReturn)
