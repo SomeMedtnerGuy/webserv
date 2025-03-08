@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 09:10:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 12:58:03 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Client::Client(int id, struct pollfd& sockfd, ConfigFile& configFile)
     : _id(id), _socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(5)
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60)
 {
     _lastActionTime = getCurrentTimestamp();
 }
