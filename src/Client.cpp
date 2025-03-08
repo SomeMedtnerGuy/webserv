@@ -6,18 +6,37 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 09:10:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:53:00 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client(int id, struct pollfd& sockfd, ConfigFile& configFile)
-    : _id(id), _socket(sockfd), _configFile(configFile),
+Client::Client(int sockfd, ConfigFile& configFile)
+    : /*_id(id), */_socket(sockfd), _configFile(configFile),
         _activeRequest(NULL), _closeConnection(false), _timeoutTime(5)
 {
     _lastActionTime = getCurrentTimestamp();
 }
+
+Client::Client(const Client& other): _socket(other._socket),
+    _configFile(other._configFile), _activeRequest(other._activeRequest),
+    _closeConnection(other._closeConnection),
+    _timeoutTime(other._timeoutTime), _lastActionTime(other._lastActionTime)
+{}
+
+Client& Client::operator=(const Client& other)
+{
+    if (this != &other) {
+        _socket = other._socket;
+        _activeRequest = other._activeRequest;
+        _closeConnection = other._closeConnection;
+        //_timeoutTime = other._timeoutTime; It is a const value
+        _lastActionTime = other._lastActionTime;
+    }
+    return (*this);
+}
+
 Client::~Client()
 {
     if (_activeRequest) {
@@ -27,9 +46,6 @@ Client::~Client()
 
 void    Client::handle(void)
 {
-    // Update flags only once per call
-    _socket.updateFlags();
-
     do {
         if (_isNewRequestRequired()) {
             _activeRequest = new RequestManager(_socket, _configFile);
@@ -44,13 +60,16 @@ void    Client::handle(void)
         }
         if (_socket.wasActionMade()) {
             _lastActionTime = getCurrentTimestamp();
-        } else if (hasTimedOut(_lastActionTime, _timeoutTime)) { //TODO: Must find way to update _lastActionTime. Perhaps a member of Socket which it can update every time recv or send is called?
+        } else if (hasTimedOut(_lastActionTime, _timeoutTime)) {
             _setCloseConnection(true);
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());
 }
 
-int     Client::getId(void) const {return (_id);}
+void    Client::updateSocketFlags(short revents)
+{
+    _socket.updateFlags(revents);
+}
 
 bool    Client::shouldCloseConnection(void) const
 {
@@ -58,7 +77,8 @@ bool    Client::shouldCloseConnection(void) const
 }
 
 void    Client::_setCloseConnection(bool closeConnection) {_closeConnection = closeConnection;}
-bool    Client::_getCloseConnection(void) const {return (_closeConnection);}
+bool    Client::_getCloseConnection(void) const {
+    return (_closeConnection);}
 
 bool    Client::_isNewRequestRequired(void) const
 {

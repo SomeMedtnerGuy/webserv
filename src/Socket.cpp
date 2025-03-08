@@ -6,27 +6,46 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 09:03:58 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:52:44 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 
 /* PUBLIC */
-Socket::Socket(sockfd_t& sockfd)
-    :_sockfd(sockfd), _canRecv(false), _canSend(false){}
+Socket::Socket(int sockfd)
+    :_sockfd(sockfd), _canRecv(false), _canSend(false), _actionMade(false){}
+
+Socket::Socket(const Socket& other)
+    :_sockfd(other._sockfd), _canRecv(other._canRecv), 
+    _canSend(other._canSend), _actionMade(other._actionMade){}
+
+Socket& Socket::operator=(const Socket& other)
+{
+    if (this != &other) {
+        _sockfd = other._sockfd;
+        std::memcpy(_buffer, other._buffer, BUFFER_SIZE);
+        _recvStash = other._recvStash;
+        _sendStash = other._sendStash;
+        _canRecv = other._canRecv;
+        _canSend = other._canSend;
+        _actionMade = other._actionMade;
+    }
+    return (*this);
+}    
+    
 Socket::~Socket(){}
 
 int    Socket::getSockFd(void) const
 {
-    return (_sockfd.fd);
+    return (_sockfd);
 }
-void    Socket::updateFlags(void)
+void    Socket::updateFlags(short revents)
 {
-    if (_sockfd.revents & POLLIN) {
+    if (revents & POLLIN) {
         _setCanRecv(true);
     }
-    if (_sockfd.revents & POLLOUT) {
+    if (revents & POLLOUT) {
         _setCanSend(true);
     }
     _actionMade = false;
@@ -71,7 +90,7 @@ void                Socket::fillStash(void)
         throw (std::runtime_error("fill() was called when it should not have!"));
     } 
 	std::memset(_buffer, 0x0, BUFFER_SIZE);
-	ssize_t	recvOutput = recv(_sockfd.fd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
+	ssize_t	recvOutput = recv(_sockfd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
 	if (recvOutput <= 0) {
 		throw (SocketException(RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
@@ -91,7 +110,7 @@ void                Socket::flushStash(void)
     //Make sure that you don't try to send more bytes than the buffer allows!
     size_t  bytesToSend = std::min(_sendStash.size(), static_cast<std::size_t>(BUFFER_SIZE));
     std::memcpy(_buffer, _sendStash.data(), bytesToSend);
-    ssize_t bytesSent = send(_sockfd.fd, _buffer, bytesToSend, 0);
+    ssize_t bytesSent = send(_sockfd, _buffer, bytesToSend, 0);
     if (bytesSent <= 0) {
         throw (SocketException(SEND,
             static_cast<SocketException::ActionReturn>(bytesSent)));
