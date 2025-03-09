@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 18:58:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/09 11:03:14 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ void    RequestManager::_recvBody(void)
 
 void    RequestManager::_cgiProcess(void)
 {
-    //std::cerr << "goddamnit" << std::endl;
-
     if (!CGIHandler::isCgi(_request.getTarget()))
 	        _stateMachine.advanceState();
         else

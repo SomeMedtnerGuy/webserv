@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/08 15:57:40 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/09 13:10:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 # include "HttpRequest.hpp"
 # include "HttpResponse.hpp"
 # include "ServerSettings.hpp"
+# include "utils.hpp"
 # include <unistd.h>
+# include <ctime>
+
 
 class CGIHandler {
 private:
@@ -26,9 +29,11 @@ private:
 	ServerSettings&						_server;
 	
 	bool								_isRunning;
-	int									_fileFd;
+	int									_fileOutFd;
+	int									_fileInFd;
 	int									_pipefd[2];
 	pid_t 								_pid;
+	long long							_startedTime;
 	const char* 						_tempFileName;
 	char **								_env;
 	char **								_cgiArgs;
@@ -42,8 +47,6 @@ private:
 	void _forkProcess();
 	void _cgiGetExec();
 	void _cgiPostExec();
-	void _cgiPostArgs();
-	void _cgiGetArgs();
 	void _getRequiredCgiArgs();
 	void _setCgiPath();
 	void _setEnv();

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/08 19:39:05 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/09 13:28:29 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ CGIHandler::~CGIHandler()
 			delete[] _cgiArgs[i];
 		delete[] _cgiArgs;
 	}
-	close(_fileFd);
+	close(_fileOutFd);
+	std::remove(_tempFileName);
+
+	
 }
 
 /* Private Methods */
@@ -68,7 +71,11 @@ void CGIHandler::_setEnv()
 	_cgiEnv["REQUEST_METHOD"] = _getMethod(_request.getMethod());
 	_cgiEnv["SCRIPT_FILENAME"] = _cgiPath;
 	_cgiEnv["SERVER_PROTOCOL"] = "HTTP/1.1";
-	_cgiEnv["CONTENT_TYPE"] = "text/plain"; //check this and content length from body size for post
+	std::map<std::string, std::string>::const_iterator it = _request.getHeaders().find("CONTENT_TYPE");
+	if (it != _request.getHeaders().end())
+		_cgiEnv["CONTENT_TYPE"] = it->second;
+	else
+		_cgiEnv["CONTENT_TYPE"] = "text/plain";
 	if (_request.getMethod() == POST)
 	{
 		size_t number = _request.getBodySize();
@@ -100,8 +107,7 @@ void CGIHandler::_getCgiEnv()
     _env[envStrings.size()] = NULL; 
 }
 
-
-void CGIHandler::_cgiGetArgs()
+void CGIHandler::_getRequiredCgiArgs()
 {
 	_cgiArgs = new char*[3];
 	std::string cgiExec = "/usr/bin/python3";
@@ -117,27 +123,25 @@ void CGIHandler::_cgiGetArgs()
 	_cgiArgs[2] = NULL; 
 }
 
-void CGIHandler::_cgiPostArgs()
-{
-	_cgiGetArgs();
-	if (pipe(_pipefd) == -1)
-		throw std::runtime_error("Pipe failed.");
-}
-
-void CGIHandler::_getRequiredCgiArgs()
-{
-	if (_request.getMethod() == GET)
-		_cgiGetArgs();
-	if (_request.getMethod() == POST)
-		_cgiPostArgs();
-}
-
 void CGIHandler::_openFile()
 {
-	_tempFileName = "/tmp/scriptresult";
-	_fileFd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
-	if (_fileFd == -1)
+	std::srand(std::time(0));
+    std::ostringstream fileNameStream;
+    
+    fileNameStream << "root/cgi-bin/cgioutfile";
+    fileNameStream << std::rand();
+		
+	_tempFileName = fileNameStream.str().c_str();
+	_fileOutFd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	if (_fileOutFd == -1)
 		throw std::runtime_error("CGI file result creat failed.");
+
+	if (_request.getMethod() == POST)
+	{
+		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
+		if (_fileInFd == -1)
+			throw std::runtime_error("CGI file open failed.");
+	}
 }
 
 void CGIHandler::_forkProcess()
@@ -151,8 +155,8 @@ void CGIHandler::_cgiGetExec()
 {
 	if (_pid == 0)
 	{
-		dup2(_fileFd, STDOUT_FILENO);
-		close(_fileFd);
+		dup2(_fileOutFd, STDOUT_FILENO);
+		close(_fileOutFd);
 		
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		
@@ -162,28 +166,22 @@ void CGIHandler::_cgiGetExec()
 }
 
 void CGIHandler::_cgiPostExec()
-{
-	
+{	
 	if (_pid == 0)
 	{
-		// close(_pipefd[1]);
-		dup2(_response.cgiFileFd, STDIN_FILENO);
-		close(_response.cgiFileFd);
+		dup2(_fileInFd, STDIN_FILENO);
+		close(_fileInFd);
 		
-		dup2(_fileFd, STDOUT_FILENO);
-		close(_fileFd);
+		dup2(_fileOutFd, STDOUT_FILENO);
+		close(_fileOutFd);
 		
-		// std::cerr << "oi?" << _cgiArgs[0] << std::endl;
+		std::cerr << _cgiArgs[0] << std::endl;
+		std::cerr << _cgiArgs[1] << std::endl;
 		
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		std::cerr << "CGI Execution failed!" << std::endl;
 		std::exit(1);
 	}
-	
-	// close(_pipefd[0]);
-	
-	// write(_pipefd[1], _response.cgiFile.c_str(), _request.getBodySize());
-	// close(_pipefd[1]);
 }
 
 void CGIHandler::_execute()
@@ -192,11 +190,13 @@ void CGIHandler::_execute()
 	_isRunning = true;
 	_openFile();
 	_forkProcess();
-	
+
 	if (_request.getMethod() == GET)
 		_cgiGetExec();
 	if (_request.getMethod() == POST)
 		_cgiPostExec();
+
+	_startedTime = getCurrentTimestamp();
 }
 
 /* Public Methods */
@@ -206,7 +206,6 @@ bool CGIHandler::isCgiRunning(){return (_isRunning);}
 bool CGIHandler::cgiDone()
 {
 	int status;
-	//std::cerr << "what" << std::endl;
 
 	pid_t pidCheck = waitpid(_pid, &status, WNOHANG);
 	if (pidCheck > 0)
@@ -218,11 +217,23 @@ bool CGIHandler::cgiDone()
 			return (true);
 		}
 		if (WEXITSTATUS(status) != 0)
-		_response.setStatusCode(500);/* internal server error */
+			_response.setStatusCode(500);/* internal server error */
 		else
-		_response.setBodyPath(_tempFileName);
+			_response.setBodyPath(_tempFileName);
+			
+		close(_fileInFd);
+		std::remove(_response.cgiFile.c_str());
+		
 		return (true);
 	}
+	
+	if (hasTimedOut(_startedTime, 60))
+	{
+		kill(_pid, SIGKILL);
+		close(_fileInFd);
+		std::remove(_response.cgiFile.c_str());
+	}
+	
 	return (false);
 }
 
