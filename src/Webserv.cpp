@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 23:19:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:08:52 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,48 @@ void    Webserv::setup(void)
 
 void    Webserv::run(void)
 {
-    //TODO: add the loop present in main()
+    try {
+        while (g_shutdown == false) {
+            poll(_pollSockets.data(), _pollSockets.size(), 200);
+            _takeCareOfClientSockets();
+            _takeCareOfListenSockets();
+        } 
+    } catch (std::exception& e) {
+        std::cerr << "Some shit went wrong." << std::endl;
+    }
+}
+
+/* PRIVATE */
+void    Webserv::_takeCareOfClientSockets(void)
+{
+    for (client_vector::reverse_iterator rclient = _clients.rbegin(); rclient != _clients.rend() ; rclient++) {
+        client_vector::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
+        // Client index is relative to total poll sockets, not just client sockets (includes listen sockets)
+        int clientIndex = _portsAm + (client - _clients.begin());
+        rclient->updateSocketFlags(_pollSockets[clientIndex].revents);
+        rclient->handle();
+        if (rclient->shouldCloseConnection()) {
+            _clients.erase(client); 
+            close(_pollSockets[clientIndex].fd);
+            _pollSockets.erase(_pollSockets.begin() + clientIndex);
+        }
+    }
+}
+
+void    Webserv::_takeCareOfListenSockets()
+{
+    for (size_t i = 0; i < _portsAm; i++) { //Only go through the listen sockets from the pollSockets (the first _portsAm amout of sockets in that vector)
+        if (_pollSockets[i].revents & POLLIN) {
+            struct sockaddr_in  cli_addr;
+            socklen_t           cli_len = sizeof(cli_addr);
+            struct pollfd       cliSock;
+            cliSock.fd = accept(_pollSockets[i].fd, (struct sockaddr*)&cli_addr, &cli_len);
+            cliSock.events = POLLIN | POLLOUT;
+            cliSock.revents = 0;
+            _pollSockets.push_back(cliSock);
+            
+            Client  client(cliSock.fd, _configFile);
+            _clients.push_back(client);
+        }
+    } 
 }

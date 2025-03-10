@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:49:01 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 23:18:26 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:50:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ private:
     const size_t    _portsAm;
     sock_vector     _pollSockets;
     client_vector   _clients;
+
+    void    _takeCareOfClientSockets(void);
+    void    _takeCareOfListenSockets(void);
 };
 
 #endif
