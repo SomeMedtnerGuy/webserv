@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/09 13:10:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:27:50 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ private:
 	bool								_isRunning;
 	int									_fileOutFd;
 	int									_fileInFd;
-	int									_pipefd[2];
+	// cgi-time.pyint									_pipefd[2];
 	pid_t 								_pid;
 	long long							_startedTime;
-	const char* 						_tempFileName;
+	std::string 						_tempFileName;
 	char **								_env;
 	char **								_cgiArgs;
 	std::string							_cgiPath;

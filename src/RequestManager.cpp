@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/09 11:03:14 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:24:53 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,16 @@ void    RequestManager::_cgiProcess(void)
             if (!_cgiHandler.isCgiRunning())
                 _cgiHandler.run();
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
+            {
+                std::cout << "done" << std::endl;
                 _stateMachine.advanceState();
+            }
         }
 }
 
 void    RequestManager::_sendResponse(void)
 {
-	// std::cout << "start debbuging" << _stateMachine.getCurrentState() << std::endl;
+	// std::cout << "start debbuging" << _response.getStatusCode() << std::endl;
     
     size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));
@@ -170,6 +173,7 @@ void    RequestManager::_checkAndActOnErrors(void)
 
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
+    std::cout << "default error" << statusCode << std::endl;
     switch (statusCode) {
         case 200: case 204: //case 411: //TODO REMOVE 411
             return (NO_ERROR);
@@ -180,6 +184,6 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
         default:
-            throw ("The status code is not recognized by the server");
+            throw std::runtime_error("The status code is not recognized by the server");
     }
 }

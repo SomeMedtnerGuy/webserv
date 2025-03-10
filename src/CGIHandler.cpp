@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/09 13:28:29 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:13:02 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 /* Constructor and destructor */
 CGIHandler::CGIHandler(const HttpRequest& request, HttpResponse& response, ServerSettings& server) : _request(request), _response(response), _server(server)
 {
-	_env = NULL;
-	_cgiArgs = NULL;
 	_isRunning = false;
+	_fileInFd = -1;
+	_fileOutFd = -1;
+	_env = NULL;
+	_cgiArgs = NULL;	
 }
 
 CGIHandler::~CGIHandler()
@@ -37,10 +39,10 @@ CGIHandler::~CGIHandler()
 			delete[] _cgiArgs[i];
 		delete[] _cgiArgs;
 	}
-	close(_fileOutFd);
-	std::remove(_tempFileName);
-
-	
+	if (_fileOutFd != -1)
+		close(_fileOutFd);
+	if (!_tempFileName.empty())
+		std::remove(_tempFileName.c_str());
 }
 
 /* Private Methods */
@@ -131,8 +133,8 @@ void CGIHandler::_openFile()
     fileNameStream << "root/cgi-bin/cgioutfile";
     fileNameStream << std::rand();
 		
-	_tempFileName = fileNameStream.str().c_str();
-	_fileOutFd = open(_tempFileName, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	_tempFileName = fileNameStream.str();
+	_fileOutFd = open(_tempFileName.c_str(), O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (_fileOutFd == -1)
 		throw std::runtime_error("CGI file result creat failed.");
 
@@ -221,17 +223,30 @@ bool CGIHandler::cgiDone()
 		else
 			_response.setBodyPath(_tempFileName);
 			
-		close(_fileInFd);
-		std::remove(_response.cgiFile.c_str());
-		
+		if (_fileInFd >= 0)
+		{
+		    close(_fileInFd);
+		    _fileInFd = -1;
+		}
+		if (!_response.cgiFile.empty())
+			std::remove(_response.cgiFile.c_str());
 		return (true);
 	}
 	
-	if (hasTimedOut(_startedTime, 60))
+	if (hasTimedOut(_startedTime, 3))
 	{
+		std::cout << "TimedOut" << std::endl;
 		kill(_pid, SIGKILL);
-		close(_fileInFd);
-		std::remove(_response.cgiFile.c_str());
+		// waitpid(_pid, &status, 0);
+		_response.setStatusCode(502); /* Bad gateway */
+		if (_fileInFd >= 0)
+		{
+		    close(_fileInFd);
+		    _fileInFd = -1;
+		}
+		if (!_response.cgiFile.empty())
+		    std::remove(_response.cgiFile.c_str());
+		return (true);
 	}
 	
 	return (false);
