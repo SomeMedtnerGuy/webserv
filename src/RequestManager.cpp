@@ -37,11 +37,7 @@ void    RequestManager::handle(void)
     do {
         stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
         (this->*stateFunction)();
-        
-        if (currentState != 0)
-            // std::cout << "current state" << currentState <<std::endl;
-        
-        // This is absolutely disgusting. It should be absolutely be checked and set on Request Processor.
+        // This is absolutely disgusting. It should definitely be checked and set on Request Processor.
         // Probably the best way would be to have this characteristic be part of the request itself?
         // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
         if (_request.getHeaders().find("Connection") != _request.getHeaders().end()) {

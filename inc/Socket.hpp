@@ -34,11 +34,13 @@ public:
     typedef unsigned char       byte_t;
     typedef std::vector<byte_t>	data_container_t;
     
-    Socket(sockfd_t& sockfd);
+    Socket(int sockfd);
+    Socket(const Socket& other);
+    Socket& operator=(const Socket& other);
     ~Socket();
     
     int                     getSockFd(void) const;
-    void                    updateFlags(void);
+    void                    updateFlags(short revents);
     const data_container_t& getRecvStash(void) const;
     void                    consumeRecvStash(size_t byteAm);
     const data_container_t& getSendStash(void) const;
@@ -67,7 +69,8 @@ public:
     };
 
 private:
-    sockfd_t&         _sockfd;
+    //sockfd_t&         _sockfd;
+    int                 _sockfd;
     byte_t      	  _buffer[BUFFER_SIZE];
     data_container_t  _recvStash;
     data_container_t  _sendStash;
