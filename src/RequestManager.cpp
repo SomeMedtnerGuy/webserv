@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 22:38:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:24:53 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
         _requestParser(_request, _response, _serverSettings),
         _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
+        _cgiHandler(_request, _response, _serverSettings), 
         _request(), _response(_serverSettings),
         _handlingComplete(false), _closeConnection(false)
 {
     _stateFunctionsMap[RECV_HEADER] = &RequestManager::_recvHeader;
     _stateFunctionsMap[RECV_BODY] = &RequestManager::_recvBody;
+    _stateFunctionsMap[CGI_PROCESS] = &RequestManager::_cgiProcess;
     _stateFunctionsMap[SEND_RESPONSE] = &RequestManager::_sendResponse;
 }
 RequestManager::~RequestManager(){}
@@ -35,14 +37,13 @@ void    RequestManager::handle(void)
     do {
         stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
         (this->*stateFunction)();
-        
         // This is absolutely disgusting. It should definitely be checked and set on Request Processor.
         // Probably the best way would be to have this characteristic be part of the request itself?
         // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
         if (_request.getHeaders().find("Connection") != _request.getHeaders().end()) {
             std::string connectionType = _request.getHeaders().at("Connection");
             if (connectionType.compare("close") == 0) {
-                _setCloseConnection(true);
+                _setCloseConnection(true); 
             }
         }
         prevState = currentState;
@@ -81,7 +82,7 @@ void    RequestManager::_recvHeader(void)
     _checkAndActOnErrors();
     if (_requestParser.isDone()) {
         _stateMachine.advanceState();
-        //_request.printMessage();
+        // _request.printMessage();
     }
 }
 void    RequestManager::_recvBody(void)
@@ -101,12 +102,31 @@ void    RequestManager::_recvBody(void)
 
     _socket.consumeRecvStash(bytesConsumed);
     _checkAndActOnErrors();
-    if (_requestPerformer.isDone()) {
+    if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {/*  */
         _stateMachine.advanceState();
     }
 }
+
+void    RequestManager::_cgiProcess(void)
+{
+    if (!CGIHandler::isCgi(_request.getTarget()))
+	        _stateMachine.advanceState();
+        else
+        {
+            if (!_cgiHandler.isCgiRunning())
+                _cgiHandler.run();
+            if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
+            {
+                std::cout << "done" << std::endl;
+                _stateMachine.advanceState();
+            }
+        }
+}
+
 void    RequestManager::_sendResponse(void)
 {
+	// std::cout << "start debbuging" << _response.getStatusCode() << std::endl;
+    
     size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));
     _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));
@@ -149,8 +169,9 @@ void    RequestManager::_checkAndActOnErrors(void)
 
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
+    std::cout << "default error" << statusCode << std::endl;
     switch (statusCode) {
-        case 200: case 204:
+        case 200: case 204: //case 411: //TODO REMOVE 411
             return (NO_ERROR);
         case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);
@@ -159,6 +180,6 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
         default:
-            throw ("The status code is not recognized by the server");
+            throw std::runtime_error("The status code is not recognized by the server");
     }
 }

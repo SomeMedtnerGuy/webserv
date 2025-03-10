@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 21:52:00 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/09 12:16:59 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <cstring> //for memset()
 # include <iostream>
 # include <algorithm> //for min()
+
 
 class   Socket
 {

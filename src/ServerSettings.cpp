@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/16 18:04:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 16:09:57 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,7 @@ void ServerSettings::setIndexLocation(Location location)
 		return ;
 	for (size_t i = 0; i < location.getIndexSize(); i++)
 	{
-		std::string filePath = _root + "/" + location.getIndex(i);  
-		std::cout << filePath << std::endl;
+		std::string filePath = _root + location.getSpecificPath() + "/" + location.getIndex(i);  
 		std::ifstream file(filePath.c_str());
 		if (file.is_open())
 		{

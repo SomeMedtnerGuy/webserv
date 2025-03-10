@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestPerformer.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/07 09:53:25 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 17:17:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ size_t    RequestPerformer::perform(const data_t& data)
                 _setConsumeMode(true);
                 break;
             case POST:
+				// std::cout << "perform post" << std::endl;
                 dataConsumed = _performPost(data);
                 break;
             default:

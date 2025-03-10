@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/08 09:14:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/09 13:09:06 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,30 +289,20 @@ bool    isStrNum(std::string str)
 }
 
 long long   getCurrentTimestamp() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    long long   currentTimestamp = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
-    return (currentTimestamp);
+    // struct timeval tv;
+    // gettimeofday(&tv, NULL);
+    // long long   currentTimestamp = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
+    // std::cout << "gettimeofaday" << currentTimestamp << std::endl;
+    // std::cout << "time" << std::time(NULL) << std::endl;
+    // return (currentTimestamp);
+    return std::time(NULL);
 }
 
 bool    hasTimedOut(long long lastActionTime, const int timeoutTime) {
     long long   currentTimestamp = getCurrentTimestamp();
-    if (lastActionTime + (timeoutTime * 1000) < currentTimestamp) {
+    if (lastActionTime + (timeoutTime) < currentTimestamp) {
         return (true);
     } else {
         return (false);
     } 
 }
-
-// if ((auxPos = line.find("#")) != std::string::npos)
-		// 	line = line.substr(0, auxPos - 1);
-		// if (line.length() == 0 || std::find_if(line.begin(), line.end(), std::not1(std::ptr_fun<int, int>(std::isspace))) == line.end())
-        //     continue;
-		// for (size_t i = 0; i < line.size(); ++i)
-		// {
-		// 	if (!isspace(line[i]))
-		// 	{
-		// 		auxPos = i;
-		// 		break ;
-		// 	}
-		// }
