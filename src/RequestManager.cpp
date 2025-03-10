@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/04 16:36:22 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:38:31 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,58 +18,36 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
         _requestParser(_request, _response, _serverSettings),
         _requestPerformer(_request, _response, _serverSettings),
         _responseSender(_request, _response),
+        _request(), _response(_serverSettings),
         _handlingComplete(false), _closeConnection(false)
 {
-    
+    _stateFunctionsMap[RECV_HEADER] = &RequestManager::_recvHeader;
+    _stateFunctionsMap[RECV_BODY] = &RequestManager::_recvBody;
+    _stateFunctionsMap[SEND_RESPONSE] = &RequestManager::_sendResponse;
 }
 RequestManager::~RequestManager(){}
 
 void    RequestManager::handle(void)
 {
-    //TODO make the following logic into a switch
-    if (_stateMachine.getCurrentState() == RECV_HEADER) {
-        //I cannot be sure by this point whether I actually need to read from socket
-        // to parse the request, as it can be enough leftover from a previous read to
-        // parse an entire nex request. Therefore I must try to parse leftovers and
-        // only then read and parse more if necessary (and possible)
-        size_t  bytesParsed = _requestParser.parse(_socket.getRecvStash()); 
-        if (!_requestParser.isDone() && _socket.canRecv()) {
-            _socket.fillStash();
-            bytesParsed += _requestParser.parse(_socket.getRecvStash());
+    state_function  stateFunction;
+    State           currentState = _stateMachine.getCurrentState();
+    State           prevState = currentState;
+    do {
+        stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
+        (this->*stateFunction)();
+        
+        // This is absolutely disgusting. It should definitely be checked and set on Request Processor.
+        // Probably the best way would be to have this characteristic be part of the request itself?
+        // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
+        if (_request.getHeaders().find("Connection") != _request.getHeaders().end()) {
+            std::string connectionType = _request.getHeaders().at("Connection");
+            if (connectionType.compare("close") == 0) {
+                _setCloseConnection(true);
+            }
         }
-        _socket.consumeRecvStash(bytesParsed);
-
-        _checkAndActOnErrors();
-        if (_requestParser.isDone()) {
-            _stateMachine.advanceState();
-            _request.printMessage();
-        }
-    }
-    if (_stateMachine.getCurrentState() == RECV_BODY) {
-        size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
-        if (!_requestPerformer.isDone() && _socket.canRecv()) {
-            _socket.fillStash();
-            bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
-        }
-        _socket.consumeRecvStash(bytesConsumed);
-        _checkAndActOnErrors();
-        if (_requestPerformer.isDone()) {
-            _stateMachine.advanceState();
-        }
-    }
-
-    
-    if (_stateMachine.getCurrentState() == SEND_RESPONSE) {
-        size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
-                                                        static_cast<size_t>(BUFFER_SIZE));
-        _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));
-        if (_socket.canSend()) {
-            _socket.flushStash();
-        }
-        if (_responseSender.isDone()) {
-            _setHandlingComplete(true);
-        }
-    }
+        prevState = currentState;
+        currentState = _stateMachine.getCurrentState();
+    } while (currentState != prevState);
 }
 
 bool    RequestManager::isDone(void) const {return (_getHandlingComplete());}
@@ -80,6 +58,72 @@ void    RequestManager::_setHandlingComplete(bool value) {_handlingComplete = va
 bool    RequestManager::_getHandlingComplete(void) const {return (_handlingComplete);}
 void    RequestManager::_setCloseConnection(bool value) {_closeConnection = value;}
 bool    RequestManager::_getCloseConnection(void) const {return (_closeConnection);}
+
+void    RequestManager::_recvHeader(void)
+{
+    //I cannot be sure by this point whether I actually need to read from socket
+    // to parse the request, as it can be enough leftover from a previous read to
+    // parse an entire nex request. Therefore I must try to parse leftovers and
+    // only then read and parse more if necessary (and possible)
+    size_t  bytesParsed = _requestParser.parse(_socket.getRecvStash()); 
+    if (!_requestParser.isDone() && _socket.canRecv()) {
+        try {
+            _socket.fillStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
+        bytesParsed += _requestParser.parse(_socket.getRecvStash());
+    }
+    _socket.consumeRecvStash(bytesParsed);
+    _checkAndActOnErrors();
+    if (_requestParser.isDone()) {
+        _stateMachine.advanceState();
+        //_request.printMessage();
+    }
+}
+void    RequestManager::_recvBody(void)
+{
+    size_t  bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
+    if (!_requestPerformer.isDone() && _socket.canRecv()) {
+        try {
+            _socket.fillStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
+        bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
+    }
+
+    _socket.consumeRecvStash(bytesConsumed);
+    _checkAndActOnErrors();
+    if (_requestPerformer.isDone()) {
+        _stateMachine.advanceState();
+    }
+}
+void    RequestManager::_sendResponse(void)
+{
+    size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
+                                                        static_cast<size_t>(BUFFER_SIZE));
+    _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));
+    if (_socket.canSend()) {
+        try {
+            _socket.flushStash();
+        } catch (Socket::SocketException& e) {
+            std::cout << e.what() << std::endl;
+            _setHandlingComplete(true);
+            _setCloseConnection(true);
+            return;
+        }
+    }
+    if (_responseSender.isDone()) {
+        _setHandlingComplete(true);
+    }
+}
 
 void    RequestManager::_checkAndActOnErrors(void)
 {
@@ -99,7 +143,7 @@ void    RequestManager::_checkAndActOnErrors(void)
             _setCloseConnection(true);
             break;
         default:
-            throw (std::exception()); //TODO explicit
+            throw (std::runtime_error("Request manager achieved an unexpected state."));
     }
 }
 
@@ -108,13 +152,13 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
     switch (statusCode) {
         case 200: case 204:
             return (NO_ERROR);
-        case 404: case 405: 
+        case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);
-        case 431:
+        case 431: case 400:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
         default:
-            throw (std::exception()); //TODO explicit
+            throw ("The status code is not recognized by the server");
     }
 }

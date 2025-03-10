@@ -6,13 +6,14 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 16:06:33 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:22:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpResponse.hpp"
 
-HttpResponse::HttpResponse(): _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH) 
+HttpResponse::HttpResponse(ServerSettings& serverSettings)
+	: _serverSettings(serverSettings), _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH) 
 {
 	_headers["Content-Type"] = "text/html; charset=UTF-8";
     _headers["Server"] = "localhost";
@@ -20,10 +21,10 @@ HttpResponse::HttpResponse(): _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH)
 }
 HttpResponse::~HttpResponse() {}
 
-void	HttpResponse::setStatusCode(code_t statusCode, std::string errorPagePath)
+void	HttpResponse::setStatusCode(code_t statusCode)
 {
 	_statusCode = statusCode;
-	setBodyPath(errorPagePath);
+	setBodyPath(_serverSettings.getErrorPage(_statusCode));
 }
 HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCode);}
 void						HttpResponse::setBodyPath(std::string bodyPath)

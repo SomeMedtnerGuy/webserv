@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/01 18:46:20 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 09:14:54 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ bool isDirectory(std::string path)
     struct stat statbuf;
 	if (stat(path.c_str(), &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR))
     {
-        perror("Erro ao acessar o path");
         return (false);
     }
     return (true);
@@ -265,15 +264,18 @@ int		getPortFromSocket(int sockfd)
 	return (ntohs(addr.sin_port));
 }
 
-size_t getFileLength(std::string filename)
+ssize_t getFileLength(std::string filename)
 {
-    std::ifstream       file(filename.c_str()); //TODO: Protect this
+    std::ifstream       file(filename.c_str());
+    if (file.fail()) {
+        return (-1);
+    }
     std::streampos      length;
     std::streampos      pos(file.tellg());
     
     file.seekg(pos, std::ios::end);
     length = file.tellg();
-    return (static_cast<int>(length));
+    return (static_cast<ssize_t>(length));
 }
 
 bool    isStrNum(std::string str)
@@ -284,6 +286,22 @@ bool    isStrNum(std::string str)
         }
     }
     return (true);
+}
+
+long long   getCurrentTimestamp() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long long   currentTimestamp = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
+    return (currentTimestamp);
+}
+
+bool    hasTimedOut(long long lastActionTime, const int timeoutTime) {
+    long long   currentTimestamp = getCurrentTimestamp();
+    if (lastActionTime + (timeoutTime * 1000) < currentTimestamp) {
+        return (true);
+    } else {
+        return (false);
+    } 
 }
 
 // if ((auxPos = line.find("#")) != std::string::npos)

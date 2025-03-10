@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:27:41 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 13:24:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:13:28 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "Socket.hpp" // for typedef
 # include "StateMachine.hpp"
+# include "HttpRequest.hpp"
 # include "HttpResponse.hpp"
 
 class APostPerformer
@@ -34,7 +35,6 @@ protected:
     bool    _isDone;
         void    _setIsDone(bool newValue);
         bool    _getIsDone(void) const;
-    
 };
 
 #endif

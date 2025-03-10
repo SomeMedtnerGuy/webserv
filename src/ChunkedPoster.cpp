@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 17:01:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:33:27 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ ChunkedPoster::ChunkedPoster(HttpResponse&  response, std::string saveFileName)
         saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
         i++;
         if (i >= 100) {
-            _response.setStatusCode(409, "");
+            _response.setStatusCode(409);
             return ;
         }
     }
     _saveFile.open(saveFileName.c_str(), std::ios::binary);
-    if (_saveFile.badbit) {
-        _response.setStatusCode(500, "");
+    if (_saveFile.fail()) {
+        _response.setStatusCode(500);
     }
 }
 ChunkedPoster::~ChunkedPoster()
@@ -70,7 +70,7 @@ void    ChunkedPoster::_parseChunkSize(void)
         if (_data.size() < 16) {
             return ;
         }
-        _response.setStatusCode(400, ""); //TODO Take care of this. Must give response access to serverSettings somehow
+        _response.setStatusCode(400);
         _setIsDone(true);
         return;
     }
@@ -78,7 +78,7 @@ void    ChunkedPoster::_parseChunkSize(void)
     _currentChunkSize = std::strtol(dataStr.c_str(), &endPointer, 16);
     if (endPointer == dataStr.c_str()
         || size_t(endPointer - dataStr.c_str()) != endPosOfSize) { //No conversion was possible, so request is malformed
-        _response.setStatusCode(400, ""); //TODO Take care of this. Must give response access to serverSettings somehow
+        _response.setStatusCode(400); 
         _setIsDone(true);
         return;
     }

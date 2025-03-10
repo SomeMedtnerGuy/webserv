@@ -6,29 +6,49 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/03 13:39:10 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:52:44 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 
 /* PUBLIC */
-Socket::Socket(sockfd_t& sockfd)
-    :_sockfd(sockfd), _canRecv(false), _canSend(false) {}
+Socket::Socket(int sockfd)
+    :_sockfd(sockfd), _canRecv(false), _canSend(false), _actionMade(false){}
+
+Socket::Socket(const Socket& other)
+    :_sockfd(other._sockfd), _canRecv(other._canRecv), 
+    _canSend(other._canSend), _actionMade(other._actionMade){}
+
+Socket& Socket::operator=(const Socket& other)
+{
+    if (this != &other) {
+        _sockfd = other._sockfd;
+        std::memcpy(_buffer, other._buffer, BUFFER_SIZE);
+        _recvStash = other._recvStash;
+        _sendStash = other._sendStash;
+        _canRecv = other._canRecv;
+        _canSend = other._canSend;
+        _actionMade = other._actionMade;
+    }
+    return (*this);
+}    
+    
 Socket::~Socket(){}
 
 int    Socket::getSockFd(void) const
 {
-    return (_sockfd.fd);
+    return (_sockfd);
 }
-void    Socket::updateFlags(void)
+void    Socket::updateFlags(short revents)
 {
-    if (_sockfd.revents & POLLIN) {
+    if (revents & POLLIN) {
         _setCanRecv(true);
     }
-    if (_sockfd.revents & POLLOUT) {
+    if (revents & POLLOUT) {
         _setCanSend(true);
     }
+    _actionMade = false;
 }
 const Socket::data_container_t&   Socket::getRecvStash(void) const
 {
@@ -55,11 +75,11 @@ void                Socket::clearStashes(void)
     _recvStash.clear();
     _sendStash.clear();
 }
-bool                Socket::canRecv(void)
+bool                Socket::canRecv(void) const
 {
     return (_getCanRecv());
 }
-bool                Socket::canSend(void)
+bool                Socket::canSend(void) const
 {
     return (_getCanSend() && _sendStash.size() != 0);
 }
@@ -67,39 +87,55 @@ void                Socket::fillStash(void)
 {
     // That means this function was called when it shouldn't have been!
     if (!canRecv()) {
-        std::cerr << "fill() was called when it should not have!" << std::endl;
-        throw (-1); //TODO: specify the error better, but if this happens it is a bug in code!
+        throw (std::runtime_error("fill() was called when it should not have!"));
     } 
 	std::memset(_buffer, 0x0, BUFFER_SIZE);
-	ssize_t	recvOutput = recv(_sockfd.fd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
+	ssize_t	recvOutput = recv(_sockfd, _buffer, BUFFER_SIZE, 0); //Last arg are flags
 	if (recvOutput <= 0) {
-		std::cerr << "recv returned " << (recvOutput == 0 ? "0" : "-1") << std::endl;
-		throw (std::exception()); //TODO: specify the error better so poller can catch it
+		throw (SocketException(RECV,
+            static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
+    _actionMade = true;
 }
 
-
-#include <stdio.h>
 void                Socket::flushStash(void)
 {
     // That means this function was called when it shouldn't have been!
     if (!canSend()) {
-        std::cerr << "flush() was called when it should not have!" << std::endl;
-        throw (-1); //TODO: specify the error better, but if this happens it is a bug in code!
+        throw (std::runtime_error("flush() was called when it should not have!"));
     }
     std::memset(_buffer, 0x0, BUFFER_SIZE);
     //Make sure that you don't try to send more bytes than the buffer allows!
     size_t  bytesToSend = std::min(_sendStash.size(), static_cast<std::size_t>(BUFFER_SIZE));
     std::memcpy(_buffer, _sendStash.data(), bytesToSend);
-    ssize_t bytesSent = send(_sockfd.fd, _buffer, bytesToSend, 0);
+    ssize_t bytesSent = send(_sockfd, _buffer, bytesToSend, 0);
     if (bytesSent <= 0) {
-        std::cerr << "send returned " << (bytesSent == 0 ? "0" : "-1") << std::endl;
-        throw (std::exception()); //TODO: specify the error better so poller can catch it 
+        throw (SocketException(SEND,
+            static_cast<SocketException::ActionReturn>(bytesSent)));
     }
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
+    _actionMade = true;
+}
+
+bool    Socket::wasActionMade(void) const {return (_actionMade);}
+
+/* EXCEPTION */
+Socket::SocketException::SocketException(Action action, ActionReturn actionReturn)
+    :_action(action), _actionReturn(actionReturn)
+{
+    std::string actionStr = ((_action == RECV) ? "RECV" : "SEND");
+    std::string actionReturnStr = ((_actionReturn == ERROR)
+                                    ? "an error in socket occurred" 
+                                    : "the client closed the connection");
+    _message = actionStr + " action reported that " + actionReturnStr + "!"; 
+}
+Socket::SocketException::~SocketException() throw() {}
+const char* Socket::SocketException::what() const throw()
+{
+    return (_message.c_str());
 }
 
 /* PRIVATE */
