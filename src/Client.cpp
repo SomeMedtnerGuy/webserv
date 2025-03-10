@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/09 13:16:32 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:17:49 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ Client& Client::operator=(const Client& other)
 
 Client::~Client()
 {
-    if (_activeRequest) {
-        delete _activeRequest;
-    }
+    // if (_activeRequest) {
+    //     delete _activeRequest;
+    // }
 }
 
 void    Client::handle(void)

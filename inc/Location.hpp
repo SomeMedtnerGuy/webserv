@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 19:34:51 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:40:15 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ private:
 	std::vector<std::string> _index;
 	std::vector<std::string> _return;
 	std::string _root;
+	size_t _clientBodySize;
 
 public:
 	Location();
@@ -37,6 +38,8 @@ public:
 	void setIndex(std::vector<std::string>& index);
 	void setReturn(std::vector<std::string>& Return);
 	void setRoot(std::vector<std::string>& root);
+	void setClientBodySize(std::vector<std::string>& clientLimit);
+
 
 	/* Getters */
 	std::string getSpecificPath() const;
@@ -46,6 +49,8 @@ public:
 	std::string getIndex(size_t indexNbr) const;
 	std::vector<std::string> getReturn() const;
 	std::string getRoot() const;
+	size_t getClientBodySize() const;
+
 
 	
 	void setLocationElements(std::string& element);

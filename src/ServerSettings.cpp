@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/08 16:09:57 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:55:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,8 @@ void ServerSettings::setLocation(std::string target)
 				_autoindex = it->getAutoIndex();
 			if (it->getRoot() != "")
 				_root = it->getRoot();
+			if (it->getClientBodySize() != 0)
+				_clientBodySize = it->getClientBodySize();
 			setAllowMethods(*it);
 			setReturn(*it);
 			setIndexLocation(*it);
