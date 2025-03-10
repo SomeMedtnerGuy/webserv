@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/08 16:09:57 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:37:46 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,8 +174,9 @@ void ServerSettings::setLocation(std::string target)
 	{
 		if (it->getSpecificPath() == searchLoc)
 		{
-			if (it->getAutoIndex() == true)
+			if (it->getAutoIndex() == true) {
 				_autoindex = it->getAutoIndex();
+			}
 			if (it->getRoot() != "")
 				_root = it->getRoot();
 			setAllowMethods(*it);

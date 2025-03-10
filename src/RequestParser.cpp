@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 22:40:27 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:07:15 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	RequestParser::_parseHeaders(void)
         }
         size_t  fieldEnd = _dataStr.find(DELIMITOR);
         if (fieldEnd == _dataStr.npos) {
+            std::cerr << "seriously" << std::endl;
             return; //Header field is not complete, so a new recv must be done before continuing parsing
         }
         std::string field = _dataStr.substr(0, fieldEnd);
@@ -107,7 +108,9 @@ void	RequestParser::_parseHeaders(void)
         }
         _consumefromDataStr(fieldEnd + delimitorSize);
         _request.setHeadersSize(_request.getHeadersSize() + fieldEnd + delimitorSize);
+        //std::cerr << "What the fuck" << std::endl;
     }
+    //std::cerr << "What the actual fuck" << std::endl;
     //Since all conditions inside the while loop have returns, this section is only reached
     // if the end of the header section is reached, so the last delimitor should be cleared and state advanced
     _consumefromDataStr(2);
@@ -115,6 +118,7 @@ void	RequestParser::_parseHeaders(void)
 }
 void	RequestParser::_processRequest(void)
 {
+    std::cerr << "Process request started" << std::endl;
     //Check return code
     int  output = _serverSettings.getReturnCode();
     if (output != -1) { // Means that a return code is present
@@ -235,7 +239,7 @@ RequestParser::code_t	RequestParser::_parseHeaderField(std::string headerField)
 	if (fieldName.compare("Host") == 0)
 	{
 		std::size_t	colonPos = fieldValue.find(':');
-		_serverSettings.setServer(std::string(fieldValue, 0, colonPos)); //TODO doublecheck if this is already only returning the received host only if that host is listening to the port where this connection was requested through!
+		_serverSettings.setServer(std::string(fieldValue, 0, colonPos));
 		_serverSettings.setLocation(_request.getTarget());
 	}
 	//Place the header in the request.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/09 12:16:59 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:55:56 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ public:
     void                    fillStash(void);
     void                    flushStash(void);
     bool                    wasActionMade(void) const;
+
+    void                    printStash(void);
 
     class SocketException: public std::exception
     {

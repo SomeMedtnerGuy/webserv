@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 21:52:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:05:43 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,3 +143,16 @@ void    Socket::_setCanRecv(bool canRecv) {_canRecv = canRecv;}
 bool    Socket::_getCanRecv(void) const {return (_canRecv);}
 void    Socket::_setCanSend(bool canSend) {_canSend = canSend;}
 bool    Socket::_getCanSend(void) const {return (_canSend);}
+
+
+
+
+void    Socket::printStash(void)
+{
+    data_container_t    stash = getRecvStash();
+    std::cerr << "Stash: " << std::endl;
+    for (data_container_t::iterator it = stash.begin(); it != stash.end(); it++) {
+        std::cerr << *it;
+    }
+    std::cerr << std::endl;
+}

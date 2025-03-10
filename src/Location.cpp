@@ -6,13 +6,15 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/01 09:27:40 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:36:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Location.hpp"
 
-Location::Location(){}
+Location::Location()
+	:_autoindex(false)
+{}
 
 Location::Location(const Location& src)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 15:24:53 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:06:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void    RequestManager::handle(void)
     do {
         stateFunction = _stateFunctionsMap[_stateMachine.getCurrentState()];
         (this->*stateFunction)();
+
         // This is absolutely disgusting. It should definitely be checked and set on Request Processor.
         // Probably the best way would be to have this characteristic be part of the request itself?
         // Or perhaps in the hopefully future RequestProcessor class can expose the necessity of closing to RequestManager
@@ -48,6 +49,7 @@ void    RequestManager::handle(void)
         }
         prevState = currentState;
         currentState = _stateMachine.getCurrentState();
+        //_socket.printStash();
     } while (currentState != prevState);
 }
 
@@ -80,9 +82,16 @@ void    RequestManager::_recvHeader(void)
     }
     _socket.consumeRecvStash(bytesParsed);
     _checkAndActOnErrors();
-    if (_requestParser.isDone()) {
+    //std::cerr << "state: " << _stateMachine.getCurrentState() << std::endl;
+    //std::cerr << "isDone: " <<  _requestParser.isDone() << std::endl;
+    //_request.printMessage();
+    if (_requestParser.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
+        //std::cerr << "before" << _stateMachine.getCurrentState() << std::endl;
         _stateMachine.advanceState();
-        // _request.printMessage();
+        //std::cerr << "after" << _stateMachine.getCurrentState() << std::endl;
+        //std::cerr << std::endl;
+        //_request.printMessage();
+        //std::cerr << std::endl;
     }
 }
 void    RequestManager::_recvBody(void)
@@ -102,7 +111,7 @@ void    RequestManager::_recvBody(void)
 
     _socket.consumeRecvStash(bytesConsumed);
     _checkAndActOnErrors();
-    if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {/*  */
+    if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
         _stateMachine.advanceState();
     }
 }
@@ -141,6 +150,9 @@ void    RequestManager::_sendResponse(void)
         }
     }
     if (_responseSender.isDone()) {
+        std::cerr << std::endl;
+        _response.printMessage();
+        std::cerr << std::endl;
         _setHandlingComplete(true);
     }
 }
@@ -148,6 +160,7 @@ void    RequestManager::_sendResponse(void)
 void    RequestManager::_checkAndActOnErrors(void)
 {
     ErrorSeverity   errorSeverity = _getErrorSeverity(_response.getStatusCode());
+    //std::cerr << _response.getStatusCode() << std::endl;
     switch (errorSeverity) {
         case NO_ERROR:
             break;
@@ -169,7 +182,7 @@ void    RequestManager::_checkAndActOnErrors(void)
 
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
-    std::cout << "default error" << statusCode << std::endl;
+    //std::cout << "default error" << statusCode << std::endl;
     switch (statusCode) {
         case 200: case 204: //case 411: //TODO REMOVE 411
             return (NO_ERROR);
