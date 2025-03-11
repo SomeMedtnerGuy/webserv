@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Service.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joamonte <joamonte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:19:35 by joamonte          #+#    #+#             */
-/*   Updated: 2025/03/07 11:47:52 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:32:44 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,21 @@
 #include "Define.hpp"
 #include "ConfigFile.hpp"
 #include "ServerSettings.hpp"
+#include "Utils.hpp"
 
 struct serviceInfo
 {
-	addrinfo	parameters;
-	addrinfo	*address;
-	std::string	host;
-	std::string	port;
-	int			socket;
-	int			clientID;
-	int			serverID;
-	int			connectionSocket;
-	int			pollID;
-	short		mode;
-	bool		launch;
+	addrinfo			parameters;
+	addrinfo			*address;
+	std::string			host;
+	std::vector<int>	_ports;
+	int					socket;
+	int					clientID;
+	int					serverID;
+	int					connectionSocket;
+	int					pollID;
+	short				mode;
+	bool				launch;
 };
 
 typedef std::vector<pollfd>	pollfdVector;
@@ -48,6 +49,7 @@ class Service
 		//Setup auxiliars
 		void	_initAddressParameters();
 		void	_getSetupInfo(serverVector::iterator server);
+		void	Service::createSocket(serverVector::iterator server);
 		void	_setReuseableAddress();
 		void	_convertHostToAddress();
 		void	_bindAddressToSocket();

@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Service.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamonte <joamonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joamonte <joamonte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 22:41:07 by joamonte          #+#    #+#             */
-/*   Updated: 2025/03/07 13:20:43 by joamonte         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:34:28 by joamonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Service.hpp"
-//#include "Parser.hpp"
-#include "Utils.hpp"
 
 bool	g_shutdown = false;
 
@@ -262,6 +260,18 @@ void Service::_checkRequestedServer()
 
 // Setup private auxiliars
 
+
+void Service::createSocket(serverVector::iterator server)
+{
+	if (!this->_tmp.socket)
+	{
+		this->_tmp.socket = socket(AF_INET, SOCK_STREAM, 0);
+
+		if (this->_tmp.socket < 0)
+			throw std::runtime_error(ERR_SOCKET(server._serverName));
+	}
+}
+
 void Service::_initAddressParameters()
 {
 	std::memset(&this->_tmp.parameters, 0, sizeof(this->_tmp.parameters));
@@ -273,10 +283,11 @@ void Service::_initAddressParameters()
 
 void Service::_getSetupInfo(serverVector::iterator server)
 {
-	server->createSocket(); // Inserir funcao de criar Socket
-	this->_tmp.socket = server->getSocket(); // Inserir funcao de atribuir socket
+	createSocket(server);
 	this->_tmp.host = server->getHost();
-	this->_tmp.port = server.getListen(getListenSize());
+	for (size_t i = 0; i < server.getListenSize(); i++) {
+		this->_tmp.ports.push_back(server.getListen(i));
+	}
 	this->_tmp.launch = false;
 }
 
