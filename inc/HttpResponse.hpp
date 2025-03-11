@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 12:16:31 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 15:19:36 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/09 12:34:06 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class HttpResponse: public HttpMessage
 {
 public:
 	typedef int code_t;
+	std::string cgiFile;
 
 	HttpResponse(ServerSettings& serverSettings);
 	~HttpResponse();

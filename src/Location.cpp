@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/01 09:27:40 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:59:06 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Location.hpp"
 
-Location::Location(){}
+Location::Location() : _autoindex(false), _clientBodySize(0){}
 
 Location::Location(const Location& src)
 {
@@ -24,6 +24,7 @@ Location& Location::operator=(const Location& src)
 	if (this != &src)
 	{
 		_specificPath = src._specificPath;
+		_clientBodySize = src._clientBodySize;
 		_allowMethods = src._allowMethods;
 		_autoindex = src._autoindex;
 		_index = src._index;
@@ -123,6 +124,16 @@ void Location::setRoot(std::vector<std::string>& root)
 	_root = newRoot;
 }
 
+void Location::setClientBodySize(std::vector<std::string>& clientLimit)
+{
+	if (clientLimit.size() != 2)
+		throw std::runtime_error("Host directive must not have more than one value and can't be empty.");
+	for (size_t j = 0; j < clientLimit[1].size(); j++)
+		if (!isdigit(clientLimit[1][j]))
+			throw std::runtime_error("Invalid Client Limit directive: Expected a number value grater than 0.");
+	_clientBodySize = atoi(clientLimit[1].c_str());
+}
+
 /* Getters */
 std::string Location::getSpecificPath() const
 {
@@ -169,16 +180,22 @@ std::string Location::getRoot() const
 	return (_root);
 }
 
+size_t Location::getClientBodySize() const
+{
+	return (_clientBodySize);
+}
+
 /* - */
 
 void Location::setLocationElements(std::string& element)
 {
-	void (Location::*SetFunct[5])(std::vector<std::string>&) = {
+	void (Location::*SetFunct[6])(std::vector<std::string>&) = {
 		&Location::setAllowMethods,
 		&Location::setAutoIndex,
 		&Location::setIndex,
 		&Location::setReturn, 
-		&Location::setRoot
+		&Location::setRoot,
+		&Location::setClientBodySize
 		};
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
@@ -189,15 +206,16 @@ void Location::setLocationElements(std::string& element)
 
 size_t getLocationNbr(std::string element)
 {
-	std::string elementsKeys[5] = {
+	std::string elementsKeys[6] = {
 		"allow_methods",
 		"autoindex", 
 		"index", 
 		"return", 
-		"root", 
+		"root",
+		"client_body_size",
 		};
 	
-	for (size_t i = 0; i < 5; ++i) {
+	for (size_t i = 0; i < 6; ++i) {
 		if (element == elementsKeys[i])
 			return (i);		
 	}

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 22:40:27 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:13:48 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ RequestParser::code_t	RequestParser::_parseHeaderField(std::string headerField)
 	if (fieldName.compare("Host") == 0)
 	{
 		std::size_t	colonPos = fieldValue.find(':');
-		_serverSettings.setServer(std::string(fieldValue, 0, colonPos)); //TODO doublecheck if this is already only returning the received host only if that host is listening to the port where this connection was requested through!
+		_serverSettings.setServer(std::string(fieldValue, 0, colonPos));
 		_serverSettings.setLocation(_request.getTarget());
 	}
 	//Place the header in the request.

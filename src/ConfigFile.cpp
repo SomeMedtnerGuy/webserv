@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 17:25:10 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:02:10 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,8 +182,10 @@ void ConfigFile::splitServers()
 	_serverStr = splitServerBlocks(_content);
 	_nbrOfServers = _serverStr.size();
 	
-	for (size_t i = 0; i < _serverStr.size(); ++i) 
+	for (size_t i = 0; i < _serverStr.size(); ++i){
 		_serverObjs.push_back(fillServersObjs(_serverStr[i], i + 1));
+	}
+
 }
 
 Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
@@ -206,6 +208,7 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 		else if (i != 0)
 			realServer.setElements(serverVector[i]);		
 	}
+
 	return (realServer);
 }
 

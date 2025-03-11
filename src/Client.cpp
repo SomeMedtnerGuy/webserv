@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 21:53:00 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:17:49 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Client::Client(int sockfd, ConfigFile& configFile)
     : /*_id(id), */_socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(5)
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60)
 {
     _lastActionTime = getCurrentTimestamp();
 }
@@ -39,14 +39,15 @@ Client& Client::operator=(const Client& other)
 
 Client::~Client()
 {
-    if (_activeRequest) {
-        delete _activeRequest;
-    }
+    // if (_activeRequest) {
+    //     delete _activeRequest;
+    // }
 }
 
 void    Client::handle(void)
 {
     do {
+        
         if (_isNewRequestRequired()) {
             _activeRequest = new RequestManager(_socket, _configFile);
         }

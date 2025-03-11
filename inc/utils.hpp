@@ -3,27 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/07 13:48:55 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/09 12:37:45 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <exception>
-#include <sys/stat.h>
-#include <fstream>
-#include <algorithm>
-#include <vector>
-#include <map>
+# include <iostream>
+# include <string>
+# include <sstream>
+# include <exception>
+# include <sys/stat.h>
+# include <fstream>
+# include <algorithm>
+# include <vector>
+# include <map>
 # include <netinet/in.h>
-#include <sys/time.h>
+# include <sys/time.h>
+# include <ctime>
+
 
 enum Method {
 	GET,
