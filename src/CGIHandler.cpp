@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 19:37:11 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:40:46 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ bool CGIHandler::isCgi(std::string target)
 {
 	int pos = target.find("./root/cgi-bin");
 	
-	std::cout << pos << std::endl;
+	//std::cout << pos << std::endl;
 	if (pos == 0)
 	{
 		if (target.find(".py") == target.size() - 3){

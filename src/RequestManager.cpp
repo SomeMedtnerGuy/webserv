@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 19:06:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:18:14 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,20 +78,15 @@ void    RequestManager::_recvHeader(void)
             _setCloseConnection(true);
             return;
         }
+        //std::cerr << "before: " << std::endl;
+        //_socket.printStash();
         bytesParsed += _requestParser.parse(_socket.getRecvStash());
     }
     _socket.consumeRecvStash(bytesParsed);
     _checkAndActOnErrors();
-    //std::cerr << "state: " << _stateMachine.getCurrentState() << std::endl;
-    //std::cerr << "isDone: " <<  _requestParser.isDone() << std::endl;
-    //_request.printMessage();
     if (_requestParser.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
-        //std::cerr << "before" << _stateMachine.getCurrentState() << std::endl;
+        _request.printMessage();
         _stateMachine.advanceState();
-        //std::cerr << "after" << _stateMachine.getCurrentState() << std::endl;
-        //std::cerr << std::endl;
-        //_request.printMessage();
-        //std::cerr << std::endl;
     }
 }
 void    RequestManager::_recvBody(void)
@@ -150,9 +145,6 @@ void    RequestManager::_sendResponse(void)
         }
     }
     if (_responseSender.isDone()) {
-        std::cerr << std::endl;
-        _response.printMessage();
-        std::cerr << std::endl;
         _setHandlingComplete(true);
     }
 }
@@ -160,7 +152,6 @@ void    RequestManager::_sendResponse(void)
 void    RequestManager::_checkAndActOnErrors(void)
 {
     ErrorSeverity   errorSeverity = _getErrorSeverity(_response.getStatusCode());
-    //std::cerr << _response.getStatusCode() << std::endl;
     switch (errorSeverity) {
         case NO_ERROR:
             break;

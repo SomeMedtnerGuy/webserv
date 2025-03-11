@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:37:03 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 18:55:56 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:12:39 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include <cstring> //for memset()
 # include <iostream>
 # include <algorithm> //for min()
+
+
+#include <unistd.h> //DEBUG
 
 
 class   Socket
@@ -53,6 +56,7 @@ public:
     bool                    wasActionMade(void) const;
 
     void                    printStash(void);
+    void                    printBuffer(void);
 
     class SocketException: public std::exception
     {

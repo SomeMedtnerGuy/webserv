@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestPerformer.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/08 17:17:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:19:59 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,10 @@ size_t  RequestPerformer::_performPost(data_t data)
 	if (!_postPerformer) {
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
+			std::cerr << "DAFUQ1" << std::endl;
 			_postPerformer = new ChunkedPoster(_response, _request.getTarget());
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
+			std::cerr << "DAFUQ2" << std::endl;
 			_postPerformer = new RawPoster(_response, _request.getTarget(), _request.getBodySize());
 		} else { // It should never get to this point, because the presence of a body was already previously checked
 			throw (std::runtime_error("Body is erroneously expected"));
