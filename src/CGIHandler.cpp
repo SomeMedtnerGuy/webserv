@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 15:13:02 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:37:11 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ bool CGIHandler::cgiDone()
 		return (true);
 	}
 	
-	if (hasTimedOut(_startedTime, 3))
+	if (hasTimedOut(_startedTime, 60))
 	{
 		std::cout << "TimedOut" << std::endl;
 		kill(_pid, SIGKILL);
@@ -264,9 +264,14 @@ bool CGIHandler::isCgi(std::string target)
 {
 	int pos = target.find("./root/cgi-bin");
 	
-	if (pos != 0)
-		return (false);
+	std::cout << pos << std::endl;
+	if (pos == 0)
+	{
+		if (target.find(".py") == target.size() - 3){
+			return (true);
+		}
+	}
 		
-	return (true);
+	return (false);
 			//TODO change parser for cgi paths  
 }
