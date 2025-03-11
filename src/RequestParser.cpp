@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 11:13:48 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:17:57 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,24 @@ RequestParser::~RequestParser(){}
 
 size_t    RequestParser::parse(const data_t& data)
 {
-    _dataStr = std::string(data.begin(), data.end());
+    _setDataStr(std::string(data.begin(), data.end()));
+    /* std::cerr << "data: " << std::endl;
+
+    if (_dataStr.size() != 0) {
+        for (std::string::iterator it = _dataStr.begin(); it != _dataStr.end(); it++) {
+            if (*it == '\r') {
+                write(2, "\\r", 2);
+            } else if (*it == '\n') {
+                write(2, "\\n", 2);
+            } else {
+                write(2, &(*it), 1);
+            }
+        }
+        std::cerr << std::endl;
+    } */
+
+
+    
     if (_dataStr.length() > BUFFER_SIZE * 4) {
         _abortRequestHandling(431);
     }

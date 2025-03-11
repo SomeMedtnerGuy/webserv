@@ -1,0 +1,1 @@
+GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n\r\n

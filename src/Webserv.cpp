@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 15:08:52 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:48:37 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void    Webserv::_takeCareOfClientSockets(void)
         client_vector::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
         // Client index is relative to total poll sockets, not just client sockets (includes listen sockets)
         int clientIndex = _portsAm + (client - _clients.begin());
+        //if (_pollSockets[clientIndex].revents & POLLIN)
+        //std::cerr << (_pollSockets[clientIndex].revents & POLLIN) << std::endl;
         rclient->updateSocketFlags(_pollSockets[clientIndex].revents);
         rclient->handle();
         if (rclient->shouldCloseConnection()) {

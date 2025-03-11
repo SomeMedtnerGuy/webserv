@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 19:05:43 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:57:26 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ void                Socket::fillStash(void)
 		throw (SocketException(RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
+    printBuffer();
+    write(1, "\n", 1);
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
     _actionMade = true;
@@ -152,7 +154,28 @@ void    Socket::printStash(void)
     data_container_t    stash = getRecvStash();
     std::cerr << "Stash: " << std::endl;
     for (data_container_t::iterator it = stash.begin(); it != stash.end(); it++) {
-        std::cerr << *it;
+        if (*it == '\r') {
+            write(2, "\\r", 2);
+        } else if (*it == '\n') {
+            write(2, "\\n", 2);
+        } else {
+            write(2, &(*it), 1);
+        }
     }
     std::cerr << std::endl;
+}
+
+void    Socket::printBuffer(void)
+{
+    unsigned char*   ptr = _buffer;
+    while (*ptr != '\0') {
+        if (*ptr == '\r') {
+            write(1, "\\r", 2);
+        } else if (*ptr == '\n') {
+            write(1, "\\n", 2);
+        } else {
+            write(1, ptr, 1);
+        }
+        ptr++;
+    }
 }
