@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 10:33:10 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 09:42:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:51:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ RawConsumer::RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::s
         if (_saveFile.fail()) {
             _response.setStatusCode(500);
         }
+        _response.cgiFile = saveFileName;
     }
 }
 RawConsumer::~RawConsumer(){}

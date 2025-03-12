@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 15:53:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:56:07 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ ChunkedConsumer::ChunkedConsumer(HttpResponse&  response, bool shouldPerformPost
         if (_saveFile.fail()) {
             _response.setStatusCode(500);
         }
+        _response.cgiFile = saveFileName;
     }
 }
 ChunkedConsumer::~ChunkedConsumer()

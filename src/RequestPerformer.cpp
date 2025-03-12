@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 15:04:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:10:51 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ size_t  RequestPerformer::_consumeBody(data_t data)
 {
 	size_t	dataConsumed = 0;
 	if (!_bodyConsumer) {
-		bool shouldPerformPost = (_request.getMethod() == POST && _consumeMode == false);
+		std::cerr << _response.getStatusCode() << std::endl;
+		bool shouldPerformPost = (_request.getMethod() == POST && _response.getStatusCode() == 200);
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
 			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost, _request.getTarget()); //TODO These constructors must not return errors
@@ -113,9 +114,9 @@ size_t  RequestPerformer::_consumeBody(data_t data)
 	if (_bodyConsumer->isDone()) {
 		delete _bodyConsumer;
 		_bodyConsumer = NULL;
-		if (_request.getMethod() == POST && _response.getStatusCode() == 200) {
-			_response.setStatusCode(204);
-		}
+		//if (_request.getMethod() == POST && _response.getStatusCode() == 200) {
+		//	_response.setStatusCode(204);
+		//}
 		_setIsDone(true);
 	}
     return (dataConsumed);
