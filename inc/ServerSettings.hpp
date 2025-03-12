@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 17:06:18 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/11 18:11:31 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ class ServerSettings {
 private:
 	int _port;
 	std::string _serverName;
+	std::string	_location;
 	std::string _root;
 	size_t _clientBodySize;
 	std::string _index; /* The first file found will be served */
@@ -47,10 +48,11 @@ public:
 	void setLocation(std::string target);
 
 	const std::string& getServerName() const;
+	const std::string getLocation() const;
 	const std::string& getRoot() const;
 	size_t getClientBodySize() const;
 	const std::string& getIndex() const;
-	const std::string& getErrorPage(int errorCode) const;
+	const std::string getErrorPage(int errorCode) const;
 	bool getAllowMethod(Method method) const;
 	bool getAutoIndex() const;
 	int getReturnCode() const;

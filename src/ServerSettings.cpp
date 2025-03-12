@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 18:55:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 07:28:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(sr
 	_root = "./root";
 	_clientBodySize = 1000 * 1000;
 	_index = "index.html";
-	_errorPages[400] = "./.default/400.html";
-	_errorPages[404] = "./.default/404.html";
-	_errorPages[414] = "./.default/414.html";
-	_errorPages[431] = "./.default/431.html";
-	_errorPages[501] = "./.default/501.html";
+	//_errorPages[400] = "./.default/400.html";
+	//_errorPages[404] = "./.default/404.html";
+	//_errorPages[414] = "./.default/414.html";
+	//_errorPages[431] = "./.default/431.html";
+	//_errorPages[501] = "./.default/501.html";
 	_allowMethods.push_back(GET);
 	_allowMethods.push_back(POST);
 	_allowMethods.push_back(DELETE);
@@ -77,7 +77,7 @@ const std::string& ServerSettings::getIndex() const
 	return (_index);
 }
 
-const std::string& ServerSettings::getErrorPage(int errorCode) const
+const std::string ServerSettings::getErrorPage(int errorCode) const
 {
 	std::map<int, std::string>::const_iterator it = _errorPages.find(errorCode);
 	if (it != _errorPages.end())
@@ -86,8 +86,7 @@ const std::string& ServerSettings::getErrorPage(int errorCode) const
 		if (file.is_open())
 			return it->second;
 	}
-	
-	static const std::string defaultPage = ".default/" + intToStr(errorCode) + ".html"; /* check this, maybe creat a default for that code */
+	const std::string defaultPage = ".default/" + intToStr(errorCode) + ".html"; /* check this, maybe creat a default for that code */
 	return (defaultPage);
 }
 
@@ -147,18 +146,20 @@ void ServerSettings::setIndex(Server& server)
 
 std::string matchLocation(const std::string& target, const std::vector<Location>& auxVec)
 {
+	std::string	preparedTarget = target;
+	if (*(target.rend()) != '/')
+		preparedTarget.append("/");
 	std::string best_match = "/";
-    // size_t max_length = 0;
 
 	for (size_t i = 0; i < auxVec.size(); i++) 
 	{
-        if (target.find(auxVec[i].getSpecificPath()) == 0)
+		std::string	location = auxVec[i].getSpecificPath();
+        if (preparedTarget.find(location) == 0)
 		{
-			if(auxVec[i].getSpecificPath().length() == target.length() || 
-				target[auxVec[i].getSpecificPath().length()] == '/') 
+			if(location.length() == preparedTarget.length() || 
+				preparedTarget[location.length() - 1] == '/') 
 			{
-            	best_match = auxVec[i].getSpecificPath();
-            	// max_length = auxVec[i].getSpecificPath().length();
+            	best_match = location;
 			} 
         }
     }
@@ -184,10 +185,16 @@ void ServerSettings::setLocation(std::string target)
 			setAllowMethods(*it);
 			setReturn(*it);
 			setIndexLocation(*it);
+			_location = searchLoc;
 			return ;
 		}
 	}
 	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
+}
+
+const std::string	ServerSettings::getLocation(void) const
+{
+	return (_location);
 }
 
 void ServerSettings::setIndexLocation(Location location)

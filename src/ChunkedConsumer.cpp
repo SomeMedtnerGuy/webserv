@@ -1,40 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ChunkedPoster.cpp                                  :+:      :+:    :+:   */
+/*   ChunkedConsumer.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 14:21:57 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:34:45 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ChunkedPoster.hpp"
+#include "ChunkedConsumer.hpp"
 
-ChunkedPoster::ChunkedPoster(HttpResponse&  response, std::string saveFileName)
-    : APostPerformer(response), _stateMachine(STATE_AM, CHUNK_SIZE), _currentChunkSize(0)
+ChunkedConsumer::ChunkedConsumer(HttpResponse&  response, bool shouldPerformPost, std::string saveFileName)
+    : ABodyConsumer(response, shouldPerformPost), _stateMachine(STATE_AM, CHUNK_SIZE), _currentChunkSize(0)
 {
-    int i = 0;
-    while (isFile(saveFileName)) {
-        saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
-        i++;
-        if (i >= 100) {
-            _response.setStatusCode(409);
-            return ;
+    if (_shouldPerformPost) {
+        int i = 0;
+        while (isFile(saveFileName)) {
+            saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
+            i++;
+            if (i >= 100) {
+                _response.setStatusCode(409);
+                return ;
+            }
+        }
+        _saveFile.open(saveFileName.c_str(), std::ios::binary);
+        if (_saveFile.fail()) {
+            _response.setStatusCode(500);
         }
     }
-    _saveFile.open(saveFileName.c_str(), std::ios::binary);
-    if (_saveFile.fail()) {
-        _response.setStatusCode(500);
-    }
 }
-ChunkedPoster::~ChunkedPoster()
+ChunkedConsumer::~ChunkedConsumer()
 {
     _saveFile.close();
 }
 
-size_t  ChunkedPoster::post(data_t& data)
+size_t  ChunkedConsumer::consume(data_t& data)
 {
     _data = data;
     State   currentState = _stateMachine.getCurrentState();
@@ -57,8 +59,8 @@ size_t  ChunkedPoster::post(data_t& data)
     return (data.size() - _data.size());
 }
 
-void    ChunkedPoster::_parseChunkSize(void)
-{
+void    ChunkedConsumer::_parseChunkSize(void)
+{   
     std::string dataStr(_data.begin(), _data.begin() + std::min(_data.size(), size_t(16)));
     if (dataStr.find("0\r\n\r\n") == 0) { //Indication that body is done
         _data.erase(_data.begin(), _data.begin() + 5);
@@ -86,11 +88,13 @@ void    ChunkedPoster::_parseChunkSize(void)
     _stateMachine.advanceState();
 }
 
-void    ChunkedPoster::_parseChunk(void)
+void    ChunkedConsumer::_parseChunk(void)
 {
     size_t  maxBytesPossible = std::min(_data.size(), _currentChunkSize);
     size_t  bytesToSave = std::min(size_t(BUFFER_SIZE), maxBytesPossible);
-    _saveFile.write(reinterpret_cast<char*>(_data.data()), bytesToSave);
+    if (_shouldPerformPost) {
+        _saveFile.write(reinterpret_cast<char*>(_data.data()), bytesToSave);
+    }
     _currentChunkSize -= bytesToSave;
     _data.erase(_data.begin(), _data.begin() + bytesToSave);
     if (_currentChunkSize == 0) {

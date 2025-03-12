@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 18:22:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:05:58 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,14 @@ void						HttpResponse::setBodyPath(std::string bodyPath)
 	//'Content-Disposition = attachment; filename="<filename>"' where <filename> is the filename.
 	//A possible feature is to add this header to any bodyPath that does not have the ".html" extension
 }
-std::string					HttpResponse::getBodyPath(void) const {return (_bodyPath);}
+std::string					HttpResponse::getBodyPath(void) const
+{
+	return (_bodyPath);
+}
 
 void	HttpResponse::printMessage(void)
 {
+	std::cerr << "----RESPONSE----" << std::endl;
 	std::cerr << "Status code: " << _statusCode << std::endl;
 	
 	std::cerr << "Body path: " << _bodyPath << std::endl;

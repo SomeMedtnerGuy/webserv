@@ -1,19 +1,7 @@
-GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAcc
-ept-Encoding: 
-gzi
-p\r\n
-\r
-\n
-POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Type: test/file\r\nAccept-Encodin
-g: gzip\r\n
-\r
-\n
-0\r\n
-H
-EAD / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1
-\r
-\n
-\r
-\n
+GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n\r\n
+POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Type: test/file\r\nAccept-Encoding: gzip\r\n\r\n0\r\n\r\n
+HEAD / HTTP/1.1\r\nHost: localhost:
+1234\r\nUser-Agent: Go-http-client/1.1\r\n\r\n
+GET /directory HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n
 RECV action reported that the client closed the connection!
 Byeeeeeeeee

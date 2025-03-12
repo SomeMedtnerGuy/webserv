@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:37:12 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 16:52:21 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:19:43 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ private:
     code_t	_httpSanitizer(std::string line);
 	code_t	_fillInRequestLineInfo(std::string requestLine);
 	code_t	_parseHeaderField(std::string headerField);
-	void	_abortRequestHandling(code_t statusCode);
+	void	_abortRequestHandling(code_t statusCode, std::string reason);
 	Method	_strToMethod(std::string str);
 };
 

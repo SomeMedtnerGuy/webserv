@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:16:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 17:51:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 07:34:04 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ ssize_t		HttpRequest::getBodySize(void) const {return (_bodySize);}
 void	HttpRequest::printMessage(void)
 {
 	const std::string methods[6] = {"GET", "POST", "DELETE", "LOL U REKT", "NOT IMPLEMENTED", "UNKNOWN"};
+	std::cerr << "----REQUEST----" << std::endl;
 	std::cerr << "Method: " << methods[_method] << std::endl;
 	
 	std::cerr << "Target: " << _target << std::endl;

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 14:18:14 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:35:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,14 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
     _stateFunctionsMap[RECV_BODY] = &RequestManager::_recvBody;
     _stateFunctionsMap[CGI_PROCESS] = &RequestManager::_cgiProcess;
     _stateFunctionsMap[SEND_RESPONSE] = &RequestManager::_sendResponse;
+    std::cerr << "-----\nREQUEST CREATED\n-----" << std::endl;
 }
-RequestManager::~RequestManager(){}
+RequestManager::~RequestManager()
+{
+    _request.printMessage();
+    _response.printMessage();
+    std::cerr << "-----\nREQUEST DELETED\n-----" << std::endl;
+}
 
 void    RequestManager::handle(void)
 {
@@ -49,7 +55,6 @@ void    RequestManager::handle(void)
         }
         prevState = currentState;
         currentState = _stateMachine.getCurrentState();
-        //_socket.printStash();
     } while (currentState != prevState);
 }
 
@@ -78,14 +83,11 @@ void    RequestManager::_recvHeader(void)
             _setCloseConnection(true);
             return;
         }
-        //std::cerr << "before: " << std::endl;
-        //_socket.printStash();
         bytesParsed += _requestParser.parse(_socket.getRecvStash());
     }
     _socket.consumeRecvStash(bytesParsed);
     _checkAndActOnErrors();
     if (_requestParser.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
-        _request.printMessage();
         _stateMachine.advanceState();
     }
 }
@@ -101,9 +103,10 @@ void    RequestManager::_recvBody(void)
             _setCloseConnection(true);
             return;
         }
-        bytesConsumed = _requestPerformer.perform(_socket.getRecvStash());
+        bytesConsumed += _requestPerformer.perform(_socket.getRecvStash());
     }
 
+    _socket.printStash();
     _socket.consumeRecvStash(bytesConsumed);
     _checkAndActOnErrors();
     if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
@@ -173,7 +176,6 @@ void    RequestManager::_checkAndActOnErrors(void)
 
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
-    //std::cout << "default error" << statusCode << std::endl;
     switch (statusCode) {
         case 200: case 204: //case 411: //TODO REMOVE 411
             return (NO_ERROR);

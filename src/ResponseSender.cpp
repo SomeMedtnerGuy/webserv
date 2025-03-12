@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 12:41:38 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:58:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ std::string	ResponseSender::_generateResponseHeader(void)
     std::stringstream response;    
     //Status line:
     response << "HTTP/1.1 " << _response.getStatusCode() << DELIMITOR;
-    std::cerr << "ststus code: " << _response.getStatusCode() << std::endl;
     //Headers:
     const HttpMessage::headers_dict headers = _response.getHeaders();
     HttpMessage::headers_dict::const_iterator cit;
