@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 11:33:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:53:01 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,13 @@ size_t  ChunkedConsumer::consume(data_t& data)
 void    ChunkedConsumer::_parseChunkSize(void)
 {   
     std::string dataStr(_data.begin(), _data.begin() + std::min(_data.size(), size_t(16)));
-    if (dataStr.find("\r\n") == 0) { //Indication that body is done
-        _data.erase(_data.begin(), _data.begin() + 2);
+    //printString(dataStr);
+    //std::cerr << std::endl;
+    if (dataStr.find("0") == 0) { //Indication that body will be done
+        if (dataStr.length() < 5) {
+            return;
+        }
+        _data.erase(_data.begin(), _data.begin() + 5);
         _setIsDone(true);
         return;
     }
@@ -84,7 +89,7 @@ void    ChunkedConsumer::_parseChunkSize(void)
         _setIsDone(true);
         return;
     }
-    _data.erase(_data.begin(), _data.begin() + endPosOfSize);
+    _data.erase(_data.begin(), _data.begin() + endPosOfSize + 2);
     _stateMachine.advanceState();
 }
 
@@ -98,6 +103,9 @@ void    ChunkedConsumer::_parseChunk(void)
     _currentChunkSize -= bytesToSave;
     _data.erase(_data.begin(), _data.begin() + bytesToSave);
     if (_currentChunkSize == 0) {
+        if (_data.size() < 2) {
+            return ;
+        }
         _data.erase(_data.begin(), _data.begin() + 2);
         _stateMachine.advanceState();
     }

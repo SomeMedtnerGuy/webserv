@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 16:23:12 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:19:32 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,23 @@ HttpResponse::~HttpResponse() {}
 void	HttpResponse::setStatusCode(code_t statusCode)
 {
 	_statusCode = statusCode;
-	setBodyPath(_serverSettings.getErrorPage(_statusCode));
+	if (statusCode == 204) {
+		setBodyPath("");
+	} else {
+		setBodyPath(_serverSettings.getErrorPage(_statusCode));
+	}
 }
 HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCode);}
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
 
+	if (_bodyPath.compare("") == 0) {
+		_headers.erase("Content-Length");
+		return;
+	}
 	_headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
+	
 	for (header_map::const_iterator cit = _fileTypeMap.begin();
 			cit != _fileTypeMap.end(); cit++) {
 		if (bodyPath.find(cit->first) != bodyPath.npos) {

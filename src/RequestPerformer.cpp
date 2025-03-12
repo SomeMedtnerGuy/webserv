@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 14:05:03 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:04:09 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,12 @@ void    RequestPerformer::_performGet(void)
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append("/" + _serverSettings.getIndex());
-			_response.setBodyPath(target);
+			if (isFile(target)) {
+				_response.setBodyPath(target);
+			} else {
+				_response.setStatusCode(404);
+			}
+			
 		} else {
 			_createAutoIndex(target);
 			_response.setBodyPath(".default/autoindex.html");
@@ -108,6 +113,9 @@ size_t  RequestPerformer::_consumeBody(data_t data)
 	if (_bodyConsumer->isDone()) {
 		delete _bodyConsumer;
 		_bodyConsumer = NULL;
+		if (_request.getMethod() == POST && _response.getStatusCode() == 200) {
+			_response.setStatusCode(204);
+		}
 		_setIsDone(true);
 	}
     return (dataConsumed);
