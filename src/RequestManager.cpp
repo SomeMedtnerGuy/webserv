@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 10:49:19 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:00:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
 }
 RequestManager::~RequestManager()
 {
-    _request.printMessage();
     _response.printMessage();
     std::cerr << "-----\nREQUEST DELETED\n-----" << std::endl;
 }
@@ -109,6 +108,7 @@ void    RequestManager::_recvBody(void)
     _checkAndActOnErrors();
     if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
         _stateMachine.advanceState();
+        _request.printMessage();
     }
 }
 

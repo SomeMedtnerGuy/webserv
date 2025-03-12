@@ -1,19 +1,27 @@
 The following shit has been received: 
-GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n\r\n
+GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: 
+The following shit has been received: 
+gzip\r\n\r\n
 The following shit has been sent: 
 HTTP/1.1 200\r\nContent-Length: 24\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
 The following shit has been sent: 
 Here goes the index of /
 The following shit has been received: 
-POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Type: test/file\r\nAccept-Encoding: gzip\r\n
+POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent:
 The following shit has been received: 
-\r
+ Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Ty
+The following shit has been received: 
+p
+The following shit has been received: 
+e: test/file\r\nAccept-Encoding: gzi
+The following shit has been received: 
+p\r
+The following shit has been received: 
+\n\r
 The following shit has been received: 
 \n
 The following shit has been received: 
-0
-The following shit has been received: 
-\r\n\r
+0\r\n\r
 The following shit has been received: 
 \n
 The following shit has been sent: 
@@ -21,7 +29,9 @@ HTTP/1.1 405\r\nContent-Length: 322\r\nContent-Type: text/html; charset=UTF-8\r\
 The following shit has been sent: 
 <!DOCTYPE html>\n<html lang="en">\n\n	<head>\n		<meta charset="UTF-8">\n		<meta name="viewport" \n			content="width=device-width, \n					initial-scale=1.0">\n		<title>\n			405 Method not allowed\n		</title>\n	</head>\n\n	<body>\n		<div class="error-container">\n			<h1> 405 </h1>\n			<p>\n				Just... no.\n			</p>\n		</div>\n	</body>\n\n</html>
 The following shit has been received: 
-HEAD / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\n
+HEAD / HTTP/1.1\r\nHost: localhost:1234\r\nUser-A
+The following shit has been received: 
+gent: Go-http-client/1.1\r\n
 The following shit has been received: 
 \r
 The following shit has been received: 
@@ -29,11 +39,129 @@ The following shit has been received:
 The following shit has been sent: 
 HTTP/1.1 405\r\nContent-Length: 322\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
 The following shit has been received: 
-GET /directory HTTP/1.1\r\nHost: localhost:1234\r
+GET /directory
 The following shit has been received: 
-\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n
+ HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r
+The following shit has been received: 
+\nAccept-Encoding: 
+The following shit has been received: 
+gz
+The following shit has been received: 
+i
+The following shit has been received: 
+p\r
+The following shit has been received: 
+\n\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 31\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+content of youpi.bad_extension\n
+The following shit has been received: 
+GET /directory/youpi.bad_extension HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-clien
+The following shit has been received: 
+t/1.1\r\nAccept-Encoding
+The following shit has been received: 
+: gzi
+The following shit has been received: 
+p\r
+The following shit has been received: 
+\n
+The following shit has been received: 
+\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 31\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+content of youpi.bad_extension\n
+The following shit has been received: 
+GET /directory/youpi.bla HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip
+The following shit has been received: 
+\r\n\r\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 22\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+contents of youpi.bla\n
+The following shit has been received: 
+GET /directory/oulalala HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAc
+The following shit has been received: 
+cept-Encoding: gzip\r
+The following shit has been received: 
+\n\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 404\r\nContent-Length: 395\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+<!DOCTYPE html>\n<html lang="en">\n\n	<head>\n		<meta charset="UTF-8">\n		<meta name="viewport" \n			content="width=device-width, \n					initial-scale=1.0">\n		<title>\n			404 Page Not Found\n		</title>\n	</head>\n\n	<body>\n		<div class="error-container">\n			<h1> 404 </h1>\n			<p>\n				Lol. You tried to fetch something that doesn't exist.\n				What an idiot AHAHAHAHAHAHAHAH\n			</p>\n		</div>\n	</body>\n\n</html>
+The following shit has been received: 
+GET /directory/nop HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encodin
+The following shit has been received: 
+g: gzip\r\n\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 36\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+contents of nop/youpi.bad_extension\n
+The following shit has been received: 
+GET /directory/nop/ HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agen
+The following shit has been received: 
+t: 
+The following shit has been received: 
+Go-http-client/1.1\r\nAccept-Encod
+The following shit has been received: 
+ing: g
+The following shit has been received: 
+zip\r
+The following shit has been received: 
+\n
+The following shit has been received: 
+\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 36\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+contents of nop/youpi.bad_extension\n
+The following shit has been received: 
+GET /directory/nop/other.po
+The following shit has been received: 
+uic HTTP/1.1\r\nHost: localho
+The following shit has been received: 
+st:1234\r\nUser-
+The following shit has been received: 
+Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n
 The following shit has been received: 
 \r\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 28\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+contents of nop/other.pouic\n
+The following shit has been received: 
+GET /directory/nop/other.pouac HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encod
+The following shit has been received: 
+ing: gzip\r\n\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 404\r\nContent-Length: 395\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+<!DOCTYPE html>\n<html lang="en">\n\n	<head>\n		<meta charset="UTF-8">\n		<meta name="viewport" \n			content="width=device-width, \n					initial-scale=1.0">\n		<title>\n			404 Page Not Found\n		</title>\n	</head>\n\n	<body>\n		<div class="error-container">\n			<h1> 404 </h1>\n			<p>\n				Lol. You tried to fetch something that doesn't exist.\n				What an idiot AHAHAHAHAHAHAHAH\n			</p>\n		</div>\n	</body>\n\n</html>
+The following shit has been received: 
+GET /directory/Yeah HTTP/1.1\r\nHost: localhost:1234\r\nUser-Ag
+The following shit has been received: 
+ent: Go-http-cli
+The following shit has been received: 
+ent/1.1\r\nAcc
+The following shit has been received: 
+ept-Encod
+The following shit has been received: 
+ing: gzip\r\n\r
+The following shit has been received: 
+\n
 The following shit has been sent: 
 HTTP/1.1 200\r\nContent-Length: -1\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
 Byeeeeeeeee

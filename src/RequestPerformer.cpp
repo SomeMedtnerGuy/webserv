@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 11:03:36 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:05:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,22 @@ bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
-	if (!isFile(target) && !(isDirectory(target))) { // If stat fails, means the target does not exist
-		_response.setStatusCode(404);
-        return;
-    }
 	if (isDirectory(target)) // If target is directory
 	{		
 		if (!_serverSettings.getAutoIndex())
 		{
-			target.append(_serverSettings.getIndex());
+			target.append("/" + _serverSettings.getIndex());
 			_response.setBodyPath(target);
-		}
-		else
-		{
+		} else {
 			_createAutoIndex(target);
 			_response.setBodyPath(".default/autoindex.html");
 		}
 	}
-	else {
+	else if (isFile(target)) {
 		_response.setBodyPath(target);
+	} else {
+		_response.setStatusCode(404);
 	}
-		
 }
 
 void    RequestPerformer::_performDelete(void)

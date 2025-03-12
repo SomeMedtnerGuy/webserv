@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 12:34:23 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:57:57 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,12 @@ void ServerSettings::setIndex(Server& server)
 	}
 }
 
-std::string matchLocation(const std::string& target, const std::vector<Location>& auxVec)
+static const Location matchLocation(const std::string& target, const std::vector<Location>& auxVec)
 {
 	std::string	preparedTarget = target;
 	if (*(target.rend()) != '/')
 		preparedTarget.append("/");
-	std::string best_match = "/";
+	Location best_match = auxVec.front();
 
 	for (size_t i = 0; i < auxVec.size(); i++) 
 	{
@@ -160,7 +160,7 @@ std::string matchLocation(const std::string& target, const std::vector<Location>
 			if(location.length() == preparedTarget.length() || 
 				preparedTarget[location.length() - 1] == '/') 
 			{
-            	best_match = location;
+            	best_match = auxVec[i];
 			} 
         }
     }
@@ -170,26 +170,18 @@ std::string matchLocation(const std::string& target, const std::vector<Location>
 void ServerSettings::setLocation(std::string target)
 {
 	std::vector<Location> auxVec = _src.getServer(_serverName, _port).getLocation();
-	std::string searchLoc = matchLocation(target, auxVec);
-	
-	for (std::vector<Location>::const_iterator it = auxVec.begin(); it != auxVec.end(); ++it)
-	{
-		if (it->getSpecificPath() == searchLoc)
-		{
-			if (it->getAutoIndex() == true) {
-				_autoindex = it->getAutoIndex();
-			}
-			if (it->getRoot() != "")
-				_root = it->getRoot();
-			if (it->getClientBodySize() != 0)
-				_clientBodySize = it->getClientBodySize();
-			setAllowMethods(*it);
-			setReturn(*it);
-			setIndexLocation(*it);
-			_location = searchLoc;
-			return ;
-		}
+	Location searchLoc = matchLocation(target, auxVec);
+	if (searchLoc.getAutoIndex() == true) {
+		_autoindex = searchLoc.getAutoIndex();
 	}
+	if (searchLoc.getRoot() != "")
+		_root = searchLoc.getRoot();
+	if (searchLoc.getClientBodySize() != 0)
+		_clientBodySize = searchLoc.getClientBodySize();
+	setAllowMethods(searchLoc);
+	setReturn(searchLoc);
+	setIndexLocation(searchLoc);
+	_location = searchLoc.getSpecificPath();
 	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
 }
 
@@ -204,9 +196,8 @@ void ServerSettings::setIndexLocation(Location location)
 		return ;
 	for (size_t i = 0; i < location.getIndexSize(); i++)
 	{
-		std::string filePath = _root + location.getSpecificPath() + "/" + location.getIndex(i);  
-		std::ifstream file(filePath.c_str());
-		if (file.is_open())
+		std::string filePath = _root + "/" + location.getIndex(i);  
+		if (isFile(filePath))
 		{
 			_index = location.getIndex(i);
 			return;
