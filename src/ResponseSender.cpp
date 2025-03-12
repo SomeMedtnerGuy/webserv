@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 12:35:26 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:50:51 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
         _setIsDone(true);
         return (output);
     } else {
-        if (_response.getStatusCode() == 204) {
+        if (_response.getStatusCode() == 204) { //TODO The second condition is a test
             _setIsDone(true);
             return (output);
         }

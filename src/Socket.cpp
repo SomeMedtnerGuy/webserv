@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 11:41:39 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:50:36 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ void                Socket::fillStash(void)
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
     std::cout << "The following shit has been received: " << std::endl;
-    printBuffer();
-    write(1, "\n", 1);
+    //printBuffer();
+    //write(1, "\n", 1);
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
     _actionMade = true;
@@ -119,8 +119,8 @@ void                Socket::flushStash(void)
             static_cast<SocketException::ActionReturn>(bytesSent)));
     }
     std::cout << "The following shit has been sent: " << std::endl;
-    printBuffer();
-    write(1, "\n", 1);
+    //printBuffer();
+    //write(1, "\n", 1);
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
     _actionMade = true;
@@ -172,7 +172,8 @@ void    Socket::printStash(void)
 void    Socket::printBuffer(void)
 {
     unsigned char*   ptr = _buffer;
-    while (*ptr != '\0') {
+    int i = BUFFER_SIZE;
+    while (*ptr != '\0' && i < BUFFER_SIZE) {
         if (*ptr == '\r') {
             write(1, "\\r", 2);
         } else if (*ptr == '\n') {
@@ -181,5 +182,6 @@ void    Socket::printBuffer(void)
             write(1, ptr, 1);
         }
         ptr++;
+        i++;
     }
 }

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 13:57:57 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:30:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void ServerSettings::setIndex(Server& server)
 static const Location matchLocation(const std::string& target, const std::vector<Location>& auxVec)
 {
 	std::string	preparedTarget = target;
-	if (*(target.rend()) != '/')
+	if (*(target.rbegin()) != '/')
 		preparedTarget.append("/");
 	Location best_match = auxVec.front();
 
