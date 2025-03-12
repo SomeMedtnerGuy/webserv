@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 12:48:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:22:41 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
 
 Webserv::Webserv(int argc, char** argv)
-    : _configFile(argc, argv), _portsAm(_configFile.getPorts().size()){}
+    : _configFile(argc, argv), _portsAm(_configFile.getPorts().size()){
+        // _clients.reserve(100);
+    }
 Webserv::~Webserv(){}
 
 void    Webserv::setup(void)
@@ -64,8 +66,8 @@ void    Webserv::run(void)
 /* PRIVATE */
 void    Webserv::_takeCareOfClientSockets(void)
 {
-    for (client_vector::reverse_iterator rclient = _clients.rbegin(); rclient != _clients.rend() ; rclient++) {
-        client_vector::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
+    for (client_deque::reverse_iterator rclient = _clients.rbegin(); rclient != _clients.rend() ; rclient++) {
+        client_deque::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
         // Client index is relative to total poll sockets, not just client sockets (includes listen sockets)
         int clientIndex = _portsAm + (client - _clients.begin());
         //if (_pollSockets[clientIndex].revents & POLLIN)
