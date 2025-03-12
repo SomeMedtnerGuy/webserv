@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 13:58:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:34:27 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ void	RequestParser::_abortRequestHandling(code_t statusCode, std::string reason)
 
 RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string requestLine)
 {
+    //printString(requestLine);
     //Initial sanitizer
 	code_t	sanitizerResult = _httpSanitizer(requestLine);
 	if (sanitizerResult != 200)
