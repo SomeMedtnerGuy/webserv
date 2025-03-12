@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:49:01 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/10 14:50:54 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:21:37 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define WEBSERV_HPP
 
 # include <vector>
+# include <deque>
 # include <fcntl.h>
 # include "Client.hpp"
 # include "main.h"
@@ -30,12 +31,12 @@ public:
 private:
     typedef std::vector<struct pollfd> sock_vector;
     typedef std::vector<int> port_vector;
-    typedef std::vector<Client> client_vector;
+    typedef std::deque<Client> client_deque;
     
     ConfigFile      _configFile;
     const size_t    _portsAm;
     sock_vector     _pollSockets;
-    client_vector   _clients;
+    client_deque   _clients;
 
     void    _takeCareOfClientSockets(void);
     void    _takeCareOfListenSockets(void);
