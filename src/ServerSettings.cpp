@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 13:57:57 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:19:40 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void ServerSettings::setIndex(Server& server)
 static const Location matchLocation(const std::string& target, const std::vector<Location>& auxVec)
 {
 	std::string	preparedTarget = target;
-	if (*(target.rend()) != '/')
+	if (*(target.rbegin()) != '/')
 		preparedTarget.append("/");
 	Location best_match = auxVec.front();
 

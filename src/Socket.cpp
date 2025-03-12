@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 11:41:39 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:25:57 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ void                Socket::flushStash(void)
         throw (SocketException(SEND,
             static_cast<SocketException::ActionReturn>(bytesSent)));
     }
-    std::cout << "The following shit has been sent: " << std::endl;
-    printBuffer();
-    write(1, "\n", 1);
+    // std::cout << "The following shit has been sent: " << std::endl;
+    // printBuffer();
+    // write(1, "\n", 1);
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
     _actionMade = true;
