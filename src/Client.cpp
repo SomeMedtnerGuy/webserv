@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 10:50:20 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:32:00 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ Client& Client::operator=(const Client& other)
 
 Client::~Client()
 {
-    // if (_activeRequest) {
-    //     delete _activeRequest;
-    // }
+    if (_activeRequest) {
+        delete _activeRequest;
+    }
 }
 
 void    Client::handle(void)
