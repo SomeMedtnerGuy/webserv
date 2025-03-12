@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:09:54 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/09 12:37:45 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:32:20 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ enum Method {
 	GET,
 	POST,
 	DELETE,
+	HEAD,
 	METHOD_SIZE,
 	NOT_IMPLEMENTED,
 	UNKNOWN
@@ -63,5 +64,7 @@ static std::string  ntostr(T number)
 	converter << number;
     return (converter.str());
 }
+
+void	printString(std::string str);
 
 #endif

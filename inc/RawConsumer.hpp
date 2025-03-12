@@ -1,45 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ChunkedPoster.hpp                                  :+:      :+:    :+:   */
+/*   RawConsumer.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/05 09:58:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/05 16:45:21 by ndo-vale         ###   ########.fr       */
+/*   Created: 2025/03/06 10:25:55 by ndo-vale          #+#    #+#             */
+/*   Updated: 2025/03/12 09:42:09 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHUNKED_POSTER_HPP
-# define CHUNKED_POSTER_HPP
+#ifndef RAW_CONSUMER_HPP
+# define RAW_CONSUMER_HPP
 
-# include "APostPerformer.hpp"
+# include "ABodyConsumer.hpp"
 # include "StateMachine.hpp"
 # include <cstdlib> //for strtol
 # include <fstream>
 # include "utils.hpp"
 
-class ChunkedPoster: public APostPerformer
+class RawConsumer: public ABodyConsumer
 {
 public:
-    ChunkedPoster(HttpResponse&  response, std::string saveFileName);
-    ~ChunkedPoster();
+    RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::string saveFileName, size_t bodySize);
+    ~RawConsumer();
 
-    size_t  post(data_t& data);
+    size_t  consume(data_t& data);
 private:
-    enum State {
-        CHUNK_SIZE,
-        CHUNK,
-        STATE_AM
-    };
-    StateMachine<State> _stateMachine;
-    
-    data_t          _data;
-    size_t          _currentChunkSize;
-    std::ofstream  _saveFile;  
-    
-    void    _parseChunkSize(void);
-    void    _parseChunk(void);
+    size_t          _bodySize;
+    std::ofstream   _saveFile;
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 14:19:59 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:05:03 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 RequestPerformer::RequestPerformer(HttpRequest& request, HttpResponse& response,
                                     ServerSettings& serverSettings)
     : AMessageHandler(request, response), _serverSettings(serverSettings),
-        _consumeMode(false), _postPerformer(NULL)
+        _consumeMode(false), _bodyConsumer(NULL)
 {}
 RequestPerformer::~RequestPerformer(){}
 
@@ -33,24 +33,14 @@ size_t    RequestPerformer::perform(const data_t& data)
                 _setConsumeMode(true);
                 break;
             case POST:
-				// std::cout << "perform post" << std::endl;
-                dataConsumed = _performPost(data);
+				_setConsumeMode(true); //Post performing is done during the body receiving
                 break;
             default:
                 throw (std::runtime_error("Request manager achieved an unexpected state."));
         };
     }
     if (_getConsumeMode() == true) {
-		if (_request.getBodySize() != -1) { //If theres body to consume
-			size_t	bodySize = static_cast<size_t>(_request.getBodySize());
-			// I want to consume as much as possible. That means as much as bodysize there is in data
-        	dataConsumed += std::min(bodySize, data.size());
-			if (dataConsumed == bodySize) {
-				_setIsDone(true);
-			}
-		} else { // If there is not, just fuck off
-			_setIsDone(true);
-		} 
+		dataConsumed += _consumeBody(data);
     }
     return (dataConsumed);
 }
@@ -66,25 +56,22 @@ bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
-	if (!(isFile(target) || isDirectory(target))) { // If stat fails, means the target does not exist
-		_response.setStatusCode(404);
-        return;
-    }
 	if (isDirectory(target)) // If target is directory
-	{
+	{		
 		if (!_serverSettings.getAutoIndex())
 		{
-			target.append(_serverSettings.getIndex());
+			target.append("/" + _serverSettings.getIndex());
 			_response.setBodyPath(target);
-		}
-		else
-		{
+		} else {
 			_createAutoIndex(target);
 			_response.setBodyPath(".default/autoindex.html");
 		}
 	}
-	else
+	else if (isFile(target)) {
 		_response.setBodyPath(target);
+	} else {
+		_response.setStatusCode(404);
+	}
 }
 
 void    RequestPerformer::_performDelete(void)
@@ -102,28 +89,25 @@ void    RequestPerformer::_performDelete(void)
 	_response.setStatusCode(204);
 }
 
-size_t  RequestPerformer::_performPost(data_t data)
+size_t  RequestPerformer::_consumeBody(data_t data)
 {
 	size_t	dataConsumed = 0;
-	if (!_postPerformer) {
+	if (!_bodyConsumer) {
+		bool shouldPerformPost = (_request.getMethod() == POST && _consumeMode == false);
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
-			std::cerr << "DAFUQ1" << std::endl;
-			_postPerformer = new ChunkedPoster(_response, _request.getTarget());
+			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost, _request.getTarget()); //TODO These constructors must not return errors
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
-			std::cerr << "DAFUQ2" << std::endl;
-			_postPerformer = new RawPoster(_response, _request.getTarget(), _request.getBodySize());
-		} else { // It should never get to this point, because the presence of a body was already previously checked
-			throw (std::runtime_error("Body is erroneously expected"));
+			_bodyConsumer = new RawConsumer(_response, shouldPerformPost, _request.getTarget(), _request.getBodySize());
+		} else {
+			_setIsDone(true);
+			return (dataConsumed);
 		}
 	}
-	if (_response.getStatusCode() != 200) {
-		return (dataConsumed);
-	}
-	dataConsumed += _postPerformer->post(data);
-	if (_postPerformer->isDone()) {
-		delete _postPerformer;
-		_postPerformer = NULL;
+	dataConsumed += _bodyConsumer->consume(data);
+	if (_bodyConsumer->isDone()) {
+		delete _bodyConsumer;
+		_bodyConsumer = NULL;
 		_setIsDone(true);
 	}
     return (dataConsumed);

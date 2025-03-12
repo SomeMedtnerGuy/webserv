@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:17 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/06 11:29:36 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:39:37 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include "AMessageHandler.hpp"
 # include "Socket.hpp"
 # include "ServerSettings.hpp"
-# include "APostPerformer.hpp"
-# include "ChunkedPoster.hpp"
-# include "RawPoster.hpp"
+# include "ABodyConsumer.hpp"
+# include "ChunkedConsumer.hpp"
+# include "RawConsumer.hpp"
 
 class RequestPerformer: public AMessageHandler
 {
@@ -40,11 +40,11 @@ private:
         void    _setConsumeMode(bool newValue);
         bool    _getConsumeMode(void) const;
     
-    APostPerformer*  _postPerformer;
+    ABodyConsumer*  _bodyConsumer;
 
     void    _performGet(void);
     void    _performDelete(void);
-    size_t  _performPost(data_t data);
+    size_t  _consumeBody(data_t data);
 
     void    _createAutoIndex(std::string target);
 };

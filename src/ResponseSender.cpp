@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/11 12:41:38 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:35:26 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());
         output.insert(output.end(), headerSection.begin(), headerSection.end());
+    } else if (_request.getMethod() == HEAD) {
+        _setIsDone(true);
+        return (output);
     } else {
         if (_response.getStatusCode() == 204) {
             _setIsDone(true);
@@ -47,7 +50,6 @@ std::string	ResponseSender::_generateResponseHeader(void)
     std::stringstream response;    
     //Status line:
     response << "HTTP/1.1 " << _response.getStatusCode() << DELIMITOR;
-    std::cerr << "ststus code: " << _response.getStatusCode() << std::endl;
     //Headers:
     const HttpMessage::headers_dict headers = _response.getHeaders();
     HttpMessage::headers_dict::const_iterator cit;

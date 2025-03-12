@@ -59,7 +59,7 @@ void    Webserv::run(void)
             _takeCareOfListenSockets();
         } 
     } catch (std::exception& e) {
-        std::cerr << "Some shit went wrong." << std::endl;
+        std::cerr << "Some shit went wrong. " << e.what() << std::endl;
     }
 }
 
@@ -70,8 +70,6 @@ void    Webserv::_takeCareOfClientSockets(void)
         client_deque::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
         // Client index is relative to total poll sockets, not just client sockets (includes listen sockets)
         int clientIndex = _portsAm + (client - _clients.begin());
-        //if (_pollSockets[clientIndex].revents & POLLIN)
-        //std::cerr << (_pollSockets[clientIndex].revents & POLLIN) << std::endl;
         rclient->updateSocketFlags(_pollSockets[clientIndex].revents);
         rclient->handle();
         if (rclient->shouldCloseConnection()) {

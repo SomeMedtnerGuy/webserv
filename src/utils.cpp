@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/09 13:09:06 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:07:43 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,4 +305,18 @@ bool    hasTimedOut(long long lastActionTime, const int timeoutTime) {
     } else {
         return (false);
     } 
+}
+
+#include <unistd.h>
+void	printString(std::string str)
+{
+    for (std::string::iterator it = str.begin(); it != str.end(); it++) {
+        if (*it == '\r') {
+            write(2, "\\r", 2);
+        } else if (*it == '\n') {
+            write(2, "\\n", 2);
+        } else {
+            write(2, &(*it), 1);
+        }
+    }
 }
