@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/11 11:40:46 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:03:41 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,30 @@ void CGIHandler::_getCgiEnv()
 
 void CGIHandler::_getRequiredCgiArgs()
 {
-	_cgiArgs = new char*[3];
-	std::string cgiExec = "/usr/bin/python3";
-	_cgiArgs[0] = new char[cgiExec.size() + 1];
-    for (size_t i = 0; i < cgiExec.size(); ++i)
-		_cgiArgs[0][i] = cgiExec[i];
-    _cgiArgs[0][cgiExec.size()] = '\0';
-	
-    _cgiArgs[1] = new char[_cgiPath.size() + 1];
-    for (size_t i = 0; i < _cgiPath.size(); ++i)
-		_cgiArgs[1][i] = _cgiPath[i];
-    _cgiArgs[1][_cgiPath.size()] = '\0';
-	_cgiArgs[2] = NULL; 
+	if (_cgiPath.rfind(".py") == _cgiPath.length() - 3)
+	{
+		_cgiArgs = new char*[3];
+		std::string cgiExec = "/usr/bin/python3";
+		_cgiArgs[0] = new char[cgiExec.size() + 1];
+    	for (size_t i = 0; i < cgiExec.size(); ++i)
+			_cgiArgs[0][i] = cgiExec[i];
+    	_cgiArgs[0][cgiExec.size()] = '\0';
+		
+    	_cgiArgs[1] = new char[_cgiPath.size() + 1];
+    	for (size_t i = 0; i < _cgiPath.size(); ++i)
+			_cgiArgs[1][i] = _cgiPath[i];
+    	_cgiArgs[1][_cgiPath.size()] = '\0';
+		_cgiArgs[2] = NULL;
+	}
+	else
+	{
+		_cgiArgs = new char*[2];
+		_cgiArgs[0] = new char[_cgiPath.size() + 1];
+		for (size_t i = 0; i < _cgiPath.size(); ++i)
+			_cgiArgs[0][i] = _cgiPath[i];
+		_cgiArgs[0][_cgiPath.size()] = '\0';
+		_cgiArgs[1] = NULL;
+	}
 }
 
 void CGIHandler::_openFile()
@@ -235,7 +247,7 @@ bool CGIHandler::cgiDone()
 	
 	if (hasTimedOut(_startedTime, 60))
 	{
-		std::cout << "TimedOut" << std::endl;
+		std::cout << "\nCGI TimedOut\n" << std::endl;
 		kill(_pid, SIGKILL);
 		// waitpid(_pid, &status, 0);
 		_response.setStatusCode(502); /* Bad gateway */
@@ -254,6 +266,7 @@ bool CGIHandler::cgiDone()
 
 void CGIHandler::run()
 {
+	std::cerr << "Running cgi" << std::endl;
 	_setCgiPath();
 	_setEnv();
 	_getRequiredCgiArgs();
@@ -267,9 +280,13 @@ bool CGIHandler::isCgi(std::string target)
 	//std::cout << pos << std::endl;
 	if (pos == 0)
 	{
-		if (target.find(".py") == target.size() - 3){
+		// if (target.find(".py") == target.size() - 3){
 			return (true);
-		}
+		// }
+	}
+
+	if (target.rfind(".bla") == target.length() - 4){
+		return (true);
 	}
 		
 	return (false);

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 14:39:26 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 13:32:00 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:00:48 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Client::Client(int sockfd, ConfigFile& configFile)
     : /*_id(id), */_socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60)
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(70)
 {
     _lastActionTime = getCurrentTimestamp();
 }
@@ -62,6 +62,7 @@ void    Client::handle(void)
         if (_socket.wasActionMade()) {
             _lastActionTime = getCurrentTimestamp();
         } else if (hasTimedOut(_lastActionTime, _timeoutTime)) {
+            std::cerr << "Timed Out" << std::endl;
             _setCloseConnection(true);
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());
