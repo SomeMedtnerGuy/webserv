@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 09:58:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:35:26 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());
         output.insert(output.end(), headerSection.begin(), headerSection.end());
+    } else if (_request.getMethod() == HEAD) {
+        _setIsDone(true);
+        return (output);
     } else {
         if (_response.getStatusCode() == 204) {
             _setIsDone(true);

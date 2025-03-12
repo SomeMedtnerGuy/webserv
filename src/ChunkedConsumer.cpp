@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 10:34:45 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:33:44 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,15 @@ size_t  ChunkedConsumer::consume(data_t& data)
 void    ChunkedConsumer::_parseChunkSize(void)
 {   
     std::string dataStr(_data.begin(), _data.begin() + std::min(_data.size(), size_t(16)));
-    if (dataStr.find("0\r\n\r\n") == 0) { //Indication that body is done
-        _data.erase(_data.begin(), _data.begin() + 5);
+    if (dataStr.find("\r\n") == 0) { //Indication that body is done
+        _data.erase(_data.begin(), _data.begin() + 2);
         _setIsDone(true);
         return;
     }
     size_t  endPosOfSize = dataStr.find("\r\n");
     if (endPosOfSize == dataStr.npos) {
         if (_data.size() < 16) {
-            return ;
+            return ; //Still hasnt received entire thing
         }
         _response.setStatusCode(400);
         _setIsDone(true);
@@ -84,7 +84,7 @@ void    ChunkedConsumer::_parseChunkSize(void)
         _setIsDone(true);
         return;
     }
-    _data.erase(_data.begin(), _data.begin() + endPosOfSize + 2);
+    _data.erase(_data.begin(), _data.begin() + endPosOfSize);
     _stateMachine.advanceState();
 }
 

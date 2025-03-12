@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 07:28:42 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:34:23 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(sr
 	_allowMethods.push_back(GET);
 	_allowMethods.push_back(POST);
 	_allowMethods.push_back(DELETE);
+	_allowMethods.push_back(HEAD);
 	_autoindex = false;
 	_returnCode = -1;
 }
@@ -223,6 +224,8 @@ void ServerSettings::setAllowMethods(Location location)
 		_allowMethods.push_back(POST);
 	if (location.getAllowMethods("DELETE"))
 		_allowMethods.push_back(DELETE);
+	if (location.getAllowMethods("HEAD"))
+		_allowMethods.push_back(HEAD);
 }
 
 void ServerSettings::setReturn(Location location)

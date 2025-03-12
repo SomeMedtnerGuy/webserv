@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 10:35:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:49:19 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,6 @@ void    RequestManager::_recvBody(void)
         }
         bytesConsumed += _requestPerformer.perform(_socket.getRecvStash());
     }
-
-    _socket.printStash();
     _socket.consumeRecvStash(bytesConsumed);
     _checkAndActOnErrors();
     if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {

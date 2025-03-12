@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 10:35:40 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:44:16 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,16 +265,16 @@ RequestParser::code_t	RequestParser::_httpSanitizer(std::string line)
 
 Method  RequestParser::_strToMethod(std::string str)
 {
-    static const std::string implementedMethods[3] = {"GET", "POST", "DELETE"};
-    for (int i = 0; i < 3; i++)
+    static const std::string implementedMethods[4] = {"GET", "POST", "DELETE", "HEAD"};
+    for (int i = 0; i < 4; i++)
 	{
 		if (str.compare(0, implementedMethods[i].length() + 1, implementedMethods[i] + " ") == 0)
 			return (static_cast<Method>(i));
 	}
     static const std::string otherMethods[] = {
-        "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE", "PATCH"
+        "PUT", "CONNECT", "OPTIONS", "TRACE", "PATCH"
     };
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 5; i++)
 	{
 		if (str.compare(0, otherMethods[i].length() + 1, otherMethods[i] + " ") == 0)
 			return (NOT_IMPLEMENTED);

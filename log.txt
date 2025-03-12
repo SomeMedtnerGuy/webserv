@@ -1,7 +1,39 @@
+The following shit has been received: 
 GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n\r\n
-POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Type: test/file\r\nAccept-Encoding: gzip\r\n\r\n0\r\n\r\n
-HEAD / HTTP/1.1\r\nHost: localhost:
-1234\r\nUser-Agent: Go-http-client/1.1\r\n\r\n
-GET /directory HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n
-RECV action reported that the client closed the connection!
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 24\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+Here goes the index of /
+The following shit has been received: 
+POST / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\nTransfer-Encoding: chunked\r\nContent-Type: test/file\r\nAccept-Encoding: gzip\r\n
+The following shit has been received: 
+\r
+The following shit has been received: 
+\n
+The following shit has been received: 
+0
+The following shit has been received: 
+\r\n\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 405\r\nContent-Length: 322\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+<!DOCTYPE html>\n<html lang="en">\n\n	<head>\n		<meta charset="UTF-8">\n		<meta name="viewport" \n			content="width=device-width, \n					initial-scale=1.0">\n		<title>\n			405 Method not allowed\n		</title>\n	</head>\n\n	<body>\n		<div class="error-container">\n			<h1> 405 </h1>\n			<p>\n				Just... no.\n			</p>\n		</div>\n	</body>\n\n</html>
+The following shit has been received: 
+HEAD / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: Go-http-client/1.1\r\n
+The following shit has been received: 
+\r
+The following shit has been received: 
+\n
+The following shit has been sent: 
+HTTP/1.1 405\r\nContent-Length: 322\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been received: 
+GET /directory HTTP/1.1\r\nHost: localhost:1234\r
+The following shit has been received: 
+\nUser-Agent: Go-http-client/1.1\r\nAccept-Encoding: gzip\r\n
+The following shit has been received: 
+\r\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: -1\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
 Byeeeeeeeee

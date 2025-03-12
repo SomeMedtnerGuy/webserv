@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 18:59:06 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:33:11 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 	
 	for (size_t i = 1; i < methods.size(); i++)
 	{
-		if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE")
+		if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE" && methods[i] != "HEAD")
 			throw std::runtime_error("Invalid directive allow_methods in " + _specificPath + " location.");
 	}
 	methods.erase(methods.begin());
