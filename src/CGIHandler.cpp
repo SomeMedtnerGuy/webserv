@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 12:26:28 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:38:42 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,4 +294,45 @@ bool CGIHandler::isCgi(std::string target)
 		
 	return (false);
 			//TODO change parser for cgi paths  
+}
+
+void CGIHandler::setCgiHeader()
+{
+	std::ifstream file(_tempFileName.c_str());
+    std::string line;
+
+    if (!file) {
+        throw std::runtime_error("CGI file open failed.");
+    }
+
+	// int i = 0;
+    while (std::getline(file, line) && line != "\n") {
+		
+        std::cout << "Line: " << line << std::endl;
+		std::string fieldName = line.substr(0, line.find(':'));
+		std::string fieldValue = line.substr(line.find(':') + 1, line.size() - 1);
+		
+        std::cout << "fieldName: " << fieldName << std::endl;
+        std::cout << "fieldValue: " << fieldValue << std::endl;
+		
+		if (line == ""){
+			std::string next;
+			std::getline(file, next);
+			if (next == "")
+				break;
+		}
+			std::cerr << "\nfirst\n" << std::endl;
+		_response.addHeaderCgi(fieldName, fieldValue);
+    }
+
+	std::streampos currentPos = file.tellg();
+	file.seekg(0, std::ios::end);
+    std::streampos endPos = file.tellg();
+	
+	std::streampos size = endPos - currentPos;
+	std::stringstream ss;
+	ss << size;
+	_response.addHeaderCgi("Content-Length", ss.str());
+
+    file.close();
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpMessage.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 12:04:51 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 13:45:50 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:11:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ public:
 	virtual ~HttpMessage();
 
 	void				addHeader(std::string fieldName, std::string fieldValue);
+	void				addHeaderCgi(std::string fieldName, std::string fieldValue);
 	const headers_dict&	getHeaders(void) const;
 
 	void				setHeadersSize(size_t newValue);

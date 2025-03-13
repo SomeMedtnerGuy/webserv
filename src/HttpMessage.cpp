@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpMessage.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:10:38 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/01 13:50:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:12:08 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ void	HttpMessage::addHeader(std::string fieldName, std::string fieldValue)
 	} catch (std::out_of_range& e) {
 		_headers[fieldName] = fieldValue;
 	}
+}
+void	HttpMessage::addHeaderCgi(std::string fieldName, std::string fieldValue)
+{
+	_headers[fieldName] = fieldValue;
 }
 const HttpMessage::headers_dict&	HttpMessage::getHeaders(void) const
 {

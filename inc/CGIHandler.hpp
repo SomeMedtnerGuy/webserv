@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 18:32:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:14:43 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ public:
 	bool cgiDone();
 
 	bool isCgi(std::string target);
+	void setCgiHeader();
 };
 
 #endif // CGIHANDLER_HPP
