@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 18:36:44 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:39:56 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,6 @@ void    RequestManager::_cgiProcess(void)
 
 void    RequestManager::_sendResponse(void)
 {
-	// std::cout << "start debbuging" << _response.getStatusCode() << std::endl;
-    
     size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));
     _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));

@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:53:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 09:37:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:12:38 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,25 @@ ABodyConsumer::ABodyConsumer(HttpResponse& response, bool shouldPerformPost)
 {}
 ABodyConsumer::~ABodyConsumer(){}
 
+void    ABodyConsumer::setup(std::string saveFileName) //TODO check what is the severity of these errors
+{
+    int i = 0;
+    while (isFile(saveFileName)) {
+        saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
+        i++;
+        if (i >= 100) {
+            _response.setStatusCode(409);
+            return ;
+        }
+    }
+    _saveFile.open(saveFileName.c_str(), std::ios::binary);
+    if (_saveFile.fail()) {
+        std::cerr << "lol" << std::endl;
+        _response.setStatusCode(500);
+        return ;
+    }
+    _response.cgiFile = saveFileName;
+}
 bool    ABodyConsumer::isDone() {return (_getIsDone());}
 
 void    ABodyConsumer::_setShouldPerformPost(bool newValue){_shouldPerformPost = newValue;}

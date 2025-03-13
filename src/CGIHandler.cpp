@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 20:08:28 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:26:28 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ CGIHandler::~CGIHandler()
 	}
 	if (_fileOutFd != -1)
 		close(_fileOutFd);
-	//if (!_tempFileName.empty())
-		//std::remove(_tempFileName.c_str());
+	if (!_tempFileName.empty())
+		std::remove(_tempFileName.c_str());
 }
 
 /* Private Methods */
@@ -83,7 +83,7 @@ void CGIHandler::_setEnv()
 		size_t number = _request.getBodySize();
     	std::ostringstream oss;
     	oss << number;
-		//_cgiEnv["CONTENT_LENGTH"] = oss.str();
+		//_cgiEnv["CONTENT_LENGTH"] = oss.str(); //TODO works without this, very likely needs removing
 		std::cerr << oss.str() << std::endl;
 	}
 }

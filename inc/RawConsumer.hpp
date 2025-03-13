@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 10:25:55 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 09:42:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:14:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 class RawConsumer: public ABodyConsumer
 {
 public:
-    RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::string saveFileName, size_t bodySize);
+    RawConsumer(HttpResponse&  response, bool shouldPerformPost, /*std::string saveFileName,*/ size_t bodySize);
     ~RawConsumer();
 
     size_t  consume(data_t& data);
 private:
     size_t          _bodySize;
-    std::ofstream   _saveFile;
+    //std::ofstream   _saveFile;
 };
 
 #endif

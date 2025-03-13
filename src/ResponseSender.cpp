@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 20:45:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:06:29 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ ResponseSender::~ResponseSender(){}
 ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
 {
     Socket::data_container_t    output;
-    //if (_request.getMethod() == POST && _request.getTarget().rfind(".bla") == _request.getTarget().length() - 4) {
-    //    _headersSent = true;
-    //}
+
     if (!_headersSent) {
         std::string headerSection(_generateResponseHeader());
         output.insert(output.end(), headerSection.begin(), headerSection.end());
@@ -50,12 +48,7 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
         if (!_wasDone && _request.getMethod() == POST && _request.getTarget().rfind(".bla") == _request.getTarget().length() - 4) {
             output.erase(output.begin(), output.begin() + 58);
             _wasDone = true;
-        }
-        //if (_request.getMethod() == POST && _request.getTarget().rfind(".bla") == _request.getTarget().length() - 4) {
-        //    for (Socket::data_container_t::iterator it = output.begin(); it != output.end(); it++) {
-        //        write(1, &(*it), 1);
-        //    }
-        //}
+        } // TODO: This is hardcode to correct size of the body sent. must update it AFTER consuming headers
 
 
         
