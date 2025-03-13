@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/13 16:49:45 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:00:06 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void    RequestManager::_cgiProcess(void)
 	        _stateMachine.advanceState();
         else
         {
+            
             if (!_cgiHandler.isCgiRunning())
                 _cgiHandler.run();
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
@@ -130,8 +131,6 @@ void    RequestManager::_cgiProcess(void)
 
 void    RequestManager::_sendResponse(void)
 {
-	// std::cout << "start debbuging" << _response.getStatusCode() << std::endl;
-    
     size_t  allowedSize = BUFFER_SIZE - std::min(_socket.getSendStash().size(),
                                                         static_cast<size_t>(BUFFER_SIZE));
     _socket.addToSendStash(_responseSender.getMessageToSend(allowedSize));

@@ -6,19 +6,18 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 10:33:10 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 09:42:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:13:21 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RawConsumer.hpp"
 #include <ctime>
 
-RawConsumer::RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::string saveFileName, size_t bodySize)
+RawConsumer::RawConsumer(HttpResponse&  response, bool shouldPerformPost, /*std::string saveFileName,*/ size_t bodySize)
     : ABodyConsumer(response, shouldPerformPost), _bodySize(bodySize)
 {
     if (_shouldPerformPost) {
-        int i = 0;
-        if (saveFileName.find("cgi-bin") != std::string::npos)
+        /*if (saveFileName.find("cgi-bin") != std::string::npos)
         {
             std::srand(std::time(0));
             std::ostringstream fileNameStream;
@@ -28,7 +27,8 @@ RawConsumer::RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::s
             
             response.cgiFile = fileNameStream.str();
             saveFileName = fileNameStream.str();
-        }
+        }*/
+        /*int i = 0;
         while (isFile(saveFileName)) {
             saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
             i++;
@@ -41,6 +41,7 @@ RawConsumer::RawConsumer(HttpResponse&  response, bool shouldPerformPost, std::s
         if (_saveFile.fail()) {
             _response.setStatusCode(500);
         }
+        _response.cgiFile = saveFileName;*/
     }
 }
 RawConsumer::~RawConsumer(){}

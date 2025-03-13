@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 13:22:41 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:37:29 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 Webserv::Webserv(int argc, char** argv)
     : _configFile(argc, argv), _portsAm(_configFile.getPorts().size()){
-        // _clients.reserve(100);
     }
 Webserv::~Webserv(){}
 
@@ -46,6 +45,7 @@ void    Webserv::setup(void)
         struct pollfd   listenPollfd;
         listenPollfd.fd = listenSocket;
         listenPollfd.events = POLLIN;
+        listenPollfd.revents = 0;
         _pollSockets.push_back(listenPollfd);
     }
 }
