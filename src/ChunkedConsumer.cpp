@@ -6,16 +6,16 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:13:47 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 15:53:01 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:14:40 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ChunkedConsumer.hpp"
 
-ChunkedConsumer::ChunkedConsumer(HttpResponse&  response, bool shouldPerformPost, std::string saveFileName)
+ChunkedConsumer::ChunkedConsumer(HttpResponse&  response, bool shouldPerformPost/*, std::string saveFileName*/)
     : ABodyConsumer(response, shouldPerformPost), _stateMachine(STATE_AM, CHUNK_SIZE), _currentChunkSize(0)
 {
-    if (_shouldPerformPost) {
+    /*if (_shouldPerformPost) {
         int i = 0;
         while (isFile(saveFileName)) {
             saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
@@ -29,7 +29,8 @@ ChunkedConsumer::ChunkedConsumer(HttpResponse&  response, bool shouldPerformPost
         if (_saveFile.fail()) {
             _response.setStatusCode(500);
         }
-    }
+        _response.cgiFile = saveFileName;
+    }*/
 }
 ChunkedConsumer::~ChunkedConsumer()
 {

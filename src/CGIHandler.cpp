@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 18:03:41 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:26:28 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void CGIHandler::_setEnv()
 		size_t number = _request.getBodySize();
     	std::ostringstream oss;
     	oss << number;
-		_cgiEnv["CONTENT_LENGTH"] = oss.str();
+		//_cgiEnv["CONTENT_LENGTH"] = oss.str(); //TODO works without this, very likely needs removing
+		std::cerr << oss.str() << std::endl;
 	}
 }
 
@@ -128,11 +129,12 @@ void CGIHandler::_getRequiredCgiArgs()
 	}
 	else
 	{
+		std::string cgiPath = "root/cgi-bin/cgi_tester";
 		_cgiArgs = new char*[2];
-		_cgiArgs[0] = new char[_cgiPath.size() + 1];
-		for (size_t i = 0; i < _cgiPath.size(); ++i)
-			_cgiArgs[0][i] = _cgiPath[i];
-		_cgiArgs[0][_cgiPath.size()] = '\0';
+		_cgiArgs[0] = new char[cgiPath.size() + 1];
+		for (size_t i = 0; i < cgiPath.size(); ++i)
+			_cgiArgs[0][i] = cgiPath[i];
+		_cgiArgs[0][cgiPath.size()] = '\0';
 		_cgiArgs[1] = NULL;
 	}
 }
@@ -245,7 +247,7 @@ bool CGIHandler::cgiDone()
 		return (true);
 	}
 	
-	if (hasTimedOut(_startedTime, 60))
+	if (hasTimedOut(_startedTime, 400))
 	{
 		std::cout << "\nCGI TimedOut\n" << std::endl;
 		kill(_pid, SIGKILL);
@@ -285,7 +287,8 @@ bool CGIHandler::isCgi(std::string target)
 		// }
 	}
 
-	if (target.rfind(".bla") == target.length() - 4){
+	if ((target.rfind(".bla") == target.length() - 4)
+		&& _request.getMethod() == POST){
 		return (true);
 	}
 		

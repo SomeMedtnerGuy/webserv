@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 15:04:09 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:13:58 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,24 +98,32 @@ size_t  RequestPerformer::_consumeBody(data_t data)
 {
 	size_t	dataConsumed = 0;
 	if (!_bodyConsumer) {
-		bool shouldPerformPost = (_request.getMethod() == POST && _consumeMode == false);
+		bool shouldPerformPost = (_request.getMethod() == POST && _response.getStatusCode() == 200);
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
-			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost, _request.getTarget()); //TODO These constructors must not return errors
+			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost/*, _request.getTarget()*/); //TODO These constructors must not return errors
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
-			_bodyConsumer = new RawConsumer(_response, shouldPerformPost, _request.getTarget(), _request.getBodySize());
+			_bodyConsumer = new RawConsumer(_response, shouldPerformPost, /*_request.getTarget(),*/ _request.getBodySize());
 		} else {
 			_setIsDone(true);
 			return (dataConsumed);
+		}
+		if (_response.getStatusCode() == 200) {
+			_bodyConsumer->setup(_request.getTarget());
+			if (_response.getStatusCode() != 200) {
+				_setIsDone(true);
+				if (_bodyConsumer) {
+					delete _bodyConsumer;
+					_bodyConsumer = NULL;
+				}
+				return (dataConsumed);
+			}
 		}
 	}
 	dataConsumed += _bodyConsumer->consume(data);
 	if (_bodyConsumer->isDone()) {
 		delete _bodyConsumer;
 		_bodyConsumer = NULL;
-		if (_request.getMethod() == POST && _response.getStatusCode() == 200) {
-			_response.setStatusCode(204);
-		}
 		_setIsDone(true);
 	}
     return (dataConsumed);
