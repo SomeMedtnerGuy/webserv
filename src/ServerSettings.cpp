@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 18:19:40 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:25:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ ServerSettings& ServerSettings::operator=(const ServerSettings& src)
 		_autoindex = src._autoindex;
 		_returnCode = src._returnCode;
 		_returnURL = src._returnURL;
+		_cgi = src._cgi;
 	}
 
 	return (*this);
@@ -129,6 +130,7 @@ void ServerSettings::setServer(std::string serverName)
 	_clientBodySize = aux.getClientBodySize();
 	setIndex(aux);
 	_errorPages = aux.getErrorPage();
+	_cgi = aux.getCgi();
 }
 
 void ServerSettings::setIndex(Server& server)
@@ -182,6 +184,7 @@ void ServerSettings::setLocation(std::string target)
 	setReturn(searchLoc);
 	setIndexLocation(searchLoc);
 	_location = searchLoc.getSpecificPath();
+	_cgi = searchLoc.getCgi();
 	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
 }
 
@@ -202,6 +205,27 @@ void ServerSettings::setIndexLocation(Location location)
 			_index = location.getIndex(i);
 			return;
 		}
+	}
+}
+
+bool ServerSettings::isCgiExtension(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	
+	if (it != _cgi.end()) {
+		return (true);
+	} else {
+	    return (false);
+	}
+}
+
+std::string ServerSettings::cgiExtensionHasASpecifcScript(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	if (it != _cgi.end()){
+		return (it->second);
+	} else {
+		return ("");
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 17:40:15 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:22:46 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ private:
 	std::vector<std::string> _return;
 	std::string _root;
 	size_t _clientBodySize;
+	std::map<std::string, std::string> _cgi;
 
 public:
 	Location();
@@ -39,6 +40,7 @@ public:
 	void setReturn(std::vector<std::string>& Return);
 	void setRoot(std::vector<std::string>& root);
 	void setClientBodySize(std::vector<std::string>& clientLimit);
+	void setCgi(std::vector<std::string>& cgi);
 
 
 	/* Getters */
@@ -49,9 +51,10 @@ public:
 	std::string getIndex(size_t indexNbr) const;
 	std::vector<std::string> getReturn() const;
 	std::string getRoot() const;
+	std::map<std::string, std::string> getCgi() const;
 	size_t getClientBodySize() const;
-
-
+	bool isCgiExtension(std::string);
+	std::string cgiExtensionHasASpecifcScript(std::string extension);
 	
 	void setLocationElements(std::string& element);
 };
