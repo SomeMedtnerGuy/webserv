@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:21:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:39:03 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ public:
 	const std::string& getReturnURL() const;
 	bool isCgiExtension(std::string);
 	std::string cgiExtensionHasASpecifcScript(std::string extension);
+	bool isCgi(std::string target);
 };
 
 #endif // SERVERSETTINGS_HPP

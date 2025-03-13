@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:25:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:55:18 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,9 @@ void ServerSettings::setLocation(std::string target)
 	setReturn(searchLoc);
 	setIndexLocation(searchLoc);
 	_location = searchLoc.getSpecificPath();
-	_cgi = searchLoc.getCgi();
+	if (!searchLoc.getCgi().empty()){
+		_cgi = searchLoc.getCgi();
+	}
 	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
 }
 
@@ -258,4 +260,18 @@ void ServerSettings::setReturn(Location location)
 	}
 	else
 		_returnURL = returnVec[0];
+}
+
+bool ServerSettings::isCgi(std::string target)
+{
+
+	if (target.rfind('.') == std::string::npos){
+		return (false);
+	}
+	std::string extension = target.substr(target.rfind('.'), target.size() - 1);
+	if (isCgiExtension(extension)){
+		return (true);
+	}
+
+	return (false);
 }
