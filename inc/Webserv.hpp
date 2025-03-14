@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:49:01 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 13:21:37 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:47:32 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <vector>
 # include <deque>
+# include <list>
 # include <fcntl.h>
 # include "Client.hpp"
 # include "main.h"
@@ -31,12 +32,13 @@ public:
 private:
     typedef std::vector<struct pollfd> sock_vector;
     typedef std::vector<int> port_vector;
-    typedef std::deque<Client> client_deque;
+    // typedef std::deque<Client> client_deque;
+    typedef std::list<Client> client_list;
     
     ConfigFile      _configFile;
     const size_t    _portsAm;
     sock_vector     _pollSockets;
-    client_deque   _clients;
+    client_list   _clients;
 
     void    _takeCareOfClientSockets(void);
     void    _takeCareOfListenSockets(void);
