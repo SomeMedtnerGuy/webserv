@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 
-import os
 import sys
+import os
+import cgi
 
-def main():
-    
-    content_length = os.environ.get("CONTENT_LENGTH")
-    
-    
-    if content_length:
-        try:
-            content_length = int(content_length)
-            body = sys.stdin.read(content_length)
-        except ValueError:
-            body = "Invalid CONTENT_LENGTH"
-    else:
-        body = "No body received"
+# Defina o cabeçalho da resposta HTTP
+print("Content-Type: text/html\n")
 
-  
-    print("Content-Type: text/plain")
-    print("") 
-    print("Received POST data:")
-    print(body)
+# Ler o corpo da requisição POST diretamente do stdin
+content_length = int(os.environ.get('CONTENT_LENGTH', 0))  # Tamanho do corpo da requisição
+post_data = sys.stdin.read(content_length)  # Leia os dados do corpo
 
-if __name__ == "__main__":
-    main()
+# Exibir os dados recebidos na resposta HTML
+print(f"""
+<html>
+<head>
+    <title>Received POST Data</title>
+</head>
+<body>
+    <h1>Received Data:</h1>
+    <p>{post_data}</p>
+</body>
+</html>
+""")
+# print(post_data)
+
+sys.stdout.flush()
+
+# curl -X POST --data "Hello World" http://localhost:1234/cgi-bin/cgi-post.py

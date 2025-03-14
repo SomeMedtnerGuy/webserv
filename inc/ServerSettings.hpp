@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:39:03 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:01:25 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 class ServerSettings {
 private:
 	int _port;
+	std::string							_queryString;
+	
 	std::string _serverName;
 	std::string	_location;
 	std::string _root;
@@ -47,6 +49,8 @@ public:
 
 	void setServer(std::string serverName);
 	void setLocation(std::string target);
+	void setQueryString(std::string& target);
+
 
 	const std::string& getServerName() const;
 	const std::string getLocation() const;
@@ -57,6 +61,7 @@ public:
 	bool getAllowMethod(Method method) const;
 	bool getAutoIndex() const;
 	int getReturnCode() const;
+	std::string getQueryString() const;
 	const std::string& getReturnURL() const;
 	bool isCgiExtension(std::string);
 	std::string cgiExtensionHasASpecifcScript(std::string extension);

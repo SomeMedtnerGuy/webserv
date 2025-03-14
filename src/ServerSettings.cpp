@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:55:18 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:02:57 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,11 @@ const std::string	ServerSettings::getLocation(void) const
 	return (_location);
 }
 
+std::string ServerSettings::getQueryString() const
+{
+	return (_queryString);
+}
+
 void ServerSettings::setIndexLocation(Location location)
 {
 	if (location.getIndexSize() == 0)
@@ -228,6 +233,16 @@ std::string ServerSettings::cgiExtensionHasASpecifcScript(std::string extension)
 		return (it->second);
 	} else {
 		return ("");
+	}
+}
+
+void ServerSettings::setQueryString(std::string& target)
+{
+	size_t hasQueryString = target.find('?');
+	if (hasQueryString != std::string::npos)
+	{
+		_queryString = target.substr(hasQueryString + 1, target.size());		
+		target = target.substr(0, hasQueryString);
 	}
 }
 

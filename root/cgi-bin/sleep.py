@@ -1,5 +1,7 @@
 import time
 
+print("Content-Type: text/html\n")
+
 time.sleep(5)
 
 print(f"""

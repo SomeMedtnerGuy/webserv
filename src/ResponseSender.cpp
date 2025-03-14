@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseSender.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/13 11:06:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:22:05 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
             _file.open(_response.getBodyPath().c_str(), std::ios::binary);
         }
         unsigned char   buffer[byteLimit];
+        
+        if (_response.cgiBodyStarted != std::streampos(-1))
+            _file.seekg(_response.cgiBodyStarted, std::ios::beg); // ignore file headers when processing CGI requests
+            
         _file.read(reinterpret_cast<char*>(buffer), byteLimit - std::strlen(DELIMITOR));
         output.insert(output.end(), buffer, buffer + _file.gcount());
         if (_file.eof()) {

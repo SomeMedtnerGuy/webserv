@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 18:38:42 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:26:51 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,21 @@ void CGIHandler::_setEnv()
 	_cgiEnv["SCRIPT_FILENAME"] = _cgiPath;
 	_cgiEnv["SERVER_PROTOCOL"] = "HTTP/1.1";
 	std::map<std::string, std::string>::const_iterator it = _request.getHeaders().find("CONTENT_TYPE");
-	if (it != _request.getHeaders().end())
-		_cgiEnv["CONTENT_TYPE"] = it->second;
-	else
+	if (_server.getQueryString() != ""){
+		_cgiEnv["QUERY_STRING"] = _server.getQueryString();
+	}
+	if (it != _request.getHeaders().end()){
+		_cgiEnv["CONTENT_TYPE"] = it->second;		
+	}
+	else{
 		_cgiEnv["CONTENT_TYPE"] = "text/plain";
+	}
 	if (_request.getMethod() == POST)
 	{
 		size_t number = _request.getBodySize();
     	std::ostringstream oss;
     	oss << number;
-		//_cgiEnv["CONTENT_LENGTH"] = oss.str(); //TODO works without this, very likely needs removing
-		std::cerr << oss.str() << std::endl;
+		_cgiEnv["CONTENT_LENGTH"] = oss.str(); //TODO works without this, very likely needs removing
 	}
 }
 
@@ -191,9 +195,6 @@ void CGIHandler::_cgiPostExec()
 		dup2(_fileOutFd, STDOUT_FILENO);
 		close(_fileOutFd);
 		
-		std::cerr << _cgiArgs[0] << std::endl;
-		std::cerr << _cgiArgs[1] << std::endl;
-		
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		std::cerr << "CGI Execution failed!" << std::endl;
 		std::exit(1);
@@ -251,7 +252,6 @@ bool CGIHandler::cgiDone()
 	{
 		std::cout << "\nCGI TimedOut\n" << std::endl;
 		kill(_pid, SIGKILL);
-		// waitpid(_pid, &status, 0);
 		_response.setStatusCode(502); /* Bad gateway */
 		if (_fileInFd >= 0)
 		{
@@ -269,31 +269,10 @@ bool CGIHandler::cgiDone()
 void CGIHandler::run()
 {
 	std::cerr << "Running cgi" << std::endl;
-	_setCgiPath();
+	_cgiPath = _request.getTarget();
 	_setEnv();
 	_getRequiredCgiArgs();
 	_execute();	
-}
-
-bool CGIHandler::isCgi(std::string target)
-{
-	int pos = target.find("./root/cgi-bin");
-	
-	//std::cout << pos << std::endl;
-	if (pos == 0)
-	{
-		// if (target.find(".py") == target.size() - 3){
-			return (true);
-		// }
-	}
-
-	if ((target.rfind(".bla") == target.length() - 4)
-		&& _request.getMethod() == POST){
-		return (true);
-	}
-		
-	return (false);
-			//TODO change parser for cgi paths  
 }
 
 void CGIHandler::setCgiHeader()
@@ -305,7 +284,6 @@ void CGIHandler::setCgiHeader()
         throw std::runtime_error("CGI file open failed.");
     }
 
-	// int i = 0;
     while (std::getline(file, line) && line != "\n") {
 		
         std::cout << "Line: " << line << std::endl;
@@ -321,18 +299,18 @@ void CGIHandler::setCgiHeader()
 			if (next == "")
 				break;
 		}
-			std::cerr << "\nfirst\n" << std::endl;
 		_response.addHeaderCgi(fieldName, fieldValue);
     }
 
-	std::streampos currentPos = file.tellg();
+	_response.cgiBodyStarted = file.tellg();
 	file.seekg(0, std::ios::end);
     std::streampos endPos = file.tellg();
 	
-	std::streampos size = endPos - currentPos;
+	std::streampos size = endPos - _response.cgiBodyStarted;
 	std::stringstream ss;
 	ss << size;
 	_response.addHeaderCgi("Content-Length", ss.str());
 
     file.close();
 }
+

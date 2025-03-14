@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/13 17:56:52 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 18:53:15 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,9 @@ void    RequestManager::_recvBody(void)
 
 void    RequestManager::_cgiProcess(void)
 {
-    if (!_serverSettings.isCgi(_request.getTarget()))
-	        _stateMachine.advanceState();
+    if (!_serverSettings.isCgi(_request.getTarget())){
+        _stateMachine.advanceState();
+    }
         else
         {
             if (!_cgiHandler.isCgiRunning())
