@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/30 17:10:56 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:23:58 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ Server& Server::operator=(const Server& src)
 		_index = src._index;
 		_errorPage	= src._errorPage;
 		_locations = src._locations;
+		_cgi = src._cgi;
 	}
 	return (*this);
 }
@@ -124,6 +125,19 @@ void Server::setErrorPage(const std::vector<std::string>& errorPage)
 	_errorPage[errorNbr] = errorPage[2];
 }
 
+void Server::setCgi(const std::vector<std::string>& cgi)
+{
+	if (cgi.size() > 3)
+		throw std::runtime_error("The Cgi directive must have only two parameters.");
+	if (cgi[1].find('.') != 0)
+		throw std::runtime_error("The Cgi directive must have a file extension in first parameter.");
+	if (cgi.size() == 3){
+		_cgi[cgi[1]] = cgi[2];
+	} else {
+		_cgi[cgi[1]] = "\0";
+	}
+}
+
 void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
 {
 	checkCurlyBrace(serverVector[i], true);
@@ -205,17 +219,43 @@ const std::map<int, std::string>& Server::getErrorPage() const
 	return (_errorPage);
 }
 
+std::map<std::string, std::string> Server::getCgi() const
+{
+	return (_cgi);
+}
+
+bool Server::isCgiExtension(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	if (it != _cgi.end()) {
+		return (true);
+	} else {
+	    return (false);
+	}
+}
+
+std::string Server::cgiExtensionHasASpecifcScript(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	if (it != _cgi.end()){
+		return (it->second);
+	} else {
+		return ("");
+	}
+}
+
 /* -- */
 
 void Server::setElements(std::string element)
 {
-	void (Server::*SetFunct[6])(const std::vector<std::string>&) = {
+	void (Server::*SetFunct[7])(const std::vector<std::string>&) = {
 		&Server::setListen, 
 		&Server::setServerName,
 		&Server::setRoot, 
 		&Server::setClientBodySize, 
 		&Server::setIndex, 
-		&Server::setErrorPage
+		&Server::setErrorPage,
+		&Server::setCgi
 		};
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
@@ -226,16 +266,17 @@ void Server::setElements(std::string element)
 
 size_t getElementNbr(std::string element)
 {
-	std::string elementsKeys[6] = {
+	std::string elementsKeys[7] = {
 		"listen",
 		"server_name", 
 		"root", 
 		"client_body_size", 
 		"index", 
-		"error_page"
+		"error_page",
+		"cgi"
 		};
 	
-	for (size_t i = 0; i < 7; ++i) {
+	for (size_t i = 0; i < 8; ++i) {
 		if (element == elementsKeys[i])
 			return (i);		
 	}

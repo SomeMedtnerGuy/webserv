@@ -6,18 +6,19 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 18:19:32 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:04:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpResponse.hpp"
 
 HttpResponse::HttpResponse(ServerSettings& serverSettings)
-	: _serverSettings(serverSettings), _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH) 
+	: _serverSettings(serverSettings), _statusCode(200), _bodyPath(DEFAULT_PAGE_PATH)
 {
 	_headers["Content-Type"] = "text/html; charset=UTF-8";
     _headers["Server"] = "localhost";
     _headers["Content-Length"] = ntostr(getFileLength(_bodyPath));
+	cgiBodyStarted = std::streampos(-1);
 }
 HttpResponse::~HttpResponse() {}
 

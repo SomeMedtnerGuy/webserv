@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/12 12:33:11 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:23:33 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ Location& Location::operator=(const Location& src)
 		_index = src._index;
 		_return = src._return;
 		_root = src._root;
+		_cgi = src._cgi;
 	}
 	return (*this);
 }
@@ -77,7 +78,7 @@ void Location::setIndex(std::vector<std::string>& index)
 		throw std::runtime_error("Host directive must have one value, at least.");
 	
 	for (size_t i = 1; i < index.size(); i++)
-			_index.push_back(index[i]);
+			_index.push_back(index[i]);	
 }
 
 void Location::setReturn(std::vector<std::string>& Return)
@@ -134,6 +135,19 @@ void Location::setClientBodySize(std::vector<std::string>& clientLimit)
 	_clientBodySize = atoi(clientLimit[1].c_str());
 }
 
+void Location::setCgi(std::vector<std::string>& cgi)
+{
+	if (cgi.size() > 3)
+		throw std::runtime_error("The Cgi directive must have only two parameters.");
+	if (cgi[1].find('.') != 0)
+		throw std::runtime_error("The Cgi directive must have a file extension in first parameter.");
+	if (cgi.size() == 3){
+		_cgi[cgi[1]] = cgi[2];
+	} else {
+		_cgi[cgi[1]] = "";
+	}
+}
+
 /* Getters */
 std::string Location::getSpecificPath() const
 {
@@ -164,7 +178,7 @@ std::string Location::getIndex(size_t indexNbr) const
 {
 	if (indexNbr > _index.size() -1)
 		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_index.size() -1));
-
+	
 	return (_index[indexNbr]);
 }
 
@@ -185,17 +199,45 @@ size_t Location::getClientBodySize() const
 	return (_clientBodySize);
 }
 
+std::map<std::string, std::string> Location::getCgi() const
+{
+	return (_cgi);
+}
+
+
+bool Location::isCgiExtension(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	
+	if (it != _cgi.end()) {
+		return (true);
+	} else {
+	    return (false);
+	}
+}
+
+std::string Location::cgiExtensionHasASpecifcScript(std::string extension)
+{
+	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
+	if (it != _cgi.end()){
+		return (it->second);
+	} else {
+		return ("");
+	}
+}
+
 /* - */
 
 void Location::setLocationElements(std::string& element)
 {
-	void (Location::*SetFunct[6])(std::vector<std::string>&) = {
+	void (Location::*SetFunct[7])(std::vector<std::string>&) = {
 		&Location::setAllowMethods,
 		&Location::setAutoIndex,
 		&Location::setIndex,
 		&Location::setReturn, 
 		&Location::setRoot,
-		&Location::setClientBodySize
+		&Location::setClientBodySize,
+		&Location::setCgi
 		};
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
@@ -206,16 +248,17 @@ void Location::setLocationElements(std::string& element)
 
 size_t getLocationNbr(std::string element)
 {
-	std::string elementsKeys[6] = {
+	std::string elementsKeys[7] = {
 		"allow_methods",
 		"autoindex", 
 		"index", 
 		"return", 
 		"root",
 		"client_body_size",
+		"cgi"
 		};
 	
-	for (size_t i = 0; i < 6; ++i) {
+	for (size_t i = 0; i < 7; ++i) {
 		if (element == elementsKeys[i])
 			return (i);		
 	}
