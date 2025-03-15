@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/13 11:37:29 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:03:10 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,22 @@ void    Webserv::run(void)
 }
 
 /* PRIVATE */
-void    Webserv::_takeCareOfClientSockets(void)
+void Webserv::_takeCareOfClientSockets(void)
 {
-    for (client_deque::reverse_iterator rclient = _clients.rbegin(); rclient != _clients.rend() ; rclient++) {
-        client_deque::iterator client = rclient.base() - 1; //The formula to convert rev to reg iterator
-        // Client index is relative to total poll sockets, not just client sockets (includes listen sockets)
-        int clientIndex = _portsAm + (client - _clients.begin());
-        rclient->updateSocketFlags(_pollSockets[clientIndex].revents);
-        rclient->handle();
-        if (rclient->shouldCloseConnection()) {
-            _clients.erase(client); 
+    for (std::list<Client>::iterator client = _clients.begin(); client != _clients.end(); ) {
+        int clientIndex = _portsAm + std::distance(_clients.begin(), client);
+    
+        client->updateSocketFlags(_pollSockets[clientIndex].revents);
+        client->handle();
+    
+        if (client->shouldCloseConnection()) {
             close(_pollSockets[clientIndex].fd);
             _pollSockets.erase(_pollSockets.begin() + clientIndex);
+            client = _clients.erase(client);
+        } else {
+            ++client;
         }
-    }
+    } 
 }
 
 void    Webserv::_takeCareOfListenSockets()

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:56:27 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 15:34:27 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:00:04 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,15 +135,18 @@ void	RequestParser::_processRequest(void)
 	}
     
     //build full target
-	std::string	target(_serverSettings.getRoot());
     std::string targetWithoutLocation = _request.getTarget();
+    _serverSettings.setQueryString(targetWithoutLocation); // extracts the query string from the target
+    
+	std::string	target(_serverSettings.getRoot());
     int lengthOfLocation = _serverSettings.getLocation().length();
     targetWithoutLocation.erase(targetWithoutLocation.begin(), 
                                     targetWithoutLocation.begin() + lengthOfLocation - 1);
 	//target.append(_request.getTarget());
 	target.append(targetWithoutLocation);
     _request.setTarget(target);
-
+    
+    
 	// Processing based on header fields
 	const HttpMessage::headers_dict&	headers = _request.getHeaders();
     // Method is POST, but no header indicates existence of a body

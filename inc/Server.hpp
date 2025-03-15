@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:24:14 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/01/07 18:28:19 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:28:22 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ private:
 	size_t _clientBodySize;
 	std::vector<std::string> _index;
 	std::map<int, std::string> _errorPage;
+	std::map<std::string, std::string> _cgi;
 	std::vector<Location> _locations;
 
 public:
@@ -41,6 +42,7 @@ public:
 	void setClientBodySize(const std::vector<std::string>& clientLimit);
 	void setIndex(const std::vector<std::string>& index);
 	void setErrorPage(const std::vector<std::string>& errorPage);
+	void setCgi(const std::vector<std::string>& cgi);
 	void setLocation(std::vector<std::string>& serverVector, size_t i);
 	Location fillLocation(std::vector<std::string>& serverVector, size_t begin, size_t end);
 
@@ -54,6 +56,11 @@ public:
 	std::string getIndex(size_t indexNbr) const;
 	const std::map<int, std::string>& getErrorPage() const;
 	const std::vector<Location>& getLocation() const;
+	std::map<std::string, std::string> getCgi() const;
+	bool isCgiExtension(std::string);
+	std::string cgiExtensionHasASpecifcScript(std::string extension);
+
+
 	//const Location& getOneLocation(std::string target) const;
 
 	void setElements(std::string element);
