@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:11:45 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 15:16:38 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:34:32 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,11 +149,11 @@ void isValidIPv4(std::vector<std::string>& str)
 bool isDirectory(std::string path)
 {
     struct stat statbuf;
-	if (stat(path.c_str(), &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR))
-    {
-        return (false);
+    
+    if (stat(path.c_str(), &statbuf) == 0 && (statbuf.st_mode & S_IFDIR)) {
+        return (true);
     }
-    return (true);
+    return (false);
 }
 
 bool isFile(std::string path)

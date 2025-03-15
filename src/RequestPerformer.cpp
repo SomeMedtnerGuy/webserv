@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestPerformer.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 15:53:03 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:18:19 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,10 @@ bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
+	std::cerr << "TARGET: " << target << std::endl;
 	if (isDirectory(target)) // If target is directory
 	{		
+		std::cerr << "\n\nWTF\n\n" << std::endl;
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append("/" + _serverSettings.getIndex());
@@ -101,9 +103,9 @@ size_t  RequestPerformer::_consumeBody(data_t data)
 		bool shouldPerformPost = (_request.getMethod() == POST && _response.getStatusCode() == 200);
 		const HttpMessage::headers_dict	requestHeaders = _request.getHeaders();
 		if (requestHeaders.find("Transfer-Encoding") != requestHeaders.end()) {
-			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost/*, _request.getTarget()*/); //TODO These constructors must not return errors
+			_bodyConsumer = new ChunkedConsumer(_response, shouldPerformPost);
 		} else if (requestHeaders.find("Content-Length") != requestHeaders.end()) {
-			_bodyConsumer = new RawConsumer(_response, shouldPerformPost, /*_request.getTarget(),*/ _request.getBodySize());
+			_bodyConsumer = new RawConsumer(_response, shouldPerformPost, _request.getBodySize());
 		} else {
 			_setIsDone(true);
 			return (dataConsumed);

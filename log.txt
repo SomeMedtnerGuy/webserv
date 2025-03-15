@@ -1,5 +1,20 @@
-done
-done
-done
-RECV action reported that an error in socket occurred!
+-----
+REQUEST CREATED
+-----
+The following shit has been received: 
+GET / HTTP/1.1\r\nHost: localhost:1234\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n\r\n
+The following shit has been sent: 
+HTTP/1.1 200\r\nContent-Length: 24\r\nContent-Type: text/html; charset=UTF-8\r\nServer: localhost\r\n\r\n
+The following shit has been sent: 
+Here goes the index of /
+-----
+REQUEST DELETED
+-----
+-----
+REQUEST CREATED
+-----
+RECV action reported that the client closed the connection!
+-----
+REQUEST DELETED
+-----
 Byeeeeeeeee
