@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/15 13:19:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:06:30 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@ Webserv::~Webserv(){}
 
 void    Webserv::setup(void)
 {
+    try
+    {
+        _configFile.run();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        exit(1);
+    }
+    
     // Create a listening socket per port
     port_vector ports = _configFile.getPorts();
     for (port_vector::const_iterator it = ports.begin(); it != ports.end(); it++) {

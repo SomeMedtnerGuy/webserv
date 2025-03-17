@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:23:58 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:01:23 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,9 @@ void Server::setCgi(const std::vector<std::string>& cgi)
 	if (cgi.size() == 3){
 		_cgi[cgi[1]] = cgi[2];
 	} else {
+		if (cgi[1].compare(".py")){
+			throw std::runtime_error("The Webserv only accept a Python script.");
+		}
 		_cgi[cgi[1]] = "\0";
 	}
 }
