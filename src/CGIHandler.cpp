@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/15 12:34:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:34:43 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void CGIHandler::_openFile()
 		std::cerr << _response.cgiFile << std::endl;;
 		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
 		if (_fileInFd == -1)
-			throw std::runtime_error("CGI file open failed.");
+			throw std::runtime_error("CGI open file failed.");
 	}
 }
 

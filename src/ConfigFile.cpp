@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/10 18:02:10 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:04:20 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ConfigFile::ConfigFile(int argc, char **argv)
 	if (argc == 1)
 		createFile();
 	argc == 1 ? _filePath = "configFileDefault.conf" :_filePath = argv[1];
-	run();
+	// run();
 }
 
 ConfigFile::ConfigFile(const ConfigFile& src)
