@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/15 12:34:31 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:57:39 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,30 +116,32 @@ void CGIHandler::_getCgiEnv()
 
 void CGIHandler::_getRequiredCgiArgs()
 {
-	if (_cgiPath.rfind(".py") == _cgiPath.length() - 3)
-	{
-		_cgiArgs = new char*[3];
-		std::string cgiExec = "/usr/bin/python3";
-		_cgiArgs[0] = new char[cgiExec.size() + 1];
-    	for (size_t i = 0; i < cgiExec.size(); ++i)
-			_cgiArgs[0][i] = cgiExec[i];
-    	_cgiArgs[0][cgiExec.size()] = '\0';
-		
-    	_cgiArgs[1] = new char[_cgiPath.size() + 1];
-    	for (size_t i = 0; i < _cgiPath.size(); ++i)
-			_cgiArgs[1][i] = _cgiPath[i];
-    	_cgiArgs[1][_cgiPath.size()] = '\0';
-		_cgiArgs[2] = NULL;
-	}
-	else
-	{
-		std::string cgiPath = "root/cgi-bin/cgi_tester";
+	std::string	cgiPath = _server.cgiExtensionHasASpecifcScript(_cgiPath);
+	if (cgiPath.empty()) {
 		_cgiArgs = new char*[2];
 		_cgiArgs[0] = new char[cgiPath.size() + 1];
 		for (size_t i = 0; i < cgiPath.size(); ++i)
 			_cgiArgs[0][i] = cgiPath[i];
 		_cgiArgs[0][cgiPath.size()] = '\0';
 		_cgiArgs[1] = NULL;
+	} else {
+		if (_cgiPath.rfind(".py") == _cgiPath.length() - 3)
+		{
+			_cgiArgs = new char*[3];
+			std::string cgiExec = "/usr/bin/python3";
+			_cgiArgs[0] = new char[cgiExec.size() + 1];
+			for (size_t i = 0; i < cgiExec.size(); ++i)
+				_cgiArgs[0][i] = cgiExec[i];
+			_cgiArgs[0][cgiExec.size()] = '\0';
+			
+			_cgiArgs[1] = new char[_cgiPath.size() + 1];
+			for (size_t i = 0; i < _cgiPath.size(); ++i)
+				_cgiArgs[1][i] = _cgiPath[i];
+			_cgiArgs[1][_cgiPath.size()] = '\0';
+			_cgiArgs[2] = NULL;
+		} else {
+			throw std::runtime_error("Extension not recognized.");
+		}
 	}
 }
 
@@ -174,11 +176,13 @@ void CGIHandler::_forkProcess()
 
 void CGIHandler::_cgiGetExec()
 {
+	std::cerr << "Get is running" << std::endl;
 	if (_pid == 0)
 	{
 		dup2(_fileOutFd, STDOUT_FILENO);
 		close(_fileOutFd);
 		
+		std::cerr << _cgiArgs[0] << std::endl;
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		
 		std::cerr << "CGI Execution failed!" << std::endl;
@@ -271,8 +275,11 @@ void CGIHandler::run()
 {
 	std::cerr << "Running cgi" << std::endl;
 	_cgiPath = _request.getTarget();
+	std::cerr << _cgiPath << std::endl;
 	_setEnv();
+	std::cerr << "Envs set" << std::endl;
 	_getRequiredCgiArgs();
+	std::cerr << "args gotten" << std::endl;
 	_execute();	
 }
 

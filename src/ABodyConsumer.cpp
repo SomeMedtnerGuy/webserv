@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:53:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/15 12:32:42 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:29:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ ABodyConsumer::~ABodyConsumer(){}
 void    ABodyConsumer::setup(std::string saveFileName)
 {
     if (_shouldPerformPost) {
-        std::cerr << "FUCK" << std::endl;
+        if (isDirectory(saveFileName)) {
+            _response.setStatusCode(405);
+            return ;
+        }
         int i = 0;
         while (isFile(saveFileName)) {
             saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
@@ -32,7 +35,6 @@ void    ABodyConsumer::setup(std::string saveFileName)
         }
         _saveFile.open(saveFileName.c_str(), std::ios::binary);
         if (_saveFile.fail()) {
-            std::cerr << "lol" << std::endl;
             _response.setStatusCode(500);
             return ;
         }

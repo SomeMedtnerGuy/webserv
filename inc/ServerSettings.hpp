@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/14 16:01:25 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:46:30 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ public:
 	int getReturnCode() const;
 	std::string getQueryString() const;
 	const std::string& getReturnURL() const;
-	bool isCgiExtension(std::string);
+	bool isCgiExtension(std::string target);
 	std::string cgiExtensionHasASpecifcScript(std::string extension);
 	bool isCgi(std::string target);
 };
