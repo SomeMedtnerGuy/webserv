@@ -20,7 +20,10 @@ ABodyConsumer::~ABodyConsumer(){}
 void    ABodyConsumer::setup(std::string saveFileName)
 {
     if (_shouldPerformPost) {
-        std::cerr << "FUCK" << std::endl;
+        if (isDirectory(saveFileName)) {
+            _response.setStatusCode(405);
+            return ;
+        }
         int i = 0;
         while (isFile(saveFileName)) {
             saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
@@ -32,7 +35,6 @@ void    ABodyConsumer::setup(std::string saveFileName)
         }
         _saveFile.open(saveFileName.c_str(), std::ios::binary);
         if (_saveFile.fail()) {
-            std::cerr << "lol" << std::endl;
             _response.setStatusCode(500);
             return ;
         }
