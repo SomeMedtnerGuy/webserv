@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:28:15 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/02/12 17:08:21 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:11:17 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ private:
 	std::vector<int> _ports;
 	
 	ConfigFile();
+	bool alreadyExist(int);
 
 public:
 	ConfigFile(int argc, char **argv);

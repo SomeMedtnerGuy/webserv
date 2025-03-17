@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/17 15:57:49 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:15:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void    Webserv::setup(void)
         std::cerr << e.what() << '\n';
         exit(1);
     }
+    port_vector ports = _configFile.getPorts();
+    _portsAm = ports.size();
     
     
     // Create a listening socket per port

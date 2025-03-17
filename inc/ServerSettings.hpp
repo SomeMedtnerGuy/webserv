@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 19:43:52 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 14:46:30 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:26:02 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ private:
 	ConfigFile& _src;
 
 	void setIndex(Server& server);
-	void setAllowMethods(Location location);
+	void setAllowMethods(std::vector<std::string> getAllowMethods);
 	void setReturn(Location location);
 	void setIndexLocation(Location location);
 	

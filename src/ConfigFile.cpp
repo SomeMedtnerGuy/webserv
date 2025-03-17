@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:30:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 15:04:20 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:55:59 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ ConfigFile::ConfigFile(int argc, char **argv)
 	if (argc == 1)
 		createFile();
 	argc == 1 ? _filePath = "configFileDefault.conf" :_filePath = argv[1];
-	// run();
 }
 
 ConfigFile::ConfigFile(const ConfigFile& src)
@@ -111,6 +110,17 @@ Server ConfigFile::getServer(std::string serverName, int port) const
 	return (_serverObjs[0]); /* If no server_name matches the request, Nginx will use the first server block in the configuration file as the default server.  */
 }
 
+bool hasDifferentPort(std::vector<int> first, std::vector<int> second)
+{
+	if (first.size() != second.size())
+		return (true);
+	std::sort(first.begin(), first.end());
+    std::sort(second.begin(), second.end());
+	if (first == second)
+		return (false);
+	return (true);
+}
+
 void ConfigFile::clearDuplicateServers()
 {
 	std::vector<Server>::iterator it = _serverObjs.begin();
@@ -122,9 +132,13 @@ void ConfigFile::clearDuplicateServers()
 		{
 			if (copy->getServerName() == servername)
 			{
-				it = _serverObjs.erase(it);
-				it = _serverObjs.begin();
-				break ;
+				if (!hasDifferentPort(copy->getListenVec(), it->getListenVec())){
+					std::cerr << "erase server" << std::endl;
+					it = _serverObjs.erase(it);
+					it = _serverObjs.begin();
+					break ;
+				}
+				++copy;
 			}
 			else
 				++copy;
@@ -212,13 +226,26 @@ Server ConfigFile::fillServersObjs(std::string& serverStr, size_t serverId)
 	return (realServer);
 }
 
+bool ConfigFile::alreadyExist(int newPort)
+{
+	for (size_t i = 0; i <_ports.size(); i++){
+		if (_ports[i] == newPort){
+			return (true);
+		}
+	}
+	return (false);
+}
+
 void ConfigFile::setPorts()
 {
 	for (size_t i = 0; i <_serverObjs.size(); i++)
 	{
 		int aux = _serverObjs[i].getListenSize();
-		for (int j = 0; j < aux; j++)
-			_ports.push_back(_serverObjs[i].getListen(j));
+		for (int j = 0; j < aux; j++){
+			if (!alreadyExist(_serverObjs[i].getListen(j))){
+				_ports.push_back(_serverObjs[i].getListen(j));
+			}
+		}
 	}
 }
 
