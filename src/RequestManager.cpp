@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/15 16:01:42 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:48:37 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ void    RequestManager::_cgiProcess(void)
                 _cgiHandler.run();
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
             {
+                _checkAndActOnErrors(); //TODO It must not continue if an error is returned (so headers remain intact).
                 std::cout << "done" << std::endl;
                 _cgiHandler.setCgiHeader();
                 _stateMachine.advanceState();
@@ -177,9 +178,9 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
     switch (statusCode) {
         case 200: case 204: //case 411: //TODO REMOVE 411
             return (NO_ERROR);
-        case 404: case 405: case 500: case 501: 
+        case 403: case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);
-        case 431: case 400: case 413:
+        case 400: case 411: case 413: case 431: case 301:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
