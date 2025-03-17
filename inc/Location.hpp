@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 19:16:04 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:22:46 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:24:01 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ public:
 	size_t getIndexSize() const;
 	std::string getIndex(size_t indexNbr) const;
 	std::vector<std::string> getReturn() const;
+	std::vector<std::string> getAllowMethodsVec() const;
 	std::string getRoot() const;
 	std::map<std::string, std::string> getCgi() const;
 	size_t getClientBodySize() const;

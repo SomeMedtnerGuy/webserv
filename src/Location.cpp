@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 15:01:16 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:24:36 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,11 @@ std::string Location::getIndex(size_t indexNbr) const
 		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_index.size() -1));
 	
 	return (_index[indexNbr]);
+}
+
+std::vector<std::string> Location::getAllowMethodsVec() const
+{
+	return (_allowMethods);
 }
 
 std::vector<std::string> Location::getReturn() const

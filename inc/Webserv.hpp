@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:49:01 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 11:47:32 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:04:45 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ private:
     typedef std::list<Client> client_list;
     
     ConfigFile      _configFile;
-    const size_t    _portsAm;
+    size_t          _portsAm;
     sock_vector     _pollSockets;
     client_list   _clients;
 
