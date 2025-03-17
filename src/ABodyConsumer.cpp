@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABodyConsumer.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:53:18 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 19:25:41 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:29:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,27 @@ ABodyConsumer::ABodyConsumer(HttpResponse& response, bool shouldPerformPost)
 {}
 ABodyConsumer::~ABodyConsumer(){}
 
-void    ABodyConsumer::setup(std::string saveFileName) //TODO check what is the severity of these errors
+void    ABodyConsumer::setup(std::string saveFileName)
 {
-    int i = 0;
-    while (isFile(saveFileName)) {
-        saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
-        i++;
-        if (i >= 100) {
-            _response.setStatusCode(409);
+    if (_shouldPerformPost) {
+        if (isDirectory(saveFileName)) {
+            _response.setStatusCode(405);
             return ;
         }
-    }
-    _saveFile.open(saveFileName.c_str(), std::ios::binary);
-    if (_saveFile.fail()) {
-        std::cerr << "lol" << std::endl;
-        _response.setStatusCode(500);
-        return ;
+        int i = 0;
+        while (isFile(saveFileName)) {
+            saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
+            i++;
+            if (i >= 100) {
+                _response.setStatusCode(409);
+                return ;
+            }
+        }
+        _saveFile.open(saveFileName.c_str(), std::ios::binary);
+        if (_saveFile.fail()) {
+            _response.setStatusCode(500);
+            return ;
+        }
     }
     _response.cgiFile = saveFileName;
 }

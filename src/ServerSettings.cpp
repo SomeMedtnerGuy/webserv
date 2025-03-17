@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/14 16:02:57 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/15 14:51:50 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,20 @@ const std::string& ServerSettings::getIndex() const
 
 const std::string ServerSettings::getErrorPage(int errorCode) const
 {
+	std::cerr << _errorPages.size() << std::endl;
+	for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); it++) {
+		std::cerr << it->first << ": " << it->second << std::endl;
+	}
+	std::cerr << std::endl;
 	std::map<int, std::string>::const_iterator it = _errorPages.find(errorCode);
 	if (it != _errorPages.end())
 	{
-		std::ifstream file(it->second.c_str());
+		std::string	path("root/" + it->second);
+		std::ifstream file(path.c_str());
+		std::cerr << errorCode << std::endl;
+		std::cerr << file.is_open() << std::endl;
 		if (file.is_open())
-			return it->second;
+			return path;
 	}
 	const std::string defaultPage = ".default/" + intToStr(errorCode) + ".html"; /* check this, maybe creat a default for that code */
 	return (defaultPage);
@@ -172,6 +180,9 @@ static const Location matchLocation(const std::string& target, const std::vector
 void ServerSettings::setLocation(std::string target)
 {
 	std::vector<Location> auxVec = _src.getServer(_serverName, _port).getLocation();
+	if (auxVec.size() == 0) {
+		return;
+	}
 	Location searchLoc = matchLocation(target, auxVec);
 	if (searchLoc.getAutoIndex() == true) {
 		_autoindex = searchLoc.getAutoIndex();

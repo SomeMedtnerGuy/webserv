@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:18:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 20:45:47 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/15 13:01:53 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ void                Socket::fillStash(void)
 		throw (SocketException(RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
-    //std::cout << "The following shit has been received: " << std::endl;
-    //printBuffer();
-    //write(1, "\n", 1);
+    std::cout << "The following shit has been received: " << std::endl;
+    printBuffer();
+    write(1, "\n", 1);
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
     _actionMade = true;
@@ -118,9 +118,9 @@ void                Socket::flushStash(void)
         throw (SocketException(SEND,
             static_cast<SocketException::ActionReturn>(bytesSent)));
     }
-    //std::cout << "The following shit has been sent: " << std::endl;
-    //printBuffer();
-    //write(1, "\n", 1);
+    std::cout << "The following shit has been sent: " << std::endl;
+    printBuffer();
+    write(1, "\n", 1);
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
     _actionMade = true;

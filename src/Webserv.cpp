@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 12:03:10 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/15 13:19:12 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void    Webserv::setup(void)
         // Setup the socket to be handled by poll()
         struct pollfd   listenPollfd;
         listenPollfd.fd = listenSocket;
-        listenPollfd.events = POLLIN;
+        listenPollfd.events = POLLIN | POLLOUT; //Because screw this subject
         listenPollfd.revents = 0;
         _pollSockets.push_back(listenPollfd);
     }

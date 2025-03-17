@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 18:53:15 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:01:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ RequestManager::RequestManager(Socket& socket, ConfigFile& configFile)
     _stateFunctionsMap[RECV_BODY] = &RequestManager::_recvBody;
     _stateFunctionsMap[CGI_PROCESS] = &RequestManager::_cgiProcess;
     _stateFunctionsMap[SEND_RESPONSE] = &RequestManager::_sendResponse;
-    std::cerr << "-----\nREQUEST CREATED\n-----" << std::endl;
+    std::cout << "-----\nREQUEST CREATED\n-----" << std::endl;
 }
 RequestManager::~RequestManager()
 {
     _response.printMessage();
-    std::cerr << "-----\nREQUEST DELETED\n-----" << std::endl;
+    std::cout << "-----\nREQUEST DELETED\n-----" << std::endl;
 }
 
 void    RequestManager::handle(void)
@@ -179,7 +179,7 @@ RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusC
             return (NO_ERROR);
         case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);
-        case 431: case 400:
+        case 431: case 400: case 413:
             return (ANSWER_AND_CLOSE);
         case -1: // This is not a real code, is an internal indication that some bad shit happened
             return (CLOSE_IMMEDIATELY);
