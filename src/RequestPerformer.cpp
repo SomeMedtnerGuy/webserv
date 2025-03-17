@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:09:54 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/15 17:18:19 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:54:47 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,8 @@ void	RequestPerformer::_createAutoIndex(std::string target)
 				"<ul>";
 	while ((dp = readdir(dir)) != NULL)
 	{
-		autoindexFile << "<li><a href=\"" << dp->d_name << "\">" << dp->d_name << "</a></li>";
+		bool isDir = isDirectory(target + "/" + dp->d_name);
+		autoindexFile << "<li><a href=\"" << dp->d_name << (isDir ? "/" : "") <<"\">" << dp->d_name << "</a></li>";
 	}
 	autoindexFile <<
 				"</ul>"

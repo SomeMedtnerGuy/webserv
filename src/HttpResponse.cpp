@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 11:30:00 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 15:04:39 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:26:42 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCod
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
-
+	std::cerr << "Why does this have to hurt so much " << ntostr(getFileLength(_bodyPath)) << std::endl;
 	if (_bodyPath.compare("") == 0) {
 		_headers.erase("Content-Length");
 		return;

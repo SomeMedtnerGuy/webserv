@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 13:34:43 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:35:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,11 +238,12 @@ bool CGIHandler::cgiDone()
 			_response.setStatusCode(502); /* Bad gateway */
 			return (true);
 		}
-		if (WEXITSTATUS(status) != 0)
+		if (WEXITSTATUS(status) != 0) {
 			_response.setStatusCode(500);/* internal server error */
-		else
+
+		} else {
 			_response.setBodyPath(_tempFileName);
-			
+		}
 		if (_fileInFd >= 0)
 		{
 		    close(_fileInFd);

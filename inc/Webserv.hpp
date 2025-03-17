@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:49:01 by ndo-vale          #+#    #+#             */
 /*   Updated: 2025/03/17 16:04:45 by nsouza-o         ###   ########.fr       */
@@ -38,7 +38,7 @@ private:
     ConfigFile      _configFile;
     size_t          _portsAm;
     sock_vector     _pollSockets;
-    client_list   _clients;
+    client_list     _clients;
 
     void    _takeCareOfClientSockets(void);
     void    _takeCareOfListenSockets(void);

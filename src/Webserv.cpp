@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
+/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
 /*   Updated: 2025/03/17 17:15:39 by nsouza-o         ###   ########.fr       */
@@ -31,7 +31,11 @@ void    Webserv::setup(void)
     port_vector ports = _configFile.getPorts();
     _portsAm = ports.size();
     
+    
     // Create a listening socket per port
+    port_vector ports = _configFile.getPorts();
+    _portsAm = ports.size();
+    std::cerr << _portsAm << std::endl;
     for (port_vector::const_iterator it = ports.begin(); it != ports.end(); it++) {
         // Create and setup socket
         int listenSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -79,7 +83,6 @@ void Webserv::_takeCareOfClientSockets(void)
 {
     for (std::list<Client>::iterator client = _clients.begin(); client != _clients.end(); ) {
         int clientIndex = _portsAm + std::distance(_clients.begin(), client);
-    
         client->updateSocketFlags(_pollSockets[clientIndex].revents);
         client->handle();
     
