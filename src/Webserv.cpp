@@ -33,9 +33,6 @@ void    Webserv::setup(void)
     
     
     // Create a listening socket per port
-    port_vector ports = _configFile.getPorts();
-    _portsAm = ports.size();
-    std::cerr << _portsAm << std::endl;
     for (port_vector::const_iterator it = ports.begin(); it != ports.end(); it++) {
         // Create and setup socket
         int listenSocket = socket(AF_INET, SOCK_STREAM, 0);

@@ -63,6 +63,7 @@ void    RequestPerformer::_performGet(void)
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append("/" + _serverSettings.getIndex());
+			std::cerr << "lol " << target << std::endl;
 			if (isFile(target)) {
 				_response.setBodyPath(target);
 			} else {
