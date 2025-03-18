@@ -6,21 +6,36 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/15 13:19:12 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:15:39 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
 
 Webserv::Webserv(int argc, char** argv)
-    : _configFile(argc, argv), _portsAm(_configFile.getPorts().size()){
+    : _configFile(argc, argv), _portsAm(0){
     }
 Webserv::~Webserv(){}
 
 void    Webserv::setup(void)
 {
+    try
+    {
+        _configFile.run();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        exit(1);
+    }
+    port_vector ports = _configFile.getPorts();
+    _portsAm = ports.size();
+    
+    
     // Create a listening socket per port
     port_vector ports = _configFile.getPorts();
+    _portsAm = ports.size();
+    std::cerr << _portsAm << std::endl;
     for (port_vector::const_iterator it = ports.begin(); it != ports.end(); it++) {
         // Create and setup socket
         int listenSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -68,7 +83,6 @@ void Webserv::_takeCareOfClientSockets(void)
 {
     for (std::list<Client>::iterator client = _clients.begin(); client != _clients.end(); ) {
         int clientIndex = _portsAm + std::distance(_clients.begin(), client);
-    
         client->updateSocketFlags(_pollSockets[clientIndex].revents);
         client->handle();
     

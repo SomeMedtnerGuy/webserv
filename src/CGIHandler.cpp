@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 14:57:39 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:35:02 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void CGIHandler::_openFile()
 		std::cerr << _response.cgiFile << std::endl;;
 		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
 		if (_fileInFd == -1)
-			throw std::runtime_error("CGI file open failed.");
+			throw std::runtime_error("CGI open file failed.");
 	}
 }
 
@@ -238,11 +238,12 @@ bool CGIHandler::cgiDone()
 			_response.setStatusCode(502); /* Bad gateway */
 			return (true);
 		}
-		if (WEXITSTATUS(status) != 0)
+		if (WEXITSTATUS(status) != 0) {
 			_response.setStatusCode(500);/* internal server error */
-		else
+
+		} else {
 			_response.setBodyPath(_tempFileName);
-			
+		}
 		if (_fileInFd >= 0)
 		{
 		    close(_fileInFd);

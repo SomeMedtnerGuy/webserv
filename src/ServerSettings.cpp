@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerSettings.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/15 14:51:50 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:30:24 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,17 +137,20 @@ void ServerSettings::setServer(std::string serverName)
 		_root = aux.getRoot();
 	_clientBodySize = aux.getClientBodySize();
 	setIndex(aux);
+	if (!aux.getAllowMethods().empty()){
+		setAllowMethods(aux.getAllowMethods());
+	}
 	_errorPages = aux.getErrorPage();
 	_cgi = aux.getCgi();
+
 }
 
 void ServerSettings::setIndex(Server& server)
 {
 	for (size_t i = 0; i < server.getIndexSize(); i++)
 	{
-		std::string filePath = server.getRoot() + "/" + server.getIndex(i);  
-		std::ifstream file(filePath.c_str());
-		if (file.is_open())
+		std::string filePath = _root + "/" + server.getIndex(i); 
+		if (isFile(filePath))
 		{
 			_index = server.getIndex(i);
 			return;
@@ -191,13 +194,17 @@ void ServerSettings::setLocation(std::string target)
 		_root = searchLoc.getRoot();
 	if (searchLoc.getClientBodySize() != 0)
 		_clientBodySize = searchLoc.getClientBodySize();
-	setAllowMethods(searchLoc);
+	if (!searchLoc.getAllowMethodsVec().empty()){
+		std::cerr << "---------> not empty" << std::endl;	
+		setAllowMethods(searchLoc.getAllowMethodsVec());
+	}
 	setReturn(searchLoc);
 	setIndexLocation(searchLoc);
 	_location = searchLoc.getSpecificPath();
 	if (!searchLoc.getCgi().empty()){
 		_cgi = searchLoc.getCgi();
 	}
+
 	/* If no location matches and there is no fallback("/"), Nginx returns a 404 error */
 }
 
@@ -257,18 +264,19 @@ void ServerSettings::setQueryString(std::string& target)
 	}
 }
 
-void ServerSettings::setAllowMethods(Location location)
+void ServerSettings::setAllowMethods(std::vector<std::string> AllowMethods)
 {
 	_allowMethods.clear();
-	
-	if (location.getAllowMethods("GET"))
-		_allowMethods.push_back(GET);
-	if (location.getAllowMethods("POST"))
-		_allowMethods.push_back(POST);
-	if (location.getAllowMethods("DELETE"))
-		_allowMethods.push_back(DELETE);
-	if (location.getAllowMethods("HEAD"))
-		_allowMethods.push_back(HEAD);
+	for (size_t i = 0; i < AllowMethods.size(); i++){
+		if (AllowMethods[i] == "GET")
+			_allowMethods.push_back(GET);
+		if (AllowMethods[i] == "POST")
+			_allowMethods.push_back(POST);
+		if (AllowMethods[i] == "DELETE")
+			_allowMethods.push_back(DELETE);
+		if (AllowMethods[i] == "HEAD")
+			_allowMethods.push_back(HEAD);
+	}
 }
 
 void ServerSettings::setReturn(Location location)

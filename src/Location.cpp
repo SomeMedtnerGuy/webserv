@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:23:33 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:24:36 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,9 @@ void Location::setCgi(std::vector<std::string>& cgi)
 	if (cgi.size() == 3){
 		_cgi[cgi[1]] = cgi[2];
 	} else {
+		if (cgi[1].compare(".py")){
+			throw std::runtime_error("The Webserv only accept a Python script.");
+		}
 		_cgi[cgi[1]] = "";
 	}
 }
@@ -180,6 +183,11 @@ std::string Location::getIndex(size_t indexNbr) const
 		throw std::runtime_error("Index number out of range. Valid range: 0 to " + intToStr(_index.size() -1));
 	
 	return (_index[indexNbr]);
+}
+
+std::vector<std::string> Location::getAllowMethodsVec() const
+{
+	return (_allowMethods);
 }
 
 std::vector<std::string> Location::getReturn() const

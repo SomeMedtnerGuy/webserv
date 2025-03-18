@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/13 16:23:58 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:33:00 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,24 @@ void Server::setCgi(const std::vector<std::string>& cgi)
 	if (cgi.size() == 3){
 		_cgi[cgi[1]] = cgi[2];
 	} else {
+		if (cgi[1].compare(".py")){
+			throw std::runtime_error("The Webserv only accept a Python script.");
+		}
 		_cgi[cgi[1]] = "\0";
 	}
+}
+
+void Server::setAllowMethods(const std::vector<std::string>& allowMethods)
+{
+	std::vector<std::string> methods = allowMethods;
+	
+	for (size_t i = 1; i < methods.size(); i++)
+	{
+		if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE" && methods[i] != "HEAD")
+			throw std::runtime_error("Invalid directive allow_methods in " + _serverName + " server.");
+	}
+	methods.erase(methods.begin());
+	_allowMethods = methods;
 }
 
 void Server::setLocation(std::vector<std::string>& serverVector, size_t i)
@@ -181,6 +197,11 @@ int Server::getListenSize(void) const
 	return (_listen.size());
 }
 
+std::vector<int> Server::getListenVec()
+{
+	return (_listen);
+} 
+
 std::string Server::getServerName(void) const
 {
 	return (_serverName);
@@ -199,6 +220,11 @@ size_t Server::getClientBodySize(void) const
 size_t Server::getIndexSize() const
 {
 	return (_index.size());
+}
+
+std::vector<std::string> Server::getAllowMethods()
+{
+	return (_allowMethods);
 }
 
 std::string Server::getIndex(size_t indexNbr) const
@@ -248,14 +274,15 @@ std::string Server::cgiExtensionHasASpecifcScript(std::string extension)
 
 void Server::setElements(std::string element)
 {
-	void (Server::*SetFunct[7])(const std::vector<std::string>&) = {
+	void (Server::*SetFunct[8])(const std::vector<std::string>&) = {
 		&Server::setListen, 
 		&Server::setServerName,
 		&Server::setRoot, 
 		&Server::setClientBodySize, 
 		&Server::setIndex, 
 		&Server::setErrorPage,
-		&Server::setCgi
+		&Server::setCgi,
+		&Server::setAllowMethods
 		};
 	
 	std::vector<std::string> elementVector = splitServerStr(element);
@@ -266,17 +293,18 @@ void Server::setElements(std::string element)
 
 size_t getElementNbr(std::string element)
 {
-	std::string elementsKeys[7] = {
+	std::string elementsKeys[8] = {
 		"listen",
 		"server_name", 
 		"root", 
 		"client_body_size", 
 		"index", 
 		"error_page",
-		"cgi"
+		"cgi",
+		"allow_methods"
 		};
 	
-	for (size_t i = 0; i < 8; ++i) {
+	for (size_t i = 0; i < 9; ++i) {
 		if (element == elementsKeys[i])
 			return (i);		
 	}
