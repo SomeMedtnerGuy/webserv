@@ -35,7 +35,6 @@ HttpResponse::code_t	HttpResponse::getStatusCode(void) const {return (_statusCod
 void						HttpResponse::setBodyPath(std::string bodyPath)
 {
 	_bodyPath = bodyPath;
-	std::cerr << "Why does this have to hurt so much " << ntostr(getFileLength(_bodyPath)) << std::endl;
 	if (_bodyPath.compare("") == 0) {
 		_headers.erase("Content-Length");
 		return;
@@ -75,6 +74,7 @@ void	HttpResponse::printMessage(void)
 const HttpResponse::header_map	HttpResponse::_createFileTypeMap(void)
 {
 	header_map	m;
+	m[".jpeg"] = "image.jpeg";
 	m[".jpg"] = "image.jpeg";
 	m[".pdf"] = "application/pdf";
 	return (m);

@@ -87,6 +87,7 @@ void    RequestManager::_recvHeader(void)
     _socket.consumeRecvStash(bytesParsed);
     _checkAndActOnErrors();
     if (_requestParser.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
+	    _request.printMessage();
         _stateMachine.advanceState();
     }
 }
@@ -108,7 +109,6 @@ void    RequestManager::_recvBody(void)
     _checkAndActOnErrors();
     if (_requestPerformer.isDone() && _stateMachine.getCurrentState() != SEND_RESPONSE) {
         _stateMachine.advanceState();
-        _request.printMessage();
     }
 }
 
@@ -124,7 +124,6 @@ void    RequestManager::_cgiProcess(void)
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
             {
                 _checkAndActOnErrors(); //TODO It must not continue if an error is returned (so headers remain intact).
-                std::cout << "done" << std::endl;
                 _cgiHandler.setCgiHeader();
                 _stateMachine.advanceState();
             }

@@ -81,18 +81,11 @@ const std::string& ServerSettings::getIndex() const
 
 const std::string ServerSettings::getErrorPage(int errorCode) const
 {
-	std::cerr << _errorPages.size() << std::endl;
-	for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); it++) {
-		std::cerr << it->first << ": " << it->second << std::endl;
-	}
-	std::cerr << std::endl;
 	std::map<int, std::string>::const_iterator it = _errorPages.find(errorCode);
 	if (it != _errorPages.end())
 	{
 		std::string	path("root/" + it->second);
 		std::ifstream file(path.c_str());
-		std::cerr << errorCode << std::endl;
-		std::cerr << file.is_open() << std::endl;
 		if (file.is_open())
 			return path;
 	}
@@ -195,7 +188,6 @@ void ServerSettings::setLocation(std::string target)
 	if (searchLoc.getClientBodySize() != 0)
 		_clientBodySize = searchLoc.getClientBodySize();
 	if (!searchLoc.getAllowMethodsVec().empty()){
-		std::cerr << "---------> not empty" << std::endl;	
 		setAllowMethods(searchLoc.getAllowMethodsVec());
 	}
 	setReturn(searchLoc);
@@ -282,8 +274,6 @@ void ServerSettings::setAllowMethods(std::vector<std::string> AllowMethods)
 void ServerSettings::setReturn(Location location)
 {
 	std::vector<std::string> returnVec = location.getReturn();
-	// std::cout << returnVec[0] << std::endl;
-	// std::cout << returnVec[1] << std::endl;
 	
 	if (returnVec == std::vector<std::string>())
 		return ;

@@ -160,7 +160,6 @@ void CGIHandler::_openFile()
 
 	if (_request.getMethod() == POST)
 	{
-		std::cerr << _response.cgiFile << std::endl;;
 		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
 		if (_fileInFd == -1)
 			throw std::runtime_error("CGI open file failed.");
@@ -176,13 +175,11 @@ void CGIHandler::_forkProcess()
 
 void CGIHandler::_cgiGetExec()
 {
-	std::cerr << "Get is running" << std::endl;
 	if (_pid == 0)
 	{
 		dup2(_fileOutFd, STDOUT_FILENO);
 		close(_fileOutFd);
 		
-		std::cerr << _cgiArgs[0] << std::endl;
 		execve(_cgiArgs[0], _cgiArgs, _env);
 		
 		std::cerr << "CGI Execution failed!" << std::endl;
@@ -234,7 +231,6 @@ bool CGIHandler::cgiDone()
 	{
 		if (WIFSIGNALED(status))
 		{
-			std::cout << WTERMSIG(status) << std::endl;
 			_response.setStatusCode(502); /* Bad gateway */
 			return (true);
 		}
@@ -274,13 +270,9 @@ bool CGIHandler::cgiDone()
 
 void CGIHandler::run()
 {
-	std::cerr << "Running cgi" << std::endl;
 	_cgiPath = _request.getTarget();
-	std::cerr << _cgiPath << std::endl;
 	_setEnv();
-	std::cerr << "Envs set" << std::endl;
 	_getRequiredCgiArgs();
-	std::cerr << "args gotten" << std::endl;
 	_execute();	
 }
 
@@ -295,12 +287,8 @@ void CGIHandler::setCgiHeader()
 
     while (std::getline(file, line) && line != "\n") {
 		
-        std::cout << "Line: " << line << std::endl;
 		std::string fieldName = line.substr(0, line.find(':'));
 		std::string fieldValue = line.substr(line.find(':') + 1, line.size() - 1);
-		
-        std::cout << "fieldName: " << fieldName << std::endl;
-        std::cout << "fieldValue: " << fieldValue << std::endl;
 		
 		if (line == ""){
 			std::string next;

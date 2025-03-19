@@ -82,7 +82,6 @@ void Server::setRoot(const std::vector<std::string>& root)
 		throw std::runtime_error("Root directive must not have '../'. Access to parent directories is not allowed.");
 	
 	std::string rootPath = "root/" + root[1];
-	// std::cout << rootPath << std::endl;	
 	if (!isDirectory(rootPath))
 			throw std::runtime_error("Root directive must have a directory path.");
 	
@@ -174,8 +173,6 @@ Location Server::fillLocation(std::vector<std::string>& serverVector, size_t beg
 	Location realLocation;
 	std::string specificPath = cacthPath(serverVector[begin - 1]);
 	realLocation.setSpecificPath(specificPath);
-
-	// std::cout << serverVector[begin] << " ---- " << serverVector[end] << std::endl;
 
 	for (size_t i = begin; i <= end; i++)
 		realLocation.setLocationElements(serverVector[i]);
