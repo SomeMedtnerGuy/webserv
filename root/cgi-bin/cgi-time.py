@@ -4,7 +4,7 @@ import datetime
 
 #<meta http-equiv="refresh" content="1">
 # Define the HTTP header
-print("Content-Type: text/html\n")
+# print("Content-Type: text/html\n")
 
 #import os
 import sys
