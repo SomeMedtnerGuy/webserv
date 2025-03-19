@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 18:35:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:53:54 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ void CGIHandler::_getCgiEnv()
 void CGIHandler::_getRequiredCgiArgs()
 {
 	std::string	cgiPath = _server.cgiExtensionHasASpecifcScript(_cgiPath);
-	if (cgiPath.empty()) {
+	
+	if (!cgiPath.empty()) {
 		_cgiArgs = new char*[2];
 		_cgiArgs[0] = new char[cgiPath.size() + 1];
 		for (size_t i = 0; i < cgiPath.size(); ++i)
@@ -155,14 +156,17 @@ void CGIHandler::_openFile()
 		
 	_tempFileName = fileNameStream.str();
 	_fileOutFd = open(_tempFileName.c_str(), O_CREAT | O_RDWR | O_TRUNC, 0666);
-	if (_fileOutFd == -1)
+	
+	if (_fileOutFd == -1){
 		throw std::runtime_error("CGI file result creat failed.");
+	}
 
 	if (_request.getMethod() == POST)
 	{
 		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
-		if (_fileInFd == -1)
+		if (_fileInFd == -1){
 			throw std::runtime_error("CGI open file failed.");
+		}
 	}
 }
 
