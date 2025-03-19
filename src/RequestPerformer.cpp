@@ -56,14 +56,11 @@ bool    RequestPerformer::_getConsumeMode(void) const {return (_consumeMode);}
 void    RequestPerformer::_performGet(void)
 {
     std::string	target(_request.getTarget());
-	std::cerr << "TARGET: " << target << std::endl;
 	if (isDirectory(target)) // If target is directory
 	{		
-		std::cerr << "\n\nWTF\n\n" << std::endl;
 		if (!_serverSettings.getAutoIndex())
 		{
 			target.append("/" + _serverSettings.getIndex());
-			std::cerr << "lol " << target << std::endl;
 			if (isFile(target)) {
 				_response.setBodyPath(target);
 			} else {

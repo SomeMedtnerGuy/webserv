@@ -95,9 +95,6 @@ void                Socket::fillStash(void)
 		throw (SocketException(RECV,
             static_cast<SocketException::ActionReturn>(recvOutput)));
 	}
-    std::cout << "The following shit has been received: " << std::endl;
-    printBuffer();
-    write(1, "\n", 1);
 	_recvStash.insert(_recvStash.end(), _buffer, _buffer + recvOutput);
 	_setCanRecv(false);
     _actionMade = true;
@@ -118,9 +115,6 @@ void                Socket::flushStash(void)
         throw (SocketException(SEND,
             static_cast<SocketException::ActionReturn>(bytesSent)));
     }
-    std::cout << "The following shit has been sent: " << std::endl;
-    printBuffer();
-    write(1, "\n", 1);
     _sendStash.erase(_sendStash.begin(), _sendStash.begin() + bytesSent);
     _setCanSend(false);
     _actionMade = true;
@@ -173,6 +167,7 @@ void    Socket::printBuffer(void)
 {
     unsigned char*   ptr = _buffer;
     int i = 0;
+    std::cerr << "Buffer: " << std::endl;
     while (*ptr != '\0' && i < BUFFER_SIZE) {
         if (*ptr == '\r') {
             write(1, "\\r", 2);
@@ -184,4 +179,5 @@ void    Socket::printBuffer(void)
         ptr++;
         i++;
     }
+    std::cerr << std::endl;
 }

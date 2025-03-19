@@ -85,7 +85,6 @@ std::string	ResponseSender::_generateResponseHeader(void)
                 tmpstr.erase(tmpstr.end() - 2, tmpstr.end());
                 tmpstr.append("00");
             }
-            std::cerr << "final: " << tmpstr << std::endl;
         } 
 
 

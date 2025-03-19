@@ -13,8 +13,7 @@
 #include "Webserv.hpp"
 
 Webserv::Webserv(int argc, char** argv)
-    : _configFile(argc, argv), _portsAm(0){
-    }
+    : _configFile(argc, argv), _portsAm(0){}
 Webserv::~Webserv(){}
 
 void    Webserv::setup(void)
@@ -25,7 +24,7 @@ void    Webserv::setup(void)
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << e.what() << std::endl;
         exit(1);
     }
     port_vector ports = _configFile.getPorts();

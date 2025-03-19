@@ -49,7 +49,7 @@ void ConfigFile::createFile()
     "\tlisten 1234;\n"
 	//"\troot ./;\n"
     "\tclient_body_size 1000000;\n"
-	"\tindex index.html;\n"
+	"\tindex html/index.html;\n"
     "\terror_page 404 error_pages/404.html;\n"
     "\terror_page 401 error_pages/401.html;\n"
 	"\n"
@@ -133,7 +133,6 @@ void ConfigFile::clearDuplicateServers()
 			if (copy->getServerName() == servername)
 			{
 				if (!hasDifferentPort(copy->getListenVec(), it->getListenVec())){
-					std::cerr << "erase server" << std::endl;
 					it = _serverObjs.erase(it);
 					it = _serverObjs.begin();
 					break ;

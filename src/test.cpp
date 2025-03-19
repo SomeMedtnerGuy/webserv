@@ -40,5 +40,4 @@ int main(int argc, char** argv)
     Webserv webserv(argc, argv);
     webserv.setup();
     webserv.run();
-    std::cout << "Byeeeeeeeee" << std::endl;
 }

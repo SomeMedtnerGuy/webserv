@@ -289,12 +289,6 @@ bool    isStrNum(std::string str)
 }
 
 long long   getCurrentTimestamp() {
-    // struct timeval tv;
-    // gettimeofday(&tv, NULL);
-    // long long   currentTimestamp = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
-    // std::cout << "gettimeofaday" << currentTimestamp << std::endl;
-    // std::cout << "time" << std::time(NULL) << std::endl;
-    // return (currentTimestamp);
     return std::time(NULL);
 }
 

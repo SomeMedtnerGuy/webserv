@@ -57,7 +57,7 @@ private:
     code_t	_httpSanitizer(std::string line);
 	code_t	_fillInRequestLineInfo(std::string requestLine);
 	code_t	_parseHeaderField(std::string headerField);
-	void	_abortRequestHandling(code_t statusCode, std::string reason);
+	void	_abortRequestHandling(code_t statusCode);
 	Method	_strToMethod(std::string str);
 };
 

@@ -47,8 +47,6 @@ size_t  ChunkedConsumer::consume(data_t& data)
 void    ChunkedConsumer::_parseChunkSize(void)
 {   
     std::string dataStr(_data.begin(), _data.begin() + std::min(_data.size(), size_t(16)));
-    //printString(dataStr);
-    //std::cerr << std::endl;
     if (dataStr.find("0") == 0) { //Indication that body will be done
         if (dataStr.length() < 5) {
             return;

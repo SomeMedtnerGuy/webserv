@@ -23,7 +23,7 @@ size_t    RequestParser::parse(const data_t& data)
 {
     _setDataStr(std::string(data.begin(), data.end()));    
     if (_dataStr.length() > BUFFER_SIZE * 4) {
-        _abortRequestHandling(431, "header section is too big");
+        _abortRequestHandling(431); 
     }
     State   currentState = _stateMachine.getCurrentState();
     State   previousState = currentState;
@@ -66,20 +66,20 @@ void	RequestParser::_parseRequestLine()
 
     if (requestLineSize != _dataStr.npos) { //found
         if (requestLineSize > BUFFER_SIZE) { //line too big
-            _abortRequestHandling(414, "request line is too big");
+            _abortRequestHandling(414);
             return;
         }
         std::string requestLine = _dataStr.substr(0, requestLineSize);
         code_t  parsingResult = _fillInRequestLineInfo(requestLine); //actual parsing is done here
         if (parsingResult != 200) {            
-            _abortRequestHandling(parsingResult, "fetching info from request line found an error");
+            _abortRequestHandling(parsingResult);
             return;
         } else {
             _consumefromDataStr(requestLineSize + std::string(DELIMITOR).length());
             _stateMachine.advanceState();
         }
     } else if (_dataStr.size() > BUFFER_SIZE) { //stash too big to hold a line (first "if" already checked if line is shorter)
-        _abortRequestHandling(414, "request line is too big 2");
+        _abortRequestHandling(414);
         return;
     } else {
         return; //Returns without modification if any of the above isn't true, as it needs to wait for the next read
@@ -92,7 +92,7 @@ void	RequestParser::_parseHeaders(void)
     
     while (_dataStr.compare(0, 2, DELIMITOR) != 0) { // As headers are consumed dinamically, delimitor of header section will be at the beginning
         if (_request.getHeadersSize() > BUFFER_SIZE * 4) {
-            _abortRequestHandling(431, "Header section is too big 2");
+            _abortRequestHandling(431);
             return;
         }
         size_t  fieldEnd = _dataStr.find(DELIMITOR);
@@ -102,7 +102,7 @@ void	RequestParser::_parseHeaders(void)
         std::string field = _dataStr.substr(0, fieldEnd);
         code_t      parsingResult = _parseHeaderField(field);
         if (parsingResult != 200) {
-            _abortRequestHandling(parsingResult, "Parsing the header field returned an error");
+            _abortRequestHandling(parsingResult);
             return;
         }
         _consumefromDataStr(fieldEnd + delimitorSize);
@@ -124,14 +124,11 @@ void	RequestParser::_processRequest(void)
         if (isRedirectCode) {
             _response.addHeader("Location", _serverSettings.getReturnURL());
         }
-        _abortRequestHandling(returnCode, "Found a return code");
+        _abortRequestHandling(returnCode);
         return;
     }
-    //Check if method is implemented or allowed
-    /*if (_request.getMethod() == NOT_IMPLEMENTED) {
-        _abortRequestHandling(501);
-    } else */if (_serverSettings.getAllowMethod(_request.getMethod()) == false) {
-		_abortRequestHandling(405, "Method is not allowed");
+    if (_serverSettings.getAllowMethod(_request.getMethod()) == false) {
+		_abortRequestHandling(405);
 	}
     
     //build full target
@@ -154,7 +151,7 @@ void	RequestParser::_processRequest(void)
 		&& headers.find("Content-Length") == headers.end()
 		&& headers.find("Transfer-Encoding") == headers.end());
 	if (postWithNoBody) {
-		_abortRequestHandling(411, "There is a post with no body");
+		_abortRequestHandling(411);
         return ;
 	}
     // Set bodysize
@@ -162,12 +159,12 @@ void	RequestParser::_processRequest(void)
 	{
 		std::string	sizeStr = headers.at("Content-Length");
         if (!isStrNum(sizeStr)) {
-            _abortRequestHandling(400, "Content length is not a number");
+            _abortRequestHandling(400);
             return ;
         }
 		ssize_t bodySize = std::atoi(sizeStr.c_str());
 		if (bodySize > static_cast<ssize_t>(_serverSettings.getClientBodySize())) {
-			_abortRequestHandling(413, "Body size is bigger than allwed");
+			_abortRequestHandling(413);
             return ;
         }
 		_request.setBodySize(bodySize);
@@ -175,11 +172,10 @@ void	RequestParser::_processRequest(void)
 	_setIsDone(true);
 }
 
-void	RequestParser::_abortRequestHandling(code_t statusCode, std::string reason)
+void	RequestParser::_abortRequestHandling(code_t statusCode)
 {
-    std::cerr << "Aborting request handling with status code " << statusCode << " because " << reason << std::endl;
 	_response.setStatusCode(statusCode);
-    _setIsDone(true);
+	_setIsDone(true);
 }
 
 RequestParser::code_t  RequestParser::_fillInRequestLineInfo(std::string requestLine)

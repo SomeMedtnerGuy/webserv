@@ -20,7 +20,6 @@ RawConsumer::~RawConsumer(){}
 
 size_t  RawConsumer::consume(data_t& data)
 {
-    std::cerr << "\n\n\nDAMN" <<std::endl;
     size_t  bytesAm = std::min(data.size(), _bodySize);
     if (_shouldPerformPost) {
         _saveFile.write(reinterpret_cast<char*>(data.data()), bytesAm);
