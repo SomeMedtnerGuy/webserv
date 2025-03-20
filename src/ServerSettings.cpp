@@ -18,7 +18,6 @@ ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(sr
 	_serverName = defaultServer.getServerName();
 	_root = defaultServer.getRoot();
 	_clientBodySize = defaultServer.getClientBodySize();
-	std::cerr << "when server settings is initialized, the max body size is: " << _clientBodySize << std::endl;
 	_index = "html/index.html";
 	_allowMethods.push_back(GET);
 	_allowMethods.push_back(POST);
@@ -31,7 +30,6 @@ ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(sr
 ServerSettings::ServerSettings(const ServerSettings& src) : _src(src._src)
 {
 	*this = src;
-	std::cerr << "After the copy constructor, the new value is: " << this->_clientBodySize << std::endl;
 }
 
 ServerSettings& ServerSettings::operator=(const ServerSettings& src)
@@ -49,7 +47,6 @@ ServerSettings& ServerSettings::operator=(const ServerSettings& src)
 		_returnURL = src._returnURL;
 		_cgi = src._cgi;
 	}
-	std::cerr << "After the assignment operator, the new value is: " << this->_clientBodySize << std::endl;
 	return (*this);
 }
 
@@ -69,7 +66,6 @@ const std::string& ServerSettings::getRoot() const
 
 size_t ServerSettings::getClientBodySize() const
 {
-	std::cerr << "From within the getter: " << _clientBodySize << std::endl;
 	return (_clientBodySize);
 }
 
@@ -127,9 +123,7 @@ void ServerSettings::setServer(std::string serverName)
 
 	if (aux.getRoot() != "")
 		_root = aux.getRoot();
-	std::cerr << "before new value in set server: " << _clientBodySize << std::endl;
 	_clientBodySize = aux.getClientBodySize();
-	std::cerr << "after new value in set server: " << _clientBodySize << std::endl;
 	setIndex(aux);
 	if (!aux.getAllowMethods().empty()){
 		setAllowMethods(aux.getAllowMethods());
