@@ -23,7 +23,7 @@
 class   Client
 {
 public:
-    Client(int sockfd, ConfigFile& configFile);
+    Client(int sockfd, ConfigFile& configFile, int id);
     Client(const Client& other);
     Client& operator=(const Client& other);
     ~Client();
@@ -44,6 +44,8 @@ private:
     
     const int   _timeoutTime;
     long long   _lastActionTime;
+
+    int		_id;
 };
 
 #endif

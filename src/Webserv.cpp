@@ -103,8 +103,10 @@ void    Webserv::_takeCareOfListenSockets()
             cliSock.events = POLLIN | POLLOUT;
             cliSock.revents = 0;
             _pollSockets.push_back(cliSock);
-            
-            Client  client(cliSock.fd, _configFile);
+	
+    		static int id = 0;
+    		std::cerr << "A new client was created because there was activity in port " << _pollSockets[i].fd << std::endl;		
+            Client  client(cliSock.fd, _configFile, id++);
             _clients.push_back(client);
         }
     } 

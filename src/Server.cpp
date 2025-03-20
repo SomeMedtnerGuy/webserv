@@ -12,7 +12,8 @@
 
 #include "Server.hpp"
 
-Server::Server(){}
+Server::Server(): _serverName("default"), _root("./root"), _clientBodySize(1000 * 1000)
+{}
 
 Server::Server(const Server& src)
 {

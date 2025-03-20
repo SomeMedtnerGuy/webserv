@@ -1,0 +1,90 @@
+Requesting: localhost:1234
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv!</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: localhost:1235
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv! (index2)</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: --resolve example1:1234:127.0.0.1 example1:1234
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv!</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: --resolve example2:1235:127.0.0.1 example2:1235
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv! (index2)</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: --resolve example1:1235:127.0.0.1 example1:1235
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv! (index3)</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: --resolve example2:1234:127.0.0.1 example2:1234
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Welcome to Webserv! (index4)</h1>
+		<h2>Below you can find different things to test:</h2>
+		<p><a href="/html/getTest.html">GET request to a different page</a></p>
+		<p><a href="/html/postTest.html">POST request command</a></p>
+		<p><a href="/html/getFilesTest.html">GET files</a></p>
+	</body>
+</html>
+
+
+Requesting: localhost:1234/doesNotExist
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Here is a custom 404 error page!</h1>
+	</body>
+</html>
+
+
+Requesting: localhost:1235/doesNotExist
+contents of 404.html
+
