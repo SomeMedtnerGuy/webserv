@@ -74,7 +74,7 @@ SETTINGS:
 -serverName: 			"default"
 -root: 					"./root"
 -clientBodySizeLimit:	1000*1000
--index:					"index.html"
+-index:					"html/index.html"
 -errorPages:				<error>: "./.default/<error>.html" (where error is the error code)
 -allowMethods:			GET, POST, DELETE (the enum items)
 -autoindex:				false

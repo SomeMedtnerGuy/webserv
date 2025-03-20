@@ -115,6 +115,10 @@ void	RequestParser::_parseHeaders(void)
 }
 void	RequestParser::_processRequest(void)
 {
+	if (_serverSettings.getLocation().empty()) {
+		_abortRequestHandling(404);
+		return;
+	}
     //Check return code
     int  output = _serverSettings.getReturnCode();
     if (output != -1) { // Means that a return code is present
