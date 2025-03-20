@@ -16,8 +16,7 @@
 # include "HttpMessage.hpp"
 # include "utils.hpp"
 
-# include <iostream> //TODO: debug. remove
-# include <vector> //TODO: debug. remove
+# include <iostream>
 
 class HttpRequest: public HttpMessage
 {

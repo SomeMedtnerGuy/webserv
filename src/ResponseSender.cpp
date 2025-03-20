@@ -46,16 +46,6 @@ ResponseSender::data_t    ResponseSender::getMessageToSend(size_t byteLimit)
             _file.close();
             _setIsDone(true);
         }
-        
-
-
-        if (!_wasDone && _request.getMethod() == POST && _request.getTarget().rfind(".bla") == _request.getTarget().length() - 4) {
-            output.erase(output.begin(), output.begin() + 58);
-            _wasDone = true;
-        } // TODO: This is hardcode to correct size of the body sent. must update it AFTER consuming headers
-
-
-        
     }
     return (output);
 }
@@ -80,15 +70,6 @@ std::string	ResponseSender::_generateResponseHeader(void)
         
         tmp << cit->second;
         tmpstr = tmp.str();
-        if (_request.getMethod() == POST && _request.getTarget().rfind(".bla") == _request.getTarget().length() - 4) {
-            if (cit->first.compare("Content-Length") == 0) {
-                tmpstr.erase(tmpstr.end() - 2, tmpstr.end());
-                tmpstr.append("00");
-            }
-        } 
-
-
-
         response << cit->first << ": " << tmpstr << DELIMITOR;
     }
         

@@ -19,7 +19,7 @@
 # include "ServerSettings.hpp"
 # include "utils.hpp"
 
-# include <iostream> //TODO: debug. remove
+# include <iostream>
 
 class HttpResponse: public HttpMessage
 {
