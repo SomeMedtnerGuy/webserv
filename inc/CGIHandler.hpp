@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:30:21 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/14 15:53:36 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:01:48 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ private:
 	void _cgiGetExec();
 	void _cgiPostExec();
 	void _getRequiredCgiArgs();
-	void _setCgiPath();
 	void _setEnv();
 	void _execute();
 	

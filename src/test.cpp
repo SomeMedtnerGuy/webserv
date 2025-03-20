@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:44:57 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/13 16:35:40 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/20 16:59:22 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,14 @@ int main(int argc, char** argv)
     signal(SIGINT, signalHandler);
     g_shutdown = false;
 
-    Webserv webserv(argc, argv);
-    webserv.setup();
-    webserv.run();
+    try
+    {
+        Webserv webserv(argc, argv);
+        webserv.setup();
+        webserv.run();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }

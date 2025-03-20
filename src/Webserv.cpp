@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 22:51:06 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/17 17:15:39 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:07:48 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,8 @@ Webserv::~Webserv(){}
 
 void    Webserv::setup(void)
 {
-    try
-    {
-        _configFile.run();
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-        exit(1);
-    }
+    _configFile.run();
+   
     port_vector ports = _configFile.getPorts();
     _portsAm = ports.size();
     

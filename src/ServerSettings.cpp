@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:35:43 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 18:30:24 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:53:44 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,9 @@ bool ServerSettings::isCgiExtension(std::string extension)
 
 std::string ServerSettings::cgiExtensionHasASpecifcScript(std::string extension)
 {
+	size_t dotPos = extension.rfind('.');
+	extension = extension.substr(dotPos);
+	
 	std::map<std::string, std::string>::iterator it = _cgi.find(extension);
 	if (it != _cgi.end()){
 		return (it->second);

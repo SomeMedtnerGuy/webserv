@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:52:23 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/17 18:48:37 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:36:14 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ void    RequestManager::_cgiProcess(void)
                 _cgiHandler.run();
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
             {
+                // _cgiHandler.setCgiHeader();
                 _checkAndActOnErrors(); //TODO It must not continue if an error is returned (so headers remain intact).
-                _cgiHandler.setCgiHeader();
                 _stateMachine.advanceState();
             }
         }

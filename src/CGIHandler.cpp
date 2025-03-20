@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 18:35:02 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:34:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,6 @@ CGIHandler::~CGIHandler()
 }
 
 /* Private Methods */
-
-void CGIHandler::_setCgiPath()
-{
-	_cgiPath = _request.getTarget();
-	
-	size_t hasArgs = _cgiPath.find('?');
-	if (hasArgs != std::string::npos)
-	{
-		_cgiEnv["QUERY_STRING"] = _cgiPath.substr(hasArgs + 1, _cgiPath.size());		
-		_cgiPath = _cgiPath.substr(0, hasArgs);
-	}
-}
 
 std::string CGIHandler::_getMethod(Method method)
 {
@@ -117,7 +105,8 @@ void CGIHandler::_getCgiEnv()
 void CGIHandler::_getRequiredCgiArgs()
 {
 	std::string	cgiPath = _server.cgiExtensionHasASpecifcScript(_cgiPath);
-	if (cgiPath.empty()) {
+	
+	if (!cgiPath.empty()) {
 		_cgiArgs = new char*[2];
 		_cgiArgs[0] = new char[cgiPath.size() + 1];
 		for (size_t i = 0; i < cgiPath.size(); ++i)
@@ -155,14 +144,17 @@ void CGIHandler::_openFile()
 		
 	_tempFileName = fileNameStream.str();
 	_fileOutFd = open(_tempFileName.c_str(), O_CREAT | O_RDWR | O_TRUNC, 0666);
-	if (_fileOutFd == -1)
+	
+	if (_fileOutFd == -1){
 		throw std::runtime_error("CGI file result creat failed.");
+	}
 
 	if (_request.getMethod() == POST)
 	{
 		_fileInFd = open(_response.cgiFile.c_str(), O_RDONLY);
-		if (_fileInFd == -1)
+		if (_fileInFd == -1){
 			throw std::runtime_error("CGI open file failed.");
+		}
 	}
 }
 
@@ -250,11 +242,11 @@ bool CGIHandler::cgiDone()
 		return (true);
 	}
 	
-	if (hasTimedOut(_startedTime, 400))
+	if (hasTimedOut(_startedTime, 59))
 	{
 		std::cout << "\nCGI TimedOut\n" << std::endl;
 		kill(_pid, SIGKILL);
-		_response.setStatusCode(502); /* Bad gateway */
+		_response.setStatusCode(500); /* in this case, cgi is internally processed, so the error is 500, not 502?*/
 		if (_fileInFd >= 0)
 		{
 		    close(_fileInFd);
@@ -278,9 +270,12 @@ void CGIHandler::run()
 
 void CGIHandler::setCgiHeader()
 {
+	if (_response.getStatusCode() != 200){
+		return ; // So that the CGI does not modify the headers if anything is wrong
+	}
+	
 	std::ifstream file(_tempFileName.c_str());
     std::string line;
-
     if (!file) {
         throw std::runtime_error("CGI file open failed.");
     }
@@ -304,6 +299,11 @@ void CGIHandler::setCgiHeader()
     std::streampos endPos = file.tellg();
 	
 	std::streampos size = endPos - _response.cgiBodyStarted;
+	
+	if (size == 0){
+		_response.setStatusCode(500);
+		return ;
+	}
 	std::stringstream ss;
 	ss << size;
 	_response.addHeaderCgi("Content-Length", ss.str());

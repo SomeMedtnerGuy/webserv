@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:17:03 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 17:33:00 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:01:34 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,10 @@ void Server::setCgi(const std::vector<std::string>& cgi)
 
 void Server::setAllowMethods(const std::vector<std::string>& allowMethods)
 {
+	if (allowMethods.size() < 2){
+			throw std::runtime_error("Invalid directive allow_methods in " + _serverName + " server.");
+	}
+	
 	std::vector<std::string> methods = allowMethods;
 	
 	for (size_t i = 1; i < methods.size(); i++)

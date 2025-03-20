@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:52:27 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/17 17:24:36 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/20 16:59:45 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ void Location::setSpecificPath(std::string& specificPath)
 
 void Location::setAllowMethods(std::vector<std::string>& allowMethods)
 {
+	if (allowMethods.size() < 2){
+			throw std::runtime_error("Invalid directive allow_methods in " + _specificPath + " location.");
+	}
+		
 	std::vector<std::string> methods = allowMethods;
 	
 	for (size_t i = 1; i < methods.size(); i++)
