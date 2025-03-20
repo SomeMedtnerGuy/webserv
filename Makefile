@@ -15,7 +15,11 @@ CC			= c++
 CFLAGS		= -Wall -Wextra -Werror -std=c++98 -g
 ASAN		= -fsanitize=leak,address -fno-omit-frame-pointer
 SRC_DIR		= src/
-SRCS 		= $(wildcard $(SRC_DIR)*.cpp) #TODO WILDCARD IS FORBIDDEN
+SRCS 		= $(addprefix $(SRC_DIR), ABodyConsumer.cpp AMessageHandler.cpp CGIHandler.cpp ChunkedConsumer.cpp \
+		  	Client.cpp ConfigFile.cpp HttpMessage.cpp HttpRequest.cpp HttpResponse.cpp \
+			Location.cpp main.cpp RawConsumer.cpp RequestManager.cpp RequestParser.cpp \
+			RequestPerformer.cpp ResponseSender.cpp Server.cpp ServerSettings.cpp \
+			Socket.cpp utils.cpp Webserv.cpp)
 OBJ_DIR		= obj/
 OBJS		= $(SRCS:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 

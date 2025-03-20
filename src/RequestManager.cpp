@@ -123,8 +123,7 @@ void    RequestManager::_cgiProcess(void)
                 _cgiHandler.run();
             if (_cgiHandler.isCgiRunning() && _cgiHandler.cgiDone())
             {
-                // _cgiHandler.setCgiHeader();
-                _checkAndActOnErrors(); //TODO It must not continue if an error is returned (so headers remain intact).
+                _checkAndActOnErrors();
                 _stateMachine.advanceState();
             }
         }
@@ -175,7 +174,7 @@ void    RequestManager::_checkAndActOnErrors(void)
 RequestManager::ErrorSeverity   RequestManager::_getErrorSeverity(code_t statusCode)
 {
     switch (statusCode) {
-        case 200: case 204: //case 411: //TODO REMOVE 411
+        case 200: case 204:
             return (NO_ERROR);
         case 403: case 404: case 405: case 500: case 501: 
             return (CONSUME_AND_ANSWER);

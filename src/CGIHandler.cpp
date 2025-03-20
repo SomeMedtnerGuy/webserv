@@ -76,7 +76,7 @@ void CGIHandler::_setEnv()
 		size_t number = _request.getBodySize();
     	std::ostringstream oss;
     	oss << number;
-		_cgiEnv["CONTENT_LENGTH"] = oss.str(); //TODO works without this, very likely needs removing
+		_cgiEnv["CONTENT_LENGTH"] = oss.str();
 	}
 }
 
