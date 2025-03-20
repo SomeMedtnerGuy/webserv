@@ -12,18 +12,19 @@
 
 #include "Client.hpp"
 
-Client::Client(int sockfd, ConfigFile& configFile)
-    : /*_id(id), */_socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(70)
+Client::Client(int sockfd, ConfigFile& configFile, int id)
+    : _socket(sockfd), _configFile(configFile),
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60), _id(id)
 {
-    _lastActionTime = getCurrentTimestamp();
+	_lastActionTime = getCurrentTimestamp();
 }
 
 Client::Client(const Client& other): _socket(other._socket),
     _configFile(other._configFile), _activeRequest(other._activeRequest),
     _closeConnection(other._closeConnection),
-    _timeoutTime(other._timeoutTime), _lastActionTime(other._lastActionTime)
-{}
+    _timeoutTime(other._timeoutTime), _lastActionTime(other._lastActionTime), _id(other._id)
+{
+}
 
 Client& Client::operator=(const Client& other)
 {
@@ -31,8 +32,8 @@ Client& Client::operator=(const Client& other)
         _socket = other._socket;
         _activeRequest = other._activeRequest;
         _closeConnection = other._closeConnection;
-        //_timeoutTime = other._timeoutTime; It is a const value
         _lastActionTime = other._lastActionTime;
+	_id = other._id;
     }
     return (*this);
 }
@@ -62,7 +63,7 @@ void    Client::handle(void)
         if (_socket.wasActionMade()) {
             _lastActionTime = getCurrentTimestamp();
         } else if (hasTimedOut(_lastActionTime, _timeoutTime)) {
-            std::cerr << "Timed Out" << std::endl;
+            std::cerr << "The client " << _id << " has timed out." << std::endl;
             _setCloseConnection(true);
         }
     } while (_isNewRequestRequired() && !shouldCloseConnection());

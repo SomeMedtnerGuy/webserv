@@ -26,7 +26,10 @@ void    ABodyConsumer::setup(std::string saveFileName)
         }
         int i = 0;
         while (isFile(saveFileName)) {
-            saveFileName.insert(saveFileName.find_last_of('.'), "(1)");
+		size_t	lastSlashPos = saveFileName.find_last_of('/');
+		size_t	lastDotPos = saveFileName.find_last_of('.');
+		size_t	insertionPos = (lastSlashPos > lastDotPos) ? saveFileName.length() : lastDotPos;
+            saveFileName.insert(insertionPos, "(1)");
             i++;
             if (i >= 100) {
                 _response.setStatusCode(409);
@@ -35,6 +38,7 @@ void    ABodyConsumer::setup(std::string saveFileName)
         }
         _saveFile.open(saveFileName.c_str(), std::ios::binary);
         if (_saveFile.fail()) {
+		std::cerr << "lol " << saveFileName << std::endl;
             _response.setStatusCode(500);
             return ;
         }

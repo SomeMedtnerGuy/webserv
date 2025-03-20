@@ -100,11 +100,16 @@ void    Webserv::_takeCareOfListenSockets()
             socklen_t           cli_len = sizeof(cli_addr);
             struct pollfd       cliSock;
             cliSock.fd = accept(_pollSockets[i].fd, (struct sockaddr*)&cli_addr, &cli_len);
-            cliSock.events = POLLIN | POLLOUT;
+            if (cliSock.fd == -1) {
+		    std::cerr << "The creation of the connection failed! Ignoring and moving on." << std::endl;
+		    continue ;
+	    }
+	    cliSock.events = POLLIN | POLLOUT;
             cliSock.revents = 0;
             _pollSockets.push_back(cliSock);
-            
-            Client  client(cliSock.fd, _configFile);
+	
+    		static int id = 0;
+            Client  client(cliSock.fd, _configFile, id++);
             _clients.push_back(client);
         }
     } 

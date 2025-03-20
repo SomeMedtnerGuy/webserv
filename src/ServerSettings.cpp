@@ -14,15 +14,11 @@
 
 ServerSettings::ServerSettings(ConfigFile& src, int port) : _port(port), _src(src)
 {
-	_serverName = "default";
-	_root = "./root";
-	_clientBodySize = 1000 * 1000;
-	_index = "index.html";
-	//_errorPages[400] = "./.default/400.html";
-	//_errorPages[404] = "./.default/404.html";
-	//_errorPages[414] = "./.default/414.html";
-	//_errorPages[431] = "./.default/431.html";
-	//_errorPages[501] = "./.default/501.html";
+	Server	defaultServer = _src.getServer("", port);
+	_serverName = defaultServer.getServerName();
+	_root = defaultServer.getRoot();
+	_clientBodySize = defaultServer.getClientBodySize();
+	_index = "html/index.html";
 	_allowMethods.push_back(GET);
 	_allowMethods.push_back(POST);
 	_allowMethods.push_back(DELETE);
@@ -51,7 +47,6 @@ ServerSettings& ServerSettings::operator=(const ServerSettings& src)
 		_returnURL = src._returnURL;
 		_cgi = src._cgi;
 	}
-
 	return (*this);
 }
 
