@@ -14,9 +14,8 @@
 
 Client::Client(int sockfd, ConfigFile& configFile, int id)
     : _socket(sockfd), _configFile(configFile),
-        _activeRequest(NULL), _closeConnection(false), _timeoutTime(5), _id(id)
+        _activeRequest(NULL), _closeConnection(false), _timeoutTime(60), _id(id)
 {
-	std::cerr << "Default constructor called. ID: " << _id << std::endl;
 	_lastActionTime = getCurrentTimestamp();
 }
 
@@ -25,7 +24,6 @@ Client::Client(const Client& other): _socket(other._socket),
     _closeConnection(other._closeConnection),
     _timeoutTime(other._timeoutTime), _lastActionTime(other._lastActionTime), _id(other._id)
 {
-	std::cerr << "Copy constructor called. ID: " << _id << std::endl;
 }
 
 Client& Client::operator=(const Client& other)
@@ -34,11 +32,9 @@ Client& Client::operator=(const Client& other)
         _socket = other._socket;
         _activeRequest = other._activeRequest;
         _closeConnection = other._closeConnection;
-        //_timeoutTime = other._timeoutTime; It is a const value
         _lastActionTime = other._lastActionTime;
 	_id = other._id;
     }
-    std::cerr << "Assignment operator called. ID: " << _id << std::endl;
     return (*this);
 }
 
