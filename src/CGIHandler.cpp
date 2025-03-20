@@ -6,7 +6,7 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:18:33 by nsouza-o          #+#    #+#             */
-/*   Updated: 2025/03/19 18:54:21 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:34:38 by nsouza-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,7 @@ bool CGIHandler::cgiDone()
 	{
 		std::cout << "\nCGI TimedOut\n" << std::endl;
 		kill(_pid, SIGKILL);
-		_response.setStatusCode(500); /* in this case, cgi is internally processed, so the error is 500, not 502*/
+		_response.setStatusCode(500); /* in this case, cgi is internally processed, so the error is 500, not 502?*/
 		if (_fileInFd >= 0)
 		{
 		    close(_fileInFd);

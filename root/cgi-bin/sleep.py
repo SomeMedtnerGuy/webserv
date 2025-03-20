@@ -8,7 +8,7 @@ import cgi
 # print()                             # Blank line separating header from body
 
 # Sleep time in seconds
-sleep_time = 25  # Change this value as needed
+sleep_time = 5  # Change this value as needed
 
 # Wait for the specified time
 time.sleep(sleep_time)
@@ -18,5 +18,6 @@ print("<html>")
 print("<head><title>CGI Sleep Example</title></head>")
 print("<body>")
 print(f"<h1>The script slept for {sleep_time} seconds.</h1>")
+print("<p><a href=\"/cgi-bin/index.html\">Back to CGI home</a></p>")
 print("</body>")
 print("</html>")

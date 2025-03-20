@@ -25,6 +25,8 @@ print(f"""
     <h1>Server Current Time</h1>
     
     <p>{now}</p>
+    
+    <p><a href="/cgi-bin/index.html">Back to CGI home</a></p>
 </body>
 </html>
 """)
