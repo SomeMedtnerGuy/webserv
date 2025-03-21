@@ -6,14 +6,14 @@
 /*   By: nsouza-o <nsouza-o@student.42porto.com     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:13:08 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/14 19:22:05 by nsouza-o         ###   ########.fr       */
+/*   Updated: 2025/03/21 08:43:59 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseSender.hpp"
 
 ResponseSender::ResponseSender(HttpRequest& request, HttpResponse& response)
-    : AMessageHandler(request, response), _file(), _headersSent(false), _wasDone(false)
+    : AMessageHandler(request, response), _file(), _headersSent(false)
 {}
 ResponseSender::~ResponseSender(){}
 

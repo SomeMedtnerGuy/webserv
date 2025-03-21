@@ -6,7 +6,7 @@
 /*   By: ndo-vale <ndo-vale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 20:12:50 by ndo-vale          #+#    #+#             */
-/*   Updated: 2025/03/12 20:23:06 by ndo-vale         ###   ########.fr       */
+/*   Updated: 2025/03/21 08:43:38 by ndo-vale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ private:
     bool            _headersSent; 
 
     std::string _generateResponseHeader(void);
-
-
-
-    bool _wasDone;
 };
 
 #endif
